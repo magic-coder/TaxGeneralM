@@ -1,0 +1,310 @@
+//
+//  NewsListViewController.m
+//  TaxGeneral
+//
+//  Created by Apple on 2016/12/1.
+//  Copyright © 2016年 Yanzheng. All rights reserved.
+//
+
+#import "NewsListViewController.h"
+#import "NewsTableViewCell.h"
+#import "NewsLoopView.h"
+#import "NewsModel.h"
+#import "NewsUtil.h"
+#import "MJRefresh.h"
+
+#import "MainTabBarController.h"
+
+@interface NewsListViewController () <MainTabBarControllerDelegate, NewsLoopViewDelegate>
+
+@property (nonatomic, strong) NewsLoopView *loopView;
+@property (nonatomic, strong) NSMutableArray *data;     // 数据列表
+@property (nonatomic, strong) NSMutableArray *tempData; // 临时数据列表
+@property (nonatomic, assign) int pageNo;               // 页码值
+@property (nonatomic, assign) int totalPage;            // 最大页
+@property (nonatomic, assign) int refreshCount;         // 刷新条数
+
+@end
+
+@implementation NewsListViewController
+
+static NSString * const reuseIdentifier = @"newsTableViewCell";
+static int const pageSize = 10;
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    MainTabBarController *mainTabBarController = (MainTabBarController *)self.tabBarController;
+    mainTabBarController.customDelegate = self;
+    
+    self.tableView.rowHeight = 80;
+    
+    self.view.backgroundColor = DEFAULT_BACKGROUND_COLOR;
+    self.tableView.backgroundColor = [UIColor whiteColor];
+    self.tableView.showsVerticalScrollIndicator = NO;// 隐藏纵向滚动条
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;// 自定义cell样式
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];// 去除底部多余分割线
+    
+    // 设置下拉刷新
+    self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(loadNewData)];
+    
+    // 马上进入刷新状态
+    [self.tableView.mj_header beginRefreshing];
+}
+
+#pragma mark - 下拉刷新数据
+- (void)loadNewData{
+    _refreshCount = pageSize;
+    _tempData = [NSMutableArray arrayWithArray:_data];
+    _data = [[NSMutableArray alloc] init];
+    
+    [NewsUtil initDataWithPageSize:pageSize dataBlock:^(NSDictionary *dataDict) {
+        _pageNo = 1;
+        _totalPage = [[dataDict objectForKey:@"totalPage"] intValue];
+        
+        NSDictionary *loopDict = [dataDict objectForKey:@"loopResult"];
+        NSArray *titles = [loopDict objectForKey:@"titles"];
+        NSArray *images = [loopDict objectForKey:@"images"];
+        NSArray *urls = [loopDict objectForKey:@"urls"];
+        if(_loopView == nil){
+            _loopView = [[NewsLoopView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.width/1.8) titles:titles images:images urls:urls autoPlay:YES delay:10.0];
+        }else{
+            _loopView.titles = titles;
+            _loopView.images = images;
+            _loopView.urls = urls;
+        }
+        _loopView.delegate = self;
+        self.tableView.tableHeaderView = _loopView;
+        
+        NSArray *newsData = [dataDict objectForKey:@"newsResult"];
+        for(NSDictionary *newsDict in newsData){
+            NewsModel *model = [NewsModel createWithDict:newsDict];
+            [_data addObject:model];
+            
+            for(NewsModel *nm in _tempData){
+                if([nm.title isEqualToString:model.title]){
+                    _refreshCount--;
+                }
+            }
+        }
+        
+        [self showNewStatusesCount:_refreshCount];
+        
+        [self.tableView reloadData];
+        
+        // 结束刷新
+        [self.tableView.mj_header endRefreshing];
+        
+        // 设置上拉加载
+        self.tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMoreData)];
+        
+        [self.tableView.mj_footer resetNoMoreData];
+    } failed:^(NSString *error) {
+        // 结束刷新
+        [self.tableView.mj_header endRefreshing];
+        
+        [YZProgressHUD showHUDView:self.navigationController.view Mode:SHOWMODE Text:error];
+    }];
+}
+
+#pragma mark - 上拉加载更多
+- (void)loadMoreData{
+    _pageNo++;
+    
+    [NewsUtil moreDataWithPageNo:+_pageNo pageSize:pageSize dataBlock:^(NSArray *dataArray) {
+        for(NSDictionary *dataDict in dataArray){
+            NewsModel *model = [NewsModel createWithDict:dataDict];
+            [_data addObject:model];
+            
+            [self.tableView reloadData];
+            [self.tableView.mj_footer endRefreshingWithNoMoreData];
+            
+            if(_pageNo < _totalPage){
+                // 结束刷新
+                [self.tableView.mj_footer endRefreshing];
+            }else{
+                // 拿到当前的上拉刷新控件，变为没有更多数据的状态
+                [self.tableView.mj_footer endRefreshingWithNoMoreData];
+            }
+        }
+    } failed:^(NSString *error) {
+        
+        [self.tableView.mj_footer resetNoMoreData];
+        
+        [YZProgressHUD showHUDView:self.navigationController.view Mode:SHOWMODE Text:error];
+    }];
+}
+
+#pragma mark - 懒加载加载数据
+/*
+- (NSMutableArray *)data{
+     //for(NewsModel *model in allNews){
+     //    if(_type == 0 && model.type == NewsModelTypeRecommend){
+     //        [_data addObject:model];
+     //    }else if(_type == 1 && model.type == NewsModelTypeHot){
+     //        [_data addObject:model];
+     //    }else if(_type == 2 && model.type == NewsModelTypeOther){
+     //        [_data addObject:model];
+     //    }else{
+     //        [_data addObject:model];
+     //    }
+     //}
+    return _data;
+}
+*/
+
+#pragma mark - Table view data source
+#pragma mark 数据源方法
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.data.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    // 1.缓存中取
+    NewsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
+    // 2.创建
+    if (cell == nil) {
+        cell = [[NewsTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
+    }
+    // 3.设置数据
+    cell.newsModel = [_data objectAtIndex:indexPath.row];
+    // 4.返回cell
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    // 点击后将颜色变回来
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    DLog(@"Yan -> 点击了第%ld个", indexPath.row);
+    NewsTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    DLog(@"Yan -> 标题为：%@", cell.newsModel.title);
+    
+    BaseWebViewController *baseWebVC = [[BaseWebViewController alloc] initWithURL:cell.newsModel.url];
+    baseWebVC.title = @"税闻详情";
+    [self.navigationController pushViewController:baseWebVC animated:YES];
+    
+}
+
+// 设置cell高度
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    NewsModel *model = [_data objectAtIndex:indexPath.row];
+    if(model.cellHeight > 0){
+        return model.cellHeight;
+    }
+    return 0;
+}
+
+#pragma mark - <MainTabBarControllerDelegate> 代理方法刷新数据
+- (void)autoRefreshData{
+    // 先清除角标
+    UITabBarItem * item = [self.tabBarController.tabBar.items objectAtIndex:0];
+    item.badgeValue = nil;
+    
+    // 马上进入刷新状态
+    [self.tableView.mj_header beginRefreshing];
+}
+
+#pragma mark - 顶部loop的点击代理方法
+- (void)loopViewDidSelectedImage:(NewsLoopView *)loopView index:(int)index{
+    DLog(@"Yan -> 点击了第%d个loop视图，其中标题为：%@", index, [loopView.urls objectAtIndex:index]);
+    BaseWebViewController *baseWebVC = [[BaseWebViewController alloc] initWithURL:[loopView.urls objectAtIndex:index]];
+    baseWebVC.title = @"税闻详情";
+    [self.navigationController pushViewController:baseWebVC animated:YES];
+}
+
+#pragma mark - 展示更新条数（浮动提示层）
+- (void)showNewStatusesCount:(int)count{
+    
+    // 1.创建一个UILabel
+    UILabel *label = [[UILabel alloc] init];
+    
+    // 2.显示文字
+    if (count) {
+        label.text = [NSString stringWithFormat:@"更新了%d条税闻", count];
+    } else {
+        label.text = @"没有最新的税闻";
+    }
+    
+    // 3.设置背景
+    label.backgroundColor = [UIColor colorWithRed:244.0f/255.0f green:151.0f/255.0f blue:42.0f/255.0f alpha:1.0f];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [UIColor whiteColor];
+    label.font = [UIFont systemFontOfSize:14.0f];
+    
+    // 4.设置frame
+    label.frame = CGRectMake(0, HEIGHT_STATUS+HEIGHT_NAVBAR-30, WIDTH_SCREEN, 30);
+    
+    // 5.添加到导航控制器的view
+    //    [self.navigationController.view addSubview:label];
+    [self.navigationController.view insertSubview:label belowSubview:self.navigationController.navigationBar];
+    
+    // 6.动画
+    CGFloat duration = 0.75;
+    label.alpha = 0.0;
+    [UIView animateWithDuration:duration animations:^{
+        // 往下移动一个label的高度
+        label.transform = CGAffineTransformMakeTranslation(0, 30);
+        label.alpha = 1.0;
+    } completion:^(BOOL finished) { // 向下移动完毕
+        // 延迟delay秒后，再执行动画
+        CGFloat delay = 1.0;
+        [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            // 恢复到原来的位置
+            label.transform = CGAffineTransformIdentity;
+            label.alpha = 0.0;
+        } completion:^(BOOL finished) {
+            // 删除控件
+            [label removeFromSuperview];
+        }];
+    }];
+}
+
+#pragma mark - 初始化数据
+/*
+-(void)initNewsData{
+    // 参数
+    NSMutableDictionary *parametersDict = [[NSMutableDictionary alloc] init];
+    [parametersDict setObject:[NSNumber numberWithInt:pageSize] forKey:@"pageSize"];
+    NSString *parameters = [BaseDataUtil dataToJsonString:dict];
+    
+    NSDictionary *dd = [NSDictionary dictionaryWithObjectsAndKeys:parameters, @"msg", nil];
+    NSString *url = @"public/photonews/index";
+    
+    [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:nil success:^(NSDictionary *responseDic) {
+        // 获取请求状态值
+        DLog(@"statusCode = %@", [responseDic objectForKey:@"statusCode"]);
+        NSString *statusCode = [responseDic objectForKey:@"statusCode"];
+        if([statusCode isEqualToString:@"00"]){
+            DLog(@"请求报文成功，开始进行处理...");
+            NSDictionary *businessDict = [responseDic objectForKey:@"businessData"];
+            NSDictionary *loopData = [businessDict objectForKey:@"loopData"];
+            NSDictionary *newsData = [businessDict objectForKey:@"newsData"];
+            NSMutableArray *newsResult = [newsData objectForKey:@"results"];
+            
+            _data = [[NSMutableArray alloc] init];
+            
+            for(NSDictionary *dict in newsResult){
+                NewsModel *model = [NewsModel createWithDict:dict];
+                [_data addObject:model];
+            }
+            DLog(@"——data size %lu", (unsigned long)_data.count);
+            [self.tableView reloadData];
+        }
+    } failure:^(NSString *error) {
+        // 请求报文失败
+        DLog(@"%@", error);
+    }];
+}
+*/
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+@end
