@@ -224,6 +224,9 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
 
 //登录方法
 -(void)loginAction:(UIButton *)sender{
+    
+    [YZProgressHUD showHUDView:self.view Mode:LOCKMODE Text:@"登录中..."];
+    
     NSString *userCode = _usernameTextField.text;
     NSString *password = _passwordTextField.text;
     DLog(@"userCode=%@，password=%@",userCode, password);
@@ -263,6 +266,8 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
                 [[NSUserDefaults standardUserDefaults] setObject:dict forKey:LOGIN_SUCCESS];
                 [[NSUserDefaults standardUserDefaults] synchronize]; // 强制写入
                 
+                [YZProgressHUD hiddenHUDForView:self.view];
+                
                 CATransition *animation = [CATransition animation];
                 animation.duration = 1.0f;
                 animation.timingFunction = UIViewAnimationCurveEaseInOut;
@@ -274,31 +279,11 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
                 [self dismissViewControllerAnimated:YES completion:nil];
             }
         } failure:^(NSString *error) {
-            DLog(@"%@", error);
+            [YZProgressHUD hiddenHUDForView:self.view];
+            [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:@"用户名或密码错误！"];
         }];
-        /*
-        if([username isEqualToString:@"admin"] && [password isEqualToString:@"123456"]){
-            // 请求的参数
-            NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:username, @"username", password, @"password",imei,@"imei", nil];
-            
-            // 登录成功将信息保存到用户单例模式中
-            [[NSUserDefaults standardUserDefaults] setObject:dict forKey:LOGIN_SUCCESS];
-            [[NSUserDefaults standardUserDefaults] synchronize]; // 强制写入
-            
-            CATransition *animation = [CATransition animation];
-            animation.duration = 1.0f;
-            animation.timingFunction = UIViewAnimationCurveEaseInOut;
-            animation.type = @"rippleEffect";
-            //animation.type = kCATransitionMoveIn;
-            animation.subtype = kCATransitionFromBottom;
-            [self.view.window.layer addAnimation:animation forKey:nil];
-            
-            [self dismissViewControllerAnimated:YES completion:nil];
-        }else{
-            [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:@"用户名或密码有误，请重新登录！"];
-        }
-         */
     }else{
+        [YZProgressHUD hiddenHUDForView:self.view];
         [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:@"用户名、密码不能为空！"];
     }
 

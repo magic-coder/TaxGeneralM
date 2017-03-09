@@ -16,10 +16,10 @@ typedef NS_ENUM(NSInteger, AppItemsType){
 
 @interface AppUtil : NSObject
 
-- (void)initAppDataFlag:(BOOL)flag;// 初始化app菜单列表
-
-- (NSMutableArray *) getAppItemsWithType:(AppItemsType)type;   // 根据类型读取本地app菜单列表
-
 - (BOOL)writeNewAppData:(NSDictionary *)appData;// 重新写入菜单列表（编辑时调用）
+
+- (NSMutableArray *)loadDataWithType:(AppItemsType)type;
+
+- (void)initDataWithType:(AppItemsType)type dataBlock:(void (^)(NSMutableArray *dataArray))dataBlock failed:(void(^)(NSString *error))failed;
 
 @end

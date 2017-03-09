@@ -88,16 +88,17 @@ static int const pageSize = 10;
     }
     
     [self.tableView reloadData];
-    
 }
 
 #pragma mark - 下拉刷新数据
 - (void)loadNewData{
-    _refreshCount = pageSize;
-    _tempData = [NSMutableArray arrayWithArray:_data];
-    _data = [[NSMutableArray alloc] init];
     
     [_newsUtil initDataWithPageSize:pageSize dataBlock:^(NSDictionary *dataDict) {
+        
+        _refreshCount = pageSize;
+        _tempData = [NSMutableArray arrayWithArray:_data];
+        _data = [[NSMutableArray alloc] init];
+        
         _pageNo = 1;
         _totalPage = [[dataDict objectForKey:@"totalPage"] intValue];
         
@@ -173,24 +174,6 @@ static int const pageSize = 10;
         [YZProgressHUD showHUDView:self.navigationController.view Mode:SHOWMODE Text:error];
     }];
 }
-
-#pragma mark - 懒加载加载数据
-/*
-- (NSMutableArray *)data{
-     //for(NewsModel *model in allNews){
-     //    if(_type == 0 && model.type == NewsModelTypeRecommend){
-     //        [_data addObject:model];
-     //    }else if(_type == 1 && model.type == NewsModelTypeHot){
-     //        [_data addObject:model];
-     //    }else if(_type == 2 && model.type == NewsModelTypeOther){
-     //        [_data addObject:model];
-     //    }else{
-     //        [_data addObject:model];
-     //    }
-     //}
-    return _data;
-}
-*/
 
 #pragma mark - Table view data source
 #pragma mark 数据源方法

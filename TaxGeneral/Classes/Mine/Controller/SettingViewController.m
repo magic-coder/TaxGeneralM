@@ -67,18 +67,22 @@
                         usleep(30000);
                     }
                     [[SDImageCache sharedImageCache] clearDiskOnCompletion:^{
+                        
+                        [[BaseSandBoxUtil alloc] removeFileName:@"newsData.plist"];
+                        
                         UIImage *image = [UIImage imageNamed:@"common_mark_success"];
                         UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
                         hud.customView = imageView;
                         hud.mode = MBProgressHUDModeCustomView;
                         hud.labelText = @"清理完成！";
+                        // 重新加载数据
+                        self.data = [MineUtil getSettingItems];
+                        [self.tableView reloadData];
                     }];
                     [[SDImageCache sharedImageCache] clearMemory];
                     sleep(1);
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [hud hide:YES];
-                        self.data = [MineUtil getSettingItems];
-                        [self.tableView reloadData];
                     });
                 });
             }
@@ -121,7 +125,7 @@
     // 写入本地SandBox设置文件中
     BOOL res = [[SettingUtil alloc] writeSettingData:settingDict];
     if(!res){
-        [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:@"设置异常！"];
+        [YZProgressHUD showHUDView:self.navigationController.view Mode:SHOWMODE Text:@"设置异常！"];
     }
     
 }

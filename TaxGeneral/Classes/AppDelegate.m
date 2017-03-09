@@ -21,7 +21,6 @@
 #import "MessageDetailViewController.h"
 #import "MapListViewController.h"
 
-#import "AppUtil.h"
 #import "SettingUtil.h"
 
 #import "BPush.h"
@@ -60,7 +59,6 @@
 #endif
     
     [self deviceInfo];  // 获取设备基本信息
-    [[AppUtil alloc] initAppDataFlag:NO];// 初始化构建应用菜单（写入SandBox中）
     [[SettingUtil alloc] initSettingData];// 初始化默认值的setting数据(写入SandBox)
     
     // BaiduMap 要使用百度地图，请先启动BaiduMapManager

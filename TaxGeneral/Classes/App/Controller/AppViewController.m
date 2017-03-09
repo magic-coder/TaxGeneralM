@@ -25,6 +25,7 @@
 @interface AppViewController () <UINavigationControllerDelegate, AppTopViewDelegate>
 
 @property (nonatomic, assign) BOOL adjustStatus;// 调整状态
+@property (nonatomic, strong) AppUtil *appUtil;
 
 @end
 
@@ -33,6 +34,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    _appUtil = [[AppUtil alloc] init];
     
     // 设置导航控制器的代理为self
     self.navigationController.delegate = self;
@@ -56,8 +59,20 @@
     _adjustStatus = NO;// 初始化调整状态值
     
     if([self isLogin]){
-        self.data = [[AppUtil alloc ] getAppItemsWithType:AppItemsTypeNone];
-        [self.collectionView reloadData];
+        self.data = [_appUtil loadDataWithType:AppItemsTypeNone];
+        if(self.data != nil){
+            [self.collectionView reloadData];
+        }else{
+            [YZProgressHUD showHUDView:self.navigationController.view Mode:LOCKMODE Text:@"加载中..."];
+            [_appUtil initDataWithType:AppItemsTypeNone dataBlock:^(NSMutableArray *dataArray) {
+                [YZProgressHUD hiddenHUDForView:self.navigationController.view];
+                self.data = dataArray;
+                [self.collectionView reloadData];
+            } failed:^(NSString *error) {
+                [YZProgressHUD hiddenHUDForView:self.navigationController.view];
+                [YZProgressHUD showHUDView:self.navigationController.view Mode:SHOWMODE Text:error];
+            }];
+        }
     }else{
         [self goToLogin];
     }
@@ -159,7 +174,7 @@
     // 点击保存将数据写入SandBox覆盖以前数据
     BaseCollectionModelGroup *mineGroup = [self.data objectAtIndex:0];
     BaseCollectionModelGroup *otherGroup = [self.data objectAtIndex:1];
-    BaseCollectionModelGroup *allGroup = [[[AppUtil alloc] getAppItemsWithType:AppItemsTypeEdit] objectAtIndex:1];
+    BaseCollectionModelGroup *allGroup = [[_appUtil loadDataWithType:AppItemsTypeEdit] objectAtIndex:1];
     
     NSMutableArray *mineData = [[NSMutableArray alloc] init];
     NSMutableArray *otherData = [[NSMutableArray alloc] init];
@@ -191,7 +206,7 @@
     
     NSMutableDictionary *dataDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:mineData, @"mineData", otherData, @"otherData", allData, @"allData", nil];
     
-    [[AppUtil alloc] writeNewAppData:dataDict];
+    [_appUtil writeNewAppData:dataDict];
 }
 
 #pragma mark - 判断是否登录，及跳转登录

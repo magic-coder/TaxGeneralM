@@ -13,6 +13,8 @@
 
 @interface AppEditViewController () <BaseCollectionViewControllerDelegate>
 
+@property (nonatomic, strong) AppUtil *appUtil;
+
 @end
 
 @implementation AppEditViewController
@@ -29,7 +31,18 @@
     self.navigationItem.rightBarButtonItem.enabled = NO;// 初始化保存按钮不可点击
     
     self.collectionStyle = CollectionStyleEdit;
-    self.data = [[AppUtil alloc] getAppItemsWithType:AppItemsTypeEdit];
+    self.data = [self.appUtil loadDataWithType:AppItemsTypeEdit];
+    if(self.data == nil){
+        [YZProgressHUD showHUDView:self.navigationController.view Mode:LOCKMODE Text:@"加载中..."];
+        [self.appUtil initDataWithType:AppItemsTypeEdit dataBlock:^(NSMutableArray *dataArray) {
+            [YZProgressHUD hiddenHUDForView:self.navigationController.view];
+            self.data = dataArray;
+            [self.collectionView reloadData];
+        } failed:^(NSString *error) {
+            [YZProgressHUD hiddenHUDForView:self.navigationController.view];
+            [YZProgressHUD showHUDView:self.navigationController.view Mode:SHOWMODE Text:error];
+        }];
+    }
     
     self.view.backgroundColor = [UIColor whiteColor];
     self.collectionView.backgroundColor = [UIColor whiteColor];
@@ -83,9 +96,9 @@
     
     BOOL res = [[AppUtil alloc] writeNewAppData:dataDict];
     if(res){
-        [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:@"保存成功!"];
+        [YZProgressHUD showHUDView:self.navigationController.view Mode:SHOWMODE Text:@"保存成功!"];
     }else{
-        [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:@"对不起，保存失败!"];
+        [YZProgressHUD showHUDView:self.navigationController.view Mode:SHOWMODE Text:@"对不起，保存失败!"];
     }
 }
 
@@ -120,6 +133,14 @@
     [self.collectionView reloadData];
     // 点击编辑按钮后设置保存按钮可点击
     self.navigationItem.rightBarButtonItem.enabled = YES;
+}
+
+#pragma mark - 懒加载
+-(AppUtil *)appUtil{
+    if(_appUtil == nil){
+        _appUtil = [[AppUtil alloc] init];
+    }
+    return _appUtil;
 }
 
 - (void)didReceiveMemoryWarning {
