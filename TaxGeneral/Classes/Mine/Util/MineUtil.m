@@ -57,7 +57,8 @@
     BaseTableModelGroup *group2 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:nil settingItems:name, phoneNum, organ, nil];
     [items addObject:group2];
     
-    BaseTableModelItem *lastTime = [BaseTableModelItem createWithTitle:@"上次登录时间" subTitle:@"2017-03-08 17:40:53"];
+    
+    BaseTableModelItem *lastTime = [BaseTableModelItem createWithTitle:@"上次登录时间" subTitle:[userDict objectForKey:@"loginDate"]];
     lastTime.accessoryType = UITableViewCellAccessoryNone;
     BaseTableModelGroup *group3 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:nil settingItems:lastTime, nil];
     [items addObject:group3];

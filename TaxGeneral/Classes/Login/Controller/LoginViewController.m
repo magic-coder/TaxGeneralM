@@ -261,6 +261,12 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
                 [dict setObject:[businessData objectForKey:@"orgCode"] forKey:@"orgCode"];
                 [dict setObject:[businessData objectForKey:@"orgName"] forKey:@"orgName"];
                 [dict setObject:[businessData objectForKey:@"token"] forKey:@"token"];
+                // 获取系统当前时间(登录时间)
+                NSDate *sendDate = [NSDate date];
+                NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+                NSString *loginDate = [dateFormatter stringFromDate:sendDate];
+                [dict setObject:loginDate forKey:@"loginDate"];
                 
                 // 登录成功将信息保存到用户单例模式中
                 [[NSUserDefaults standardUserDefaults] setObject:dict forKey:LOGIN_SUCCESS];

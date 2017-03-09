@@ -8,7 +8,7 @@
 
 #import "AccountViewController.h"
 #import "MineUtil.h"
-#import "SettingUtil.h"
+#import "AccountUtil.h"
 
 @interface AccountViewController ()
 
@@ -29,25 +29,11 @@
     BaseTableModelItem *item = [group itemAtIndex:indexPath.row];
     
     if([item.title isEqualToString:@"退出登录"]){
-        /*
-        [YZAlertView showActionSheetWith:self title:EmptyTitle message:@"退出登录后下次使用时需重新登录，您确定要退出吗？" callbackBlock:^(NSInteger btnIndex) {
-            if(0 == btnIndex){
-                [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"gesturespassword"];
-                [[NSUserDefaults standardUserDefaults] removeObjectForKey:LOGIN_SUCCESS];
-                [[SettingUtil alloc] removeSettingData];
-                [[SettingUtil alloc] initSettingData];
-                
-                [self.navigationController popViewControllerAnimated:YES];
-            }
-        } destructiveButtonTitle:@"退出" cancelButtonTitle:@"取消" otherButtonTitles: nil, nil];
-         */
         [YZActionSheet showActionSheetWithTitle:@"退出登录后下次使用时需重新登录，您确定要退出吗？" cancelButtonTitle:@"取消" destructiveButtonTitle:@"退出" otherButtonTitles:nil handler:^(YZActionSheet *actionSheet, NSInteger index) {
             if(-1 == index){
-                [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"gesturespassword"];
-                [[NSUserDefaults standardUserDefaults] removeObjectForKey:LOGIN_SUCCESS];
-                [[SettingUtil alloc] removeSettingData];
-                [[SettingUtil alloc] initSettingData];
-                
+                [YZProgressHUD showHUDView:self.navigationController.view Mode:LOCKMODE Text:@"注销中..."];
+                [[AccountUtil alloc] accountLogout];
+                [YZProgressHUD hiddenHUDForView:self.navigationController.view];
                 [self.navigationController popViewControllerAnimated:YES];
             }
         }];

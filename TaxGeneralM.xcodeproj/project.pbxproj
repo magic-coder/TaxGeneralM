@@ -11,6 +11,7 @@
 		180D3B111E53E53800440E99 /* MessageDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 180D3B101E53E53800440E99 /* MessageDetailViewController.m */; };
 		180D3B141E53E59800440E99 /* MessageDetailViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 180D3B131E53E59800440E99 /* MessageDetailViewCell.m */; };
 		180D3B171E53F61B00440E99 /* MessageDetailUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 180D3B161E53F61B00440E99 /* MessageDetailUtil.m */; };
+		18198B831E71390B001CB690 /* AccountUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 18198B821E71390B001CB690 /* AccountUtil.m */; };
 		182000261D5C1C1A004E6592 /* BaseTableUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 182000251D5C1C1A004E6592 /* BaseTableUtil.m */; };
 		182000291D5C1CF9004E6592 /* BaseCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 182000281D5C1CF9004E6592 /* BaseCollectionViewController.m */; };
 		1820002C1D5C1D5F004E6592 /* BaseCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1820002B1D5C1D5F004E6592 /* BaseCollectionViewCell.m */; };
@@ -250,6 +251,8 @@
 		180D3B131E53E59800440E99 /* MessageDetailViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MessageDetailViewCell.m; path = Classes/Message/View/MessageDetailViewCell.m; sourceTree = "<group>"; };
 		180D3B151E53F61B00440E99 /* MessageDetailUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageDetailUtil.h; path = Classes/Message/Util/MessageDetailUtil.h; sourceTree = "<group>"; };
 		180D3B161E53F61B00440E99 /* MessageDetailUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MessageDetailUtil.m; path = Classes/Message/Util/MessageDetailUtil.m; sourceTree = "<group>"; };
+		18198B811E71390B001CB690 /* AccountUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AccountUtil.h; path = Classes/Mine/Util/AccountUtil.h; sourceTree = "<group>"; };
+		18198B821E71390B001CB690 /* AccountUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AccountUtil.m; path = Classes/Mine/Util/AccountUtil.m; sourceTree = "<group>"; };
 		182000241D5C1C1A004E6592 /* BaseTableUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseTableUtil.h; path = Classes/Base/Util/BaseTableUtil.h; sourceTree = "<group>"; };
 		182000251D5C1C1A004E6592 /* BaseTableUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BaseTableUtil.m; path = Classes/Base/Util/BaseTableUtil.m; sourceTree = "<group>"; };
 		182000271D5C1CF9004E6592 /* BaseCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseCollectionViewController.h; path = Classes/Base/Controller/BaseCollectionViewController.h; sourceTree = "<group>"; };
@@ -878,6 +881,8 @@
 				1856DA3B1E48275A0092DE3F /* MineUtil.m */,
 				18C7373D1E4C1C070058E7E4 /* SettingUtil.h */,
 				18C7373E1E4C1C070058E7E4 /* SettingUtil.m */,
+				18198B811E71390B001CB690 /* AccountUtil.h */,
+				18198B821E71390B001CB690 /* AccountUtil.m */,
 			);
 			name = Util;
 			sourceTree = "<group>";
@@ -2086,6 +2091,7 @@
 				188C75211E14C9AF0056E40D /* AppTopView.m in Sources */,
 				18AA319C1D47384500862187 /* MASConstraintMaker.m in Sources */,
 				18D5B2551E6FD21E00F5F555 /* NSData+ImageContentType.m in Sources */,
+				18198B831E71390B001CB690 /* AccountUtil.m in Sources */,
 				18AA31A21D47384500862187 /* View+MASAdditions.m in Sources */,
 				18C995071DEC0C18006A040F /* NewsTableViewCell.m in Sources */,
 				1822B31C1E5C33B2008F1DB2 /* MapListViewController.m in Sources */,
