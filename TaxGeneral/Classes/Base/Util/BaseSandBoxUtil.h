@@ -14,7 +14,7 @@
 
 - (NSMutableDictionary *)loadDataWithFileName:(NSString *)fileName;    // 读取文件
 
-- (BOOL)writeData:(NSMutableDictionary *)data fileName:(NSString *)fileName;    // 写入文件
+- (BOOL)writeData:(NSDictionary *)data fileName:(NSString *)fileName;    // 写入文件
 
 - (void)removeFileName:(NSString *)fileName;    // 删除文件
 

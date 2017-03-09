@@ -26,7 +26,7 @@
 }
 
 #pragma mark 将数据写入文件
--(BOOL)writeData:(NSMutableDictionary *)data fileName:(NSString *)fileName{
+-(BOOL)writeData:(NSDictionary *)data fileName:(NSString *)fileName{
     
     NSString *dataFile = [self getFile:fileName];
     

@@ -46,13 +46,16 @@
 #endif
 
 #pragma mark - ServiceUrl
-//#define SERVER_URL      @"http://127.0.0.1:8080/json_demo/" // 测试http服务器地址
+//#define SERVER_URL      @"http://127.0.0.1:8080/json_demo/" // Yan测试http服务器地址
 #define SERVER_URL      @"https://202.100.37.162:8444/mobiletax/" // 测试https服务器地址
 
 
-#pragma mark - # ThirdPart KEY
+#pragma mark - ThirdPart KEY
 #define BMAP_APPKEY     @"ZodL7vsmdWTxn83jRO6KX1OSpOVFsnUn"
 #define BPUSH_APIKEY    @"ZodL7vsmdWTxn83jRO6KX1OSpOVFsnUn"
-#define MCODE           @"com.prient.TaxGeneralM"
+
+#pragma mark - Commons Key
+#define LOGIN_SUCCESS   @"loginSuccess"
+#define DEVICE_INFO     @"deviceInfo"
 
 #endif /* Marcos_h */

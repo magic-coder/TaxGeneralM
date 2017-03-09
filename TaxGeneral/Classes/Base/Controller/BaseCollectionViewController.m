@@ -116,7 +116,7 @@ static NSString * const reusableView = @"reusableView";
 #pragma mark 设置cell的大小
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    NSData *deviceInfoData = [[NSUserDefaults standardUserDefaults] objectForKey:@"deviceInfoData"];
+    NSData *deviceInfoData = [[NSUserDefaults standardUserDefaults] objectForKey:DEVICE_INFO];
     DeviceInfoModel *deviceInfoModel = [NSKeyedUnarchiver unarchiveObjectWithData:deviceInfoData];
     
     if(indexPath.section == 0){

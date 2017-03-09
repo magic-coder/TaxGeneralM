@@ -11,9 +11,17 @@
 #import "NewsUtil.h"
 #import "NewsModel.h"
 
+#define FILE_NAME @"newsData.plist"
+
 @implementation NewsUtil
 
-+(void)initDataWithPageSize:(int)pageSize dataBlock:(void (^)(NSDictionary *))dataBlock failed:(void (^)(NSString *))failed{
+- (NSMutableDictionary *)loadData{
+    BaseSandBoxUtil *sandBoxUtil = [[BaseSandBoxUtil alloc] init];
+    NSMutableDictionary *newsDict = [sandBoxUtil loadDataWithFileName:FILE_NAME];
+    return newsDict;
+}
+
+- (void)initDataWithPageSize:(int)pageSize dataBlock:(void (^)(NSDictionary *))dataBlock failed:(void (^)(NSString *))failed{
     
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     [dict setObject:[NSNumber numberWithInt:pageSize] forKey:@"pageSize"];
@@ -21,8 +29,8 @@
     NSString *jsonString = [BaseDataUtil dataToJsonString:dict];
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:jsonString, @"msg", nil];
-    NSString *url = @"public/photonews/index";
     
+    NSString *url = @"public/photonews/index";
     [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:parameters success:^(NSDictionary *responseDic) {
         // 获取请求状态值
         DLog(@"statusCode = %@", [responseDic objectForKey:@"statusCode"]);
@@ -48,6 +56,14 @@
             NSString *totalRecord = [newsData objectForKey:@"totalRecord"];
             
             NSDictionary *resDict = [NSDictionary dictionaryWithObjectsAndKeys:loopResult, @"loopResult", newsResult, @"newsResult", totalPage, @"totalPage", totalRecord, @"totalRecord", nil];
+            
+            BaseSandBoxUtil *sandBoxUtil = [[BaseSandBoxUtil alloc] init];
+            BOOL res = [sandBoxUtil writeData:resDict fileName:FILE_NAME];
+            if(res){
+                DLog(@"NewsData数据写入SandBox成功");
+            }else{
+                DLog(@"NewsData数据写入SandBox失败");
+            }
             dataBlock(resDict);
         }
     } failure:^(NSString *error) {
@@ -55,7 +71,7 @@
     }];
 }
 
-+ (void)moreDataWithPageNo:(int)pageNo pageSize:(int)pageSize dataBlock:(void (^)(NSArray *))dataBlock failed:(void (^)(NSString *))failed{
+- (void)moreDataWithPageNo:(int)pageNo pageSize:(int)pageSize dataBlock:(void (^)(NSArray *))dataBlock failed:(void (^)(NSString *))failed{
     
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     [dict setObject:[NSNumber numberWithInt:pageNo] forKey:@"pageNo"];
@@ -64,8 +80,8 @@
     NSString *jsonString = [BaseDataUtil dataToJsonString:dict];
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:jsonString, @"msg", nil];
-    NSString *url = @"public/photonews/queryPhotoNewsList";
     
+    NSString *url = @"public/photonews/queryPhotoNewsList";
     [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:parameters success:^(NSDictionary *responseDic) {
         // 获取请求状态值
         DLog(@"statusCode = %@", [responseDic objectForKey:@"statusCode"]);

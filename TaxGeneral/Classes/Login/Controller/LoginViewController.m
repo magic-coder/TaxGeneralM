@@ -10,6 +10,7 @@
 
 #import "LoginViewController.h"
 #import "MainTabBarController.h"
+#import "DeviceInfoModel.h"
 
 #define LABELSIZE CGSizeMake(70, 20)
 #define TEXTFIELDSIZE CGSizeMake(180, 30)
@@ -151,7 +152,7 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
 }
 
 #pragma mark - <UITextFieldDelegate>代理方法
-// 猫咪动画
+// 捂脸移动动画
 - (void)textFieldDidBeginEditing:(UITextField *)textField{
     if ([textField isEqual:self.usernameTextField]) {
         if (_showType != LoginShowType_PASS)
@@ -223,18 +224,65 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
 
 //登录方法
 -(void)loginAction:(UIButton *)sender{
-    NSString *username = _usernameTextField.text;
+    NSString *userCode = _usernameTextField.text;
     NSString *password = _passwordTextField.text;
-    NSString *imei = @"111111111111111";
-    DLog(@"username=%@，password=%@, imei=%@",username, password, imei);
+    DLog(@"userCode=%@，password=%@",userCode, password);
     
-    if(username.length > 0 && password.length > 0){
+    if(userCode.length > 0 && password.length > 0){
+        
+        NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:DEVICE_INFO];
+        DeviceInfoModel *model = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+        
+        NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+        [dict setObject:@"app" forKey:@"loginType"];
+        [dict setObject:userCode forKey:@"userCode"];
+        [dict setObject:password forKey:@"password"];
+        [dict setObject:model.deviceModel forKey:@"phonemodel"];
+        [dict setObject:model.systemVersion forKey:@"osversion"];
+        [dict setObject:@"4" forKey:@"phonetype"];
+        [dict setObject:model.deviceIdentifier forKey:@"deviceid"];
+        
+        NSString *jsonString = [BaseDataUtil dataToJsonString:dict];
+        
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:jsonString, @"msg", nil];
+        NSString *url = @"account/login";
+        [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:parameters success:^(NSDictionary *responseDic) {
+            
+            // 获取请求状态值
+            DLog(@"statusCode = %@", [responseDic objectForKey:@"statusCode"]);
+            NSString *statusCode = [responseDic objectForKey:@"statusCode"];
+            if([statusCode isEqualToString:@"00"]){
+                DLog(@"请求报文成功，开始进行处理...");
+                NSDictionary *businessData = [responseDic objectForKey:@"businessData"];
+                [dict setObject:[businessData objectForKey:@"userName"] forKey:@"userName"];
+                [dict setObject:[businessData objectForKey:@"orgCode"] forKey:@"orgCode"];
+                [dict setObject:[businessData objectForKey:@"orgName"] forKey:@"orgName"];
+                [dict setObject:[businessData objectForKey:@"token"] forKey:@"token"];
+                
+                // 登录成功将信息保存到用户单例模式中
+                [[NSUserDefaults standardUserDefaults] setObject:dict forKey:LOGIN_SUCCESS];
+                [[NSUserDefaults standardUserDefaults] synchronize]; // 强制写入
+                
+                CATransition *animation = [CATransition animation];
+                animation.duration = 1.0f;
+                animation.timingFunction = UIViewAnimationCurveEaseInOut;
+                animation.type = @"rippleEffect";
+                //animation.type = kCATransitionMoveIn;
+                animation.subtype = kCATransitionFromBottom;
+                [self.view.window.layer addAnimation:animation forKey:nil];
+                
+                [self dismissViewControllerAnimated:YES completion:nil];
+            }
+        } failure:^(NSString *error) {
+            DLog(@"%@", error);
+        }];
+        /*
         if([username isEqualToString:@"admin"] && [password isEqualToString:@"123456"]){
             // 请求的参数
             NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:username, @"username", password, @"password",imei,@"imei", nil];
             
             // 登录成功将信息保存到用户单例模式中
-            [[NSUserDefaults standardUserDefaults] setObject:dict forKey:@"userSuccess"];
+            [[NSUserDefaults standardUserDefaults] setObject:dict forKey:LOGIN_SUCCESS];
             [[NSUserDefaults standardUserDefaults] synchronize]; // 强制写入
             
             CATransition *animation = [CATransition animation];
@@ -249,35 +297,11 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
         }else{
             [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:@"用户名或密码有误，请重新登录！"];
         }
-        /*
-        NSString *url = @"loginUser.action";
-        
-        [YZProgressHUD showHUDView:self.view Mode:LOCKMODE Text:@"登录中..."];
-        [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:dict success:^(NSDictionary *responseDic) {
-            [YZProgressHUD  hiddenHUDForView:self.view];
-            // 获取请求状态值
-            NSString * responseCode = [responseDic objectForKey:@"repcode"];
-            // 判断请求状态：1、表示成功，0、表示失败
-            if([responseCode isEqualToString:@"1"]){
-                // 登录成功将信息保存到用户单例模式中
-                [[NSUserDefaults standardUserDefaults] setObject:dict forKey:@"userSuccess"];
-                [[NSUserDefaults standardUserDefaults] synchronize]; // 强制写入
-            
-                // 登录成功，界面跳转到主页
-                _mainTabBarController = [[MainTabBarController alloc] init];
-                [self presentViewController:_mainTabBarController animated:YES completion:nil];
-            }else{
-                NSString *msg = [responseDic objectForKey:@"returnMessage"];
-                [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:msg];
-            }
-        } failure:^(NSString *error) {
-            [YZProgressHUD hiddenHUDForView:self.view];
-            [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:error];
-        }];
          */
     }else{
         [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:@"用户名、密码不能为空！"];
     }
+
     [self.view endEditing:YES];
 }
 

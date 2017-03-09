@@ -33,7 +33,7 @@
         [YZAlertView showActionSheetWith:self title:EmptyTitle message:@"退出登录后下次使用时需重新登录，您确定要退出吗？" callbackBlock:^(NSInteger btnIndex) {
             if(0 == btnIndex){
                 [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"gesturespassword"];
-                [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"userSuccess"];
+                [[NSUserDefaults standardUserDefaults] removeObjectForKey:LOGIN_SUCCESS];
                 [[SettingUtil alloc] removeSettingData];
                 [[SettingUtil alloc] initSettingData];
                 
@@ -44,7 +44,7 @@
         [YZActionSheet showActionSheetWithTitle:@"退出登录后下次使用时需重新登录，您确定要退出吗？" cancelButtonTitle:@"取消" destructiveButtonTitle:@"退出" otherButtonTitles:nil handler:^(YZActionSheet *actionSheet, NSInteger index) {
             if(-1 == index){
                 [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"gesturespassword"];
-                [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"userSuccess"];
+                [[NSUserDefaults standardUserDefaults] removeObjectForKey:LOGIN_SUCCESS];
                 [[SettingUtil alloc] removeSettingData];
                 [[SettingUtil alloc] initSettingData];
                 

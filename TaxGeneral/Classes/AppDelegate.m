@@ -120,7 +120,7 @@
     _mainTabBarController = [[MainTabBarController alloc] init];
     
     // 获取单例模式中的用户信息自动登录
-    NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:@"userSuccess"];
+    NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS];
     if(nil != userDict){
         // 若用户开启指纹解锁，进行指纹验证
         NSDictionary *settingDict = [[SettingUtil alloc] loadSettingData];
@@ -167,7 +167,7 @@
     // App图片添加3DTouch按压方法 ->End<-
     
     /*
-    NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:@"userSuccess"];
+    NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS];
     if(nil != userDict){
         NSString *url = @"loginUser.action";
         
@@ -209,7 +209,7 @@
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     
-    NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:@"userSuccess"];
+    NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS];
     if(nil != userDict){
         UIApplicationShortcutIcon *icon1 = [UIApplicationShortcutIcon iconWithTemplateImageName:@"3DTouch_Notification"];
         UIApplicationShortcutItem *item1 = [[UIApplicationShortcutItem alloc] initWithType:@"item1" localizedTitle:@"通知公告" localizedSubtitle:@"" icon:icon1 userInfo:nil];
@@ -390,7 +390,7 @@
 
 #pragma mark - 获取设备的基本信息并存入NSUserDefaults中
 - (void)deviceInfo{
-    NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"deviceInfoData"];
+    NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:DEVICE_INFO];
     //DeviceInfoModel *model = [NSKeyedUnarchiver unarchiveObjectWithData:data];
     //DLog(@"Yan -> model.deviceIdentifier = %@", model.deviceIdentifier);
     
@@ -398,7 +398,7 @@
         DLog(@"Yan -> 开始写入设备基本信息");
         DeviceInfoModel *deviceInfoModel = [[DeviceInfoModel alloc] getDeviceInfoModel];
         NSData *deviceInfoData = [NSKeyedArchiver archivedDataWithRootObject:deviceInfoModel];
-        [[NSUserDefaults standardUserDefaults] setObject:deviceInfoData forKey:@"deviceInfoData"];
+        [[NSUserDefaults standardUserDefaults] setObject:deviceInfoData forKey:DEVICE_INFO];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
 }

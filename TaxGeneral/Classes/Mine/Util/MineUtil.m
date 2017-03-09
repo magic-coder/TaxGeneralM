@@ -37,24 +37,27 @@
 }
 
 + (NSMutableArray *)getAccountItems{
+    
+    NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS];
+    
     NSMutableArray *items = [[NSMutableArray alloc] init];
-    BaseTableModelItem *userID = [BaseTableModelItem createWithTitle:@"姓名" subTitle:@"倪辰曦"];
+    BaseTableModelItem *userID = [BaseTableModelItem createWithTitle:@"姓名" subTitle:[userDict objectForKey:@"userName"]];
     userID.accessoryType = UITableViewCellAccessoryNone;
     BaseTableModelGroup *group1 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:nil settingItems:userID, nil];
     [items addObject:group1];
 
-    BaseTableModelItem *name = [BaseTableModelItem createWithTitle:@"账号" subTitle:@"ncx0628"];
+    BaseTableModelItem *name = [BaseTableModelItem createWithTitle:@"账号" subTitle:[userDict objectForKey:@"userCode"]];
     name.accessoryType = UITableViewCellAccessoryNone;
     BaseTableModelItem *phoneNum = [BaseTableModelItem createWithTitle:@"手机号" subTitle:@"15691959168"];
     phoneNum.accessoryType = UITableViewCellAccessoryNone;
     //BaseTableModelItem *barCode = [BaseTableModelItem createWithImageName:nil title:@"我的二维码" subTitle:nil rightImageName:@"mine_barcode"];
     //barCode.accessoryType = UITableViewCellAccessoryNone;
-    BaseTableModelItem *organ = [BaseTableModelItem createWithTitle:@"所属部门" subTitle:@"西安市地方税务局"];
+    BaseTableModelItem *organ = [BaseTableModelItem createWithTitle:@"所属部门" subTitle:[userDict objectForKey:@"orgName"]];
     organ.accessoryType = UITableViewCellAccessoryNone;
     BaseTableModelGroup *group2 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:nil settingItems:name, phoneNum, organ, nil];
     [items addObject:group2];
     
-    BaseTableModelItem *lastTime = [BaseTableModelItem createWithTitle:@"上次登录时间" subTitle:@"2017-02-06 16:36"];
+    BaseTableModelItem *lastTime = [BaseTableModelItem createWithTitle:@"上次登录时间" subTitle:@"2017-03-08 17:40:53"];
     lastTime.accessoryType = UITableViewCellAccessoryNone;
     BaseTableModelGroup *group3 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:nil settingItems:lastTime, nil];
     [items addObject:group3];

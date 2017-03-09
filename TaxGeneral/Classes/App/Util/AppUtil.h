@@ -20,6 +20,6 @@ typedef NS_ENUM(NSInteger, AppItemsType){
 
 - (NSMutableArray *) getAppItemsWithType:(AppItemsType)type;   // 根据类型读取本地app菜单列表
 
-- (BOOL)writeNewAppData:(NSMutableDictionary *)appData;// 重新写入菜单列表（编辑时调用）
+- (BOOL)writeNewAppData:(NSDictionary *)appData;// 重新写入菜单列表（编辑时调用）
 
 @end

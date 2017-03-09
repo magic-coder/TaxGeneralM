@@ -187,7 +187,7 @@
                 errorCount = 5;
                 
                 [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"gesturespassword"];
-                [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"userSuccess"];
+                [[NSUserDefaults standardUserDefaults] removeObjectForKey:LOGIN_SUCCESS];
                 [[SettingUtil alloc] removeSettingData];
                 [[SettingUtil alloc] initSettingData];
                 

@@ -75,7 +75,7 @@
                 [self sortWithArray:mineData key:@"userappsort" ascending:YES];
                  
                 // 最终数据（写入SandBox的数据）
-                NSMutableDictionary *dataDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:mineData, @"mineData", otherData, @"otherData", allData, @"allData", nil];
+                NSMutableDictionary *dataDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:mineData, @"mineData", otherData, @"otherData", allData, @"allData", nil];
                  
                 BOOL isSuccess = [self writeNewAppData:dataDict];
                 if(isSuccess){
@@ -145,7 +145,7 @@
 }
 
 // 写入应用数据到本地SandBox中
-- (BOOL)writeNewAppData:(NSMutableDictionary *)appData{
+- (BOOL)writeNewAppData:(NSDictionary *)appData{
     
     BaseSandBoxUtil *sandBoxUtil = [[BaseSandBoxUtil alloc] init];
     

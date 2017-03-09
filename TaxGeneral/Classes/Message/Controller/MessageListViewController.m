@@ -216,7 +216,7 @@ static NSString * const reuseIdentifier = @"messageListCell";
 #pragma mark - 判断是否登录，及跳转登录
 #pragma mark 判断是否登录了
 -(BOOL)isLogin{
-    NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:@"userSuccess"];
+    NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS];
     if(nil != userDict){
         return YES;
     }else{

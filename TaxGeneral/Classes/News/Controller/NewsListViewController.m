@@ -23,6 +23,7 @@
 @property (nonatomic, assign) int pageNo;               // 页码值
 @property (nonatomic, assign) int totalPage;            // 最大页
 @property (nonatomic, assign) int refreshCount;         // 刷新条数
+@property (nonatomic, strong) NewsUtil *newsUtil;
 
 @end
 
@@ -33,6 +34,9 @@ static int const pageSize = 10;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    _pageNo = 1;
+    _newsUtil = [[NewsUtil alloc] init];
     
     MainTabBarController *mainTabBarController = (MainTabBarController *)self.tabBarController;
     mainTabBarController.customDelegate = self;
@@ -48,8 +52,43 @@ static int const pageSize = 10;
     // 设置下拉刷新
     self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(loadNewData)];
     
-    // 马上进入刷新状态
-    [self.tableView.mj_header beginRefreshing];
+    // 获取数据
+    NSMutableDictionary *dataDict = [_newsUtil loadData];
+    if(dataDict != nil){
+        [self handleDataDict:dataDict];// sandBox存在则进行处理加工数据
+    }else{
+        [self.tableView.mj_header beginRefreshing];// 进行查询数据
+    }
+}
+
+#pragma mark - 处理数据
+- (void)handleDataDict:(NSMutableDictionary *)dataDict{
+    _data = [[NSMutableArray alloc] init];
+    
+    _totalPage = [[dataDict objectForKey:@"totalPage"] intValue];
+    
+    NSDictionary *loopDict = [dataDict objectForKey:@"loopResult"];
+    NSArray *titles = [loopDict objectForKey:@"titles"];
+    NSArray *images = [loopDict objectForKey:@"images"];
+    NSArray *urls = [loopDict objectForKey:@"urls"];
+    if(_loopView == nil){
+        _loopView = [[NewsLoopView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.width/1.8) titles:titles images:images urls:urls autoPlay:YES delay:10.0];
+    }else{
+        _loopView.titles = titles;
+        _loopView.images = images;
+        _loopView.urls = urls;
+    }
+    _loopView.delegate = self;
+    self.tableView.tableHeaderView = _loopView;
+    
+    NSArray *newsData = [dataDict objectForKey:@"newsResult"];
+    for(NSDictionary *newsDict in newsData){
+        NewsModel *model = [NewsModel createWithDict:newsDict];
+        [_data addObject:model];
+    }
+    
+    [self.tableView reloadData];
+    
 }
 
 #pragma mark - 下拉刷新数据
@@ -58,7 +97,7 @@ static int const pageSize = 10;
     _tempData = [NSMutableArray arrayWithArray:_data];
     _data = [[NSMutableArray alloc] init];
     
-    [NewsUtil initDataWithPageSize:pageSize dataBlock:^(NSDictionary *dataDict) {
+    [_newsUtil initDataWithPageSize:pageSize dataBlock:^(NSDictionary *dataDict) {
         _pageNo = 1;
         _totalPage = [[dataDict objectForKey:@"totalPage"] intValue];
         
@@ -111,7 +150,7 @@ static int const pageSize = 10;
 - (void)loadMoreData{
     _pageNo++;
     
-    [NewsUtil moreDataWithPageNo:+_pageNo pageSize:pageSize dataBlock:^(NSArray *dataArray) {
+    [_newsUtil moreDataWithPageNo:+_pageNo pageSize:pageSize dataBlock:^(NSArray *dataArray) {
         for(NSDictionary *dataDict in dataArray){
             NewsModel *model = [NewsModel createWithDict:dataDict];
             [_data addObject:model];
@@ -232,7 +271,7 @@ static int const pageSize = 10;
     }
     
     // 3.设置背景
-    label.backgroundColor = [UIColor colorWithRed:244.0f/255.0f green:151.0f/255.0f blue:42.0f/255.0f alpha:1.0f];
+    label.backgroundColor = WBColor(242.0, 162.0, 46.0, 1.0f);
     label.textAlignment = NSTextAlignmentCenter;
     label.textColor = [UIColor whiteColor];
     label.font = [UIFont systemFontOfSize:14.0f];
@@ -265,43 +304,6 @@ static int const pageSize = 10;
     }];
 }
 
-#pragma mark - 初始化数据
-/*
--(void)initNewsData{
-    // 参数
-    NSMutableDictionary *parametersDict = [[NSMutableDictionary alloc] init];
-    [parametersDict setObject:[NSNumber numberWithInt:pageSize] forKey:@"pageSize"];
-    NSString *parameters = [BaseDataUtil dataToJsonString:dict];
-    
-    NSDictionary *dd = [NSDictionary dictionaryWithObjectsAndKeys:parameters, @"msg", nil];
-    NSString *url = @"public/photonews/index";
-    
-    [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:nil success:^(NSDictionary *responseDic) {
-        // 获取请求状态值
-        DLog(@"statusCode = %@", [responseDic objectForKey:@"statusCode"]);
-        NSString *statusCode = [responseDic objectForKey:@"statusCode"];
-        if([statusCode isEqualToString:@"00"]){
-            DLog(@"请求报文成功，开始进行处理...");
-            NSDictionary *businessDict = [responseDic objectForKey:@"businessData"];
-            NSDictionary *loopData = [businessDict objectForKey:@"loopData"];
-            NSDictionary *newsData = [businessDict objectForKey:@"newsData"];
-            NSMutableArray *newsResult = [newsData objectForKey:@"results"];
-            
-            _data = [[NSMutableArray alloc] init];
-            
-            for(NSDictionary *dict in newsResult){
-                NewsModel *model = [NewsModel createWithDict:dict];
-                [_data addObject:model];
-            }
-            DLog(@"——data size %lu", (unsigned long)_data.count);
-            [self.tableView reloadData];
-        }
-    } failure:^(NSString *error) {
-        // 请求报文失败
-        DLog(@"%@", error);
-    }];
-}
-*/
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
