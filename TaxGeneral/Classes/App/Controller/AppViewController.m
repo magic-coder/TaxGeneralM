@@ -109,7 +109,7 @@
     }else if([cell.titleLabel.text isEqualToString:@"工作安排"]){
         url = [NSString stringWithFormat:@"%@public/workschedule/index", SERVER_URL];
     }else if([cell.titleLabel.text isEqualToString:@"地税文化"]){
-        url = [NSString stringWithFormat:@"%@public/workschedule/index", SERVER_URL];
+        url = [NSString stringWithFormat:@"%@public/taxculture/index", SERVER_URL];
     }else if([cell.titleLabel.text isEqualToString:@"通讯录"]){
         url = [NSString stringWithFormat:@"%@litter/initLitter", SERVER_URL];
     }else{
