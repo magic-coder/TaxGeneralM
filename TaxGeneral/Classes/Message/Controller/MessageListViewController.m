@@ -11,6 +11,7 @@
 #import "MessageListUtil.h"
 #import "LoginViewController.h"
 #import "YZRefreshHeader.h"
+#import "MJRefresh.h"
 
 #import "ChatViewController.h"
 #import "MessageDetailViewController.h"
@@ -21,16 +22,23 @@
 */
 @interface MessageListViewController ()
 
+@property (nonatomic, strong) NSMutableArray *data;             // 消息列表数据
 @property (nonatomic, strong) UIImageView *topLogoImageView;    // 顶部回弹logo视图
+@property (nonatomic, assign) int pageNo;                       // 页码值
+@property (nonatomic, assign) int totalPage;                    // 最大页
+@property (nonatomic, strong) MessageListUtil *msgListUtil;
 
 @end
 
 @implementation MessageListViewController
 
 static NSString * const reuseIdentifier = @"messageListCell";
+static int const pageSize = 15;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    _data = [[NSMutableArray alloc] init];
+    _msgListUtil = [[MessageListUtil alloc] init];
     
     [self.view setBackgroundColor:DEFAULT_BACKGROUND_COLOR];
     [self.tableView setBackgroundColor:[UIColor whiteColor]];
@@ -41,7 +49,12 @@ static NSString * const reuseIdentifier = @"messageListCell";
     
     self.title = @"消息";
     
-    [self autoLoadData];
+    // 判断是否登录，若没登录则返回登录页面
+    if([self isLogin]){
+        [self autoLoadData];
+    }else{
+        [self goToLogin];
+    }
 }
 
 #pragma mark - 视图即将显示时调用
@@ -52,12 +65,17 @@ static NSString * const reuseIdentifier = @"messageListCell";
     if([self isLogin]){
         // 先判断角标
         UITabBarItem * item = [self.tabBarController.tabBar.items objectAtIndex:2];
-        if(item.badgeValue != nil){
+        if(item.badgeValue != nil || [self.title isEqualToString:@"未连接"]){
             [self autoLoadData];
             item.badgeValue = nil;
+        }else{
+            NSDictionary *dataDict = [_msgListUtil loadMsgDataWithFile];
+            if(dataDict != nil){
+                [self handleDataDict:dataDict];// 数据处理
+            }else{
+                [self autoLoadData];
+            }
         }
-        
-        _data = [MessageListUtil getMessageList];
         [self.tableView reloadData];
     }else{
         [self goToLogin];
@@ -112,9 +130,11 @@ static NSString * const reuseIdentifier = @"messageListCell";
 #pragma mark - <UITableViewDelegate>代理方法
 #pragma mark 每行是否可以进行编辑
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
+    /*
     if(indexPath.section == 0){
         return NO;
     }
+    */
     return YES;
 }
 
@@ -154,7 +174,9 @@ static NSString * const reuseIdentifier = @"messageListCell";
     
     // 获取当前点击的cell
     MessageListViewCell *cell = (MessageListViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-    messageDetailVC.title = cell.messageListModel.name;
+    messageDetailVC.title = cell.messageListModel.name; // 设置详细视图标题
+    messageDetailVC.sourceCode = cell.messageListModel.sourceCode;
+    messageDetailVC.pushUserCode = cell.messageListModel.pushUserCode;
     
 }
 
@@ -204,13 +226,39 @@ static NSString * const reuseIdentifier = @"messageListCell";
     [titleLabel addSubview:loading];
     
     self.navigationItem.titleView = titleView;
-    
-    // 模拟延迟加载数据，因此2秒后才调用（真实开发中，可以移除这段gcd代码）
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        DLog(@"刷新成功");
+    _pageNo = 1;
+    [_msgListUtil loadMsgDataWithPageNo:_pageNo pageSize:pageSize dataBlock:^(NSDictionary *dataDict) {
+        [self handleDataDict:dataDict];// 数据处理
+        
         self.navigationItem.titleView = nil;
         self.title = @"消息";
-    });
+        [self.tableView reloadData];
+    } failed:^(NSString *error) {
+        self.navigationItem.titleView = nil;
+        self.title = @"未连接";
+        [YZProgressHUD showHUDView:self.navigationController.view Mode:SHOWMODE Text:error];
+    }];
+}
+
+#pragma mark - 处理数据
+-(void)handleDataDict:(NSDictionary *)dict{
+    _data = [[NSMutableArray alloc] init];
+    
+    _totalPage = [[dict objectForKey:@"totalPage"] intValue];
+    NSArray *results = [dict objectForKey:@"results"];
+    NSMutableArray *sysData = [[NSMutableArray alloc] init];
+    NSMutableArray *userData = [[NSMutableArray alloc] init];
+    for(NSDictionary *dict in results){
+        MessageListModel *model = [MessageListModel createWithDict:dict];
+        if(![model.sourceCode isEqualToString:@"01"]){
+            [sysData addObject:model];
+        }else{
+            [userData addObject:model];
+        }
+    }
+    [_data addObject:sysData];
+    [_data addObject:userData];
+    
 }
 
 #pragma mark - 判断是否登录，及跳转登录

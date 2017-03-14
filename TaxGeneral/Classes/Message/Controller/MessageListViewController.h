@@ -10,7 +10,6 @@
 
 @interface MessageListViewController : UITableViewController
 
-@property (nonatomic, strong) NSMutableArray *data;      // 消息列表数据
-
 - (void)autoLoadData;   // 自动请求刷新
+
 @end

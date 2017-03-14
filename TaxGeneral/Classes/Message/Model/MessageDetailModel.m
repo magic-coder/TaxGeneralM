@@ -22,9 +22,9 @@
 
 +(MessageDetailModel *)createWithDict:(NSDictionary *)dict{
     MessageDetailModel *model = [[MessageDetailModel alloc] init];
-    model.title = [dict objectForKey:@"title"];
-    model.date = [dict objectForKey:@"date"];
-    model.content = [dict objectForKey:@"content"];
+    model.title = [dict objectForKey:@"pushtitle"];
+    model.date = [dict objectForKey:@"pushdate"];
+    model.content = [dict objectForKey:@"pushcontent"];
     model.url = [dict objectForKey:@"url"];
     
     return model;

@@ -9,7 +9,7 @@
 #import "MessageListModel.h"
 
 @implementation MessageListModel
-
+/*
 + (NSDictionary *)mj_replacedKeyFromPropertyName{
     return @{
              @"avatar"  :   @"avatar",
@@ -18,28 +18,30 @@
              @"date"    :   @"date"
              };
 }
-
-/*
-+ (MessageListModel *)createWithAvatar:(NSString *)avatar name:(NSString *)name message:(NSString *)message date:(NSString *)date{
-    MessageListModel *model = [[MessageListModel alloc] init];
-    
-    model.avatar = avatar;
-    model.name = name;
-    model.message = message;
-    model.date = date;
-    return model;
-}
-
-+(MessageListModel *)createWithDict:(NSDictionary *)dict{
-    MessageListModel *model = [[MessageListModel alloc] init];
-    
-    model.avatar = [dict objectForKey:@"avatar"];
-    model.name = [dict objectForKey:@"name"];
-    model.message = [dict objectForKey:@"message"];
-    model.date = [dict objectForKey:@"date"];
-    
-    return model;
-}
 */
+
++ (MessageListModel *)createWithDict:(NSDictionary *)dict{
+    MessageListModel *model = [[MessageListModel alloc] init];
+    
+    NSString *sourceCode = [dict objectForKey:@"sourcecode"];
+    model.sourceCode = sourceCode;
+    if([sourceCode isEqualToString:@"01"]){// 一般用户推送
+        model.avatar = @"msg_head";
+        model.name = [dict objectForKey:@"taxofficialname"];
+    }else if([sourceCode isEqualToString:@"02"]){
+        model.avatar = @"msg_notification";
+        model.name = [dict objectForKey:@"sourcename"];
+    }else{
+        model.avatar = @"msg_information";
+        model.name = [dict objectForKey:@"sourcename"];
+    }
+    
+    model.pushUserCode = [dict objectForKey:@"pushusercode"];
+    model.message = [dict objectForKey:@"pushcontent"];
+    model.date = [[dict objectForKey:@"pushdate"] substringWithRange:NSMakeRange(0, 16)];
+    model.unReadCount = [dict objectForKey:@"unreadcount"];
+    
+    return model;
+}
 
 @end

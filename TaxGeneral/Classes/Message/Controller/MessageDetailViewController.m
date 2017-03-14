@@ -13,16 +13,24 @@
 
 @interface MessageDetailViewController ()
 
+@property (nonatomic, strong) NSMutableArray *data;             // 消息数据内容列表
+@property (nonatomic, assign) int pageNo;                       // 页码值
+@property (nonatomic, assign) int totalPage;                    // 最大页
+@property (nonatomic, strong) MessageDetailUtil *msgDetailUtil;
+
 @end
 
 @implementation MessageDetailViewController
 
 static NSString * const reuseIdentifier = @"messageDetailCell";
+static int const pageSize = 15;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _data = [MessageDetailUtil getDetailData];
+    _msgDetailUtil = [[MessageDetailUtil alloc] init];
+    
+    [self initData];
     
     [self.view setBackgroundColor:DEFAULT_BACKGROUND_COLOR];
     [self.tableView setBackgroundColor:DEFAULT_BACKGROUND_COLOR];
@@ -31,8 +39,6 @@ static NSString * const reuseIdentifier = @"messageDetailCell";
     
     [self.tableView registerClass:[MessageDetailViewCell class] forCellReuseIdentifier:reuseIdentifier];
     [self.tableView setSeparatorStyle: UITableViewCellSeparatorStyleNone];
-    
-    [self reloadAfterMessage:NO];
     
 }
 
@@ -96,6 +102,31 @@ static NSString * const reuseIdentifier = @"messageDetailCell";
             [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:show];
         }
     });
+}
+
+#pragma mark - 初始化数据
+- (void)initData{
+    _pageNo = 1;
+    _data = [[NSMutableArray alloc] init];
+    
+    NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
+    [param setObject:[NSNumber numberWithInt:_pageNo] forKey:@"pageNo"];
+    [param setObject:[NSNumber numberWithInt:pageSize] forKey:@"pageSize"];
+    [param setObject:_sourceCode forKey:@"sourcecode"];
+    [param setObject:_pushUserCode forKey:@"pushusercode"];
+    
+    [_msgDetailUtil loadMsgDataWithParam:param dataBlock:^(NSDictionary *dataDict) {
+        _totalPage = [[dataDict objectForKey:@"totalPage"] intValue];
+        NSArray *results = [dataDict objectForKey:@"results"];
+        for(NSDictionary *dict in results){
+            MessageDetailModel *model = [MessageDetailModel createWithDict:dict];
+            [_data addObject:model];
+        }
+        [self.tableView reloadData];
+        [self reloadAfterMessage:NO];
+    } failed:^(NSString *error) {
+        DLog(@"%@",error);
+    }];
 }
 
 - (void)didReceiveMemoryWarning {

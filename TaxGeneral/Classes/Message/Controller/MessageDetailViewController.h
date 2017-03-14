@@ -10,6 +10,7 @@
 
 @interface MessageDetailViewController : UITableViewController
 
-@property (nonatomic, strong) NSMutableArray *data;      // 消息数据内容列表
+@property (nonatomic, strong) NSString *sourceCode;
+@property (nonatomic, strong) NSString *pushUserCode;
 
 @end

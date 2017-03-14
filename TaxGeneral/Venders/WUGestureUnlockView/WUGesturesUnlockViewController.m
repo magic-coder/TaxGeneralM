@@ -13,6 +13,7 @@
 #import "MainTabBarController.h"
 #import "LoginViewController.h"
 #import "SettingUtil.h"
+#import "AccountUtil.h"
 
 #define GesturesPassword @"gesturespassword"
 
@@ -185,28 +186,31 @@
         if (errorCount - 1 == 0) {//你已经输错五次了！ 退出登陆！
             [YZAlertView showAlertWith:self title:@"手势密码已失效" message:@"请注销后，重新登录！" callbackBlock:^(NSInteger btnIndex) {
                 errorCount = 5;
-                
-                [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"gesturespassword"];
-                [[NSUserDefaults standardUserDefaults] removeObjectForKey:LOGIN_SUCCESS];
-                [[SettingUtil alloc] removeSettingData];
-                [[SettingUtil alloc] initSettingData];
-                
-                LoginViewController *loginVC = [[LoginViewController alloc] init];
-                loginVC.isLogin = YES;
-                if(_unlockType == WUUnlockTypeValidatePwd){
-                    loginVC.selectedIndex = 3;
-                }
-                
-                CATransition *animation = [CATransition animation];
-                animation.duration = 1.0f;
-                animation.timingFunction = UIViewAnimationCurveEaseInOut;
-                animation.type = @"rippleEffect";
-                //animation.type = kCATransitionMoveIn;
-                animation.subtype = kCATransitionFromTop;
-                [self.view.window.layer addAnimation:animation forKey:nil];
-                
-                [self presentViewController:loginVC animated:YES completion:nil];
-                
+                // 注销方法
+                [YZProgressHUD showHUDView:self.view Mode:LOCKMODE Text:@"注销中..."];
+                [[AccountUtil alloc] accountLogout:^{
+                    [YZProgressHUD hiddenHUDForView:self.view];
+                    
+                    LoginViewController *loginVC = [[LoginViewController alloc] init];
+                    loginVC.isLogin = YES;
+                    if(_unlockType == WUUnlockTypeValidatePwd){
+                        loginVC.selectedIndex = 3;
+                    }
+                    
+                    CATransition *animation = [CATransition animation];
+                    animation.duration = 1.0f;
+                    animation.timingFunction = UIViewAnimationCurveEaseInOut;
+                    animation.type = @"rippleEffect";
+                    //animation.type = kCATransitionMoveIn;
+                    animation.subtype = kCATransitionFromTop;
+                    [self.view.window.layer addAnimation:animation forKey:nil];
+                    
+                    [self presentViewController:loginVC animated:YES completion:nil];
+                    
+                } failed:^(NSString *error) {
+                    [YZProgressHUD hiddenHUDForView:self.view];
+                    [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:error];
+                }];
             } cancelButtonTitle:@"重新登录" destructiveButtonTitle:nil otherButtonTitles: nil];
             return;
         }

@@ -11,6 +11,8 @@
 
 @interface MessageListUtil : NSObject
 
-+ (NSMutableArray *)getMessageList;
+- (NSDictionary *)loadMsgDataWithFile;
+
+- (void)loadMsgDataWithPageNo:(int)pageNo pageSize:(int)pageSize dataBlock:(void(^)(NSDictionary *dataDict))dataBlock failed:(void(^)(NSString *error))failed;
 
 @end

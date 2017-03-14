@@ -53,17 +53,11 @@
             NSDictionary *newsData = [businessData objectForKey:@"newsData"];
             NSArray *newsResult = [newsData objectForKey:@"results"];
             NSString *totalPage = [newsData objectForKey:@"totalPage"];
-            NSString *totalRecord = [newsData objectForKey:@"totalRecord"];
             
-            NSDictionary *resDict = [NSDictionary dictionaryWithObjectsAndKeys:loopResult, @"loopResult", newsResult, @"newsResult", totalPage, @"totalPage", totalRecord, @"totalRecord", nil];
+            NSDictionary *resDict = [NSDictionary dictionaryWithObjectsAndKeys:loopResult, @"loopResult", newsResult, @"newsResult", totalPage, @"totalPage", nil];
             
             BaseSandBoxUtil *sandBoxUtil = [[BaseSandBoxUtil alloc] init];
-            BOOL res = [sandBoxUtil writeData:resDict fileName:FILE_NAME];
-            if(res){
-                DLog(@"NewsData数据写入SandBox成功");
-            }else{
-                DLog(@"NewsData数据写入SandBox失败");
-            }
+            [sandBoxUtil writeData:resDict fileName:FILE_NAME];
             dataBlock(resDict);
         }
     } failure:^(NSString *error) {

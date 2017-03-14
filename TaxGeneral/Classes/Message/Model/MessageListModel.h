@@ -11,13 +11,15 @@
 @interface MessageListModel : NSObject
 
 /************************ 属性 ************************/
-@property (nonatomic, strong) NSString *avatar;      // 头像
+@property (nonatomic, strong) NSString *sourceCode;     // 来源代码
+@property (nonatomic, strong) NSString *pushUserCode;   // 推送用户代码
+@property (nonatomic, strong) NSString *avatar;         // 头像
 @property (nonatomic, strong) NSString *name;           // 名称
 @property (nonatomic, strong) NSString *message;        // 消息
 @property (nonatomic, strong) NSString *date;           // 时间
+@property (nonatomic, strong) NSString *unReadCount;    // 未读条数
 
 /************************ 类方法 ************************/
-//+ (MessageListModel *)createWithAvatar:(NSString *)avatar name:(NSString *)name message:(NSString *)message date:(NSString *)date;
-//+ (MessageListModel *)createWithDict:(NSDictionary *)dict;
++ (MessageListModel *)createWithDict:(NSDictionary *)dict;
 
 @end

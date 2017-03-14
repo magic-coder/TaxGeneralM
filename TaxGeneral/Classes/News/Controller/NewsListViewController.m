@@ -88,6 +88,9 @@ static int const pageSize = 10;
     }
     
     [self.tableView reloadData];
+    
+    // 设置上拉加载
+    self.tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMoreData)];
 }
 
 #pragma mark - 下拉刷新数据
