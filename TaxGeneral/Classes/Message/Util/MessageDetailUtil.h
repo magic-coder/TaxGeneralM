@@ -10,6 +10,8 @@
 
 @interface MessageDetailUtil : NSObject
 
+- (NSDictionary *)loadMsgDataWithFile;
+
 - (void)loadMsgDataWithParam:(NSDictionary *)param dataBlock:(void (^)(NSDictionary *dataDict))dataBlock failed:(void (^)(NSString *error))failed;
 
 @end

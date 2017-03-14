@@ -25,7 +25,7 @@
     model.title = [dict objectForKey:@"pushtitle"];
     model.date = [dict objectForKey:@"pushdate"];
     model.content = [dict objectForKey:@"pushcontent"];
-    model.url = [dict objectForKey:@"url"];
+    model.url = [dict objectForKey:@"detailurl"];
     
     return model;
 }

@@ -13,6 +13,11 @@
 
 @implementation MessageDetailUtil
 
+- (NSDictionary *)loadMsgDataWithFile{
+    BaseSandBoxUtil *sandBoxUtil = [[BaseSandBoxUtil alloc] init];
+    return [sandBoxUtil loadDataWithFileName:FILE_NAME];
+}
+
 - (void)loadMsgDataWithParam:(NSDictionary *)param dataBlock:(void (^)(NSDictionary *))dataBlock failed:(void (^)(NSString *))failed{
     
     NSString *jsonString = [BaseDataUtil dataToJsonString:param];
@@ -31,7 +36,7 @@
             NSArray *results = [businessData objectForKey:@"results"];
             
             NSDictionary *resDict = [NSDictionary dictionaryWithObjectsAndKeys:totalPage, @"totalPage", results, @"results", nil];
-            if([[param objectForKey:@"pageNo"] intValue] == 1){
+            if([[param objectForKey:@"pageNo"] intValue] == [totalPage intValue]){// 逆向思维：当页码值为最大时进行写入
                 BaseSandBoxUtil *sandBoxUtil = [[BaseSandBoxUtil alloc] init];
                 [sandBoxUtil writeData:resDict fileName:FILE_NAME];
             }
@@ -40,7 +45,6 @@
         }else{
             failed(@"收取消息失败！");
         }
-        dataBlock(responseDic);
     } failure:^(NSString *error) {
         failed(error);
     }];

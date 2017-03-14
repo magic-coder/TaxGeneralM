@@ -196,7 +196,7 @@
         [vc presentViewController:alert animated:YES completion:NULL];
     }
 }
-#pragma mark 在发送请求之前，决定是否跳转的代理
+#pragma mark 在发送请求(request)之前，决定是否跳转的代理
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler{
     BOOL decision = YES;
     if ([self.delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
@@ -210,6 +210,24 @@
         decisionHandler(WKNavigationActionPolicyAllow);// 允许跳转
     }
 }
+#pragma mark 在收到响应(response)之后，决定是否跳转的代理
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler{
+    DLog(@"%@",navigationResponse.response.URL);
+    BOOL decision = YES;
+    /*
+    if ([self.delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
+        //decision = [self.delegate webView:self shouldStartLoadWithRequest:navigationAction.request navigationType:(YZWebViewNavigationType)navigationAction.navigationType];
+    }
+    */
+    if (!decision) {
+        [[UIApplication sharedApplication] openURL:navigationResponse.response.URL];
+        decisionHandler(WKNavigationResponsePolicyCancel);// 不允许跳转
+        return;
+    }else{
+        decisionHandler(WKNavigationResponsePolicyAllow);// 允许跳转
+    }
+}
+
 #pragma mark 页面开始加载时调用
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:( WKNavigation *)navigation{
     if ([self.delegate respondsToSelector:@selector(webViewDidStartLoad:)]) {
@@ -264,6 +282,7 @@
         return YES;
     }
 }
+
 #pragma mark 页面开始加载时调用
 - (void)webViewDidStartLoad:(UIWebView *)webView{
     if ([self.delegate respondsToSelector:@selector(webViewDidStartLoad:)]) {

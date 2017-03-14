@@ -10,7 +10,8 @@
 
 @interface MessageDetailViewController : UITableViewController
 
-@property (nonatomic, strong) NSString *sourceCode;
-@property (nonatomic, strong) NSString *pushUserCode;
+@property (nonatomic, assign) int totalPage;            // 最大页
+@property (nonatomic, strong) NSString *sourceCode;     // 来源代码
+@property (nonatomic, strong) NSString *pushUserCode;   // 推送人代码
 
 @end

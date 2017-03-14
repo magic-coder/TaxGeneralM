@@ -32,6 +32,8 @@
             [[BaseSandBoxUtil alloc] removeFileName:@"appData.plist"];
             // 删除msg列表信息
             [[BaseSandBoxUtil alloc] removeFileName:@"msgData.plist"];
+            // 删除msg详细列表息
+            [[BaseSandBoxUtil alloc] removeFileName:@"msgDetailData.plist"];
             // 删除设置信息、并重置设置
             [[SettingUtil alloc] removeSettingData];
             [[SettingUtil alloc] initSettingData];

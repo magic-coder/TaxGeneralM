@@ -8,14 +8,13 @@
 
 #import "MessageDetailViewController.h"
 #import "MessageDetailViewCell.h"
-
 #import "MessageDetailUtil.h"
+#import "YZRefreshHeader.h"
 
 @interface MessageDetailViewController ()
 
 @property (nonatomic, strong) NSMutableArray *data;             // 消息数据内容列表
 @property (nonatomic, assign) int pageNo;                       // 页码值
-@property (nonatomic, assign) int totalPage;                    // 最大页
 @property (nonatomic, strong) MessageDetailUtil *msgDetailUtil;
 
 @end
@@ -23,14 +22,13 @@
 @implementation MessageDetailViewController
 
 static NSString * const reuseIdentifier = @"messageDetailCell";
-static int const pageSize = 15;
+static int const pageSize = 10;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    _data = [[NSMutableArray alloc] init];
     _msgDetailUtil = [[MessageDetailUtil alloc] init];
-    
-    [self initData];
     
     [self.view setBackgroundColor:DEFAULT_BACKGROUND_COLOR];
     [self.tableView setBackgroundColor:DEFAULT_BACKGROUND_COLOR];
@@ -39,6 +37,13 @@ static int const pageSize = 15;
     
     [self.tableView registerClass:[MessageDetailViewCell class] forCellReuseIdentifier:reuseIdentifier];
     [self.tableView setSeparatorStyle: UITableViewCellSeparatorStyleNone];
+    
+    [self autoLoadData];
+    
+    if(_totalPage > 1){
+        // 设置下拉刷新
+        self.tableView.mj_header = [YZRefreshHeader headerWithRefreshingTarget:self refreshingAction:@selector(loadMoreData)];
+    }
     
 }
 
@@ -94,6 +99,51 @@ static int const pageSize = 15;
     }
 }
 
+#pragma mark - 加载数据
+- (void)autoLoadData{
+    
+    // 从本地缓存中获取信息数据
+    NSDictionary *dataDict = [_msgDetailUtil loadMsgDataWithFile];
+    if(dataDict != nil){
+        [self handleDataDict:dataDict];// 数据处理
+    }
+    
+    // 从数据库获取
+    _pageNo = _totalPage;
+    NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
+    [param setObject:[NSNumber numberWithInt:_pageNo] forKey:@"pageNo"];
+    [param setObject:[NSNumber numberWithInt:pageSize] forKey:@"pageSize"];
+    [param setObject:_sourceCode forKey:@"sourcecode"];
+    [param setObject:_pushUserCode forKey:@"pushusercode"];
+    
+    [_msgDetailUtil loadMsgDataWithParam:param dataBlock:^(NSDictionary *dataDict) {
+        [self handleDataDict:dataDict];// 数据处理
+        [self.tableView reloadData];
+        [self reloadAfterMessage:NO];
+    } failed:^(NSString *error) {
+        DLog(@"%@",error);
+    }];
+}
+
+#pragma mark - 加载更多方法
+- (void)loadMoreData{
+    sleep(1);
+    // 结束刷新
+    [self.tableView.mj_header endRefreshing];
+}
+
+#pragma mark - 处理数据
+-(void)handleDataDict:(NSDictionary *)dict{
+    _data = [[NSMutableArray alloc] init];
+    
+    NSArray *results = [dict objectForKey:@"results"];
+    
+    for(NSDictionary *dict in results){
+        MessageDetailModel *model = [MessageDetailModel createWithDict:dict];
+        [_data addObject:model];
+    }
+}
+
 #pragma mark - 视图滚动到最底部
 - (void)reloadAfterMessage:(BOOL)show {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -102,31 +152,6 @@ static int const pageSize = 15;
             [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:show];
         }
     });
-}
-
-#pragma mark - 初始化数据
-- (void)initData{
-    _pageNo = 1;
-    _data = [[NSMutableArray alloc] init];
-    
-    NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
-    [param setObject:[NSNumber numberWithInt:_pageNo] forKey:@"pageNo"];
-    [param setObject:[NSNumber numberWithInt:pageSize] forKey:@"pageSize"];
-    [param setObject:_sourceCode forKey:@"sourcecode"];
-    [param setObject:_pushUserCode forKey:@"pushusercode"];
-    
-    [_msgDetailUtil loadMsgDataWithParam:param dataBlock:^(NSDictionary *dataDict) {
-        _totalPage = [[dataDict objectForKey:@"totalPage"] intValue];
-        NSArray *results = [dataDict objectForKey:@"results"];
-        for(NSDictionary *dict in results){
-            MessageDetailModel *model = [MessageDetailModel createWithDict:dict];
-            [_data addObject:model];
-        }
-        [self.tableView reloadData];
-        [self reloadAfterMessage:NO];
-    } failed:^(NSString *error) {
-        DLog(@"%@",error);
-    }];
 }
 
 - (void)didReceiveMemoryWarning {

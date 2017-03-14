@@ -109,6 +109,7 @@
 
 #pragma mark - WebViewDelegate
 -(BOOL)webView:(YZWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(YZWebViewNavigationType)navigationType{
+    DLog(@"Yan -> %@", webView.URL.absoluteString);
     // 如果响应的地址是指定域名，则允许跳转
     if ([webView.URL.absoluteString hasPrefix:@"https://itunes.apple.com"]) {
         return NO;

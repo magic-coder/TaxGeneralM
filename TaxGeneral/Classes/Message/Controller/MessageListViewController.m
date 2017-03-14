@@ -10,7 +10,6 @@
 #import "MessageListViewCell.h"
 #import "MessageListUtil.h"
 #import "LoginViewController.h"
-#import "YZRefreshHeader.h"
 #import "MJRefresh.h"
 
 #import "ChatViewController.h"
@@ -33,7 +32,7 @@
 @implementation MessageListViewController
 
 static NSString * const reuseIdentifier = @"messageListCell";
-static int const pageSize = 15;
+static int const pageSize = 10;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -175,6 +174,9 @@ static int const pageSize = 15;
     // 获取当前点击的cell
     MessageListViewCell *cell = (MessageListViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     messageDetailVC.title = cell.messageListModel.name; // 设置详细视图标题
+    
+    DLog(@"页码值：-> %d",cell.messageListModel.totalPage);
+    messageDetailVC.totalPage = cell.messageListModel.totalPage;
     messageDetailVC.sourceCode = cell.messageListModel.sourceCode;
     messageDetailVC.pushUserCode = cell.messageListModel.pushUserCode;
     

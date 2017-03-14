@@ -25,7 +25,7 @@
     
     NSString *sourceCode = [dict objectForKey:@"sourcecode"];
     model.sourceCode = sourceCode;
-    if([sourceCode isEqualToString:@"01"]){// 一般用户推送
+    if([sourceCode isEqualToString:@"01"]){     // 一般用户推送
         model.avatar = @"msg_head";
         model.name = [dict objectForKey:@"taxofficialname"];
     }else if([sourceCode isEqualToString:@"02"]){
@@ -40,6 +40,7 @@
     model.message = [dict objectForKey:@"pushcontent"];
     model.date = [[dict objectForKey:@"pushdate"] substringWithRange:NSMakeRange(0, 16)];
     model.unReadCount = [dict objectForKey:@"unreadcount"];
+    model.totalPage = [[dict objectForKey:@"detailtotalpage"] intValue];
     
     return model;
 }
