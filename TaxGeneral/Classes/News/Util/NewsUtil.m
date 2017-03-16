@@ -59,6 +59,8 @@
             BaseSandBoxUtil *sandBoxUtil = [[BaseSandBoxUtil alloc] init];
             [sandBoxUtil writeData:resDict fileName:FILE_NAME];
             dataBlock(resDict);
+        }else{
+            failed([responseDic objectForKey:@"msg"]);
         }
     } failure:^(NSString *error) {
         failed(error);

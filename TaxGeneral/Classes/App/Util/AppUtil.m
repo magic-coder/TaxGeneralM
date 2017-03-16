@@ -75,6 +75,8 @@
             [self writeNewAppData:dataDict];
             
             dataBlock([self handleData:dataDict WithType:type]);
+        }else{
+            failed([responseDic objectForKey:@"msg"]);
         }
     } failure:^(NSString *error) {
         failed(error);

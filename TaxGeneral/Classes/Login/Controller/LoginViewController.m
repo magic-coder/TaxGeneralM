@@ -283,10 +283,13 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
                 [self.view.window.layer addAnimation:animation forKey:nil];
                 
                 [self dismissViewControllerAnimated:YES completion:nil];
+            }else{
+                [YZProgressHUD hiddenHUDForView:self.view];
+                [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:[responseDic objectForKey:@"msg"]];
             }
         } failure:^(NSString *error) {
             [YZProgressHUD hiddenHUDForView:self.view];
-            [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:@"用户名或密码错误！"];
+            [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:error];
         }];
     }else{
         [YZProgressHUD hiddenHUDForView:self.view];

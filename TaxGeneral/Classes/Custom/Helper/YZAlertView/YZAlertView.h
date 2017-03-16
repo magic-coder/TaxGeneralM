@@ -11,9 +11,9 @@
 #import <Foundation/Foundation.h>
 
 /**
- * 弹框显示的时间，默认1秒
+ * 弹框显示的时间，默认2秒
  */
-#define AlertViewShowTime 1.0
+#define AlertViewShowTime 2.0
 
 /**
  *  检测系统版本

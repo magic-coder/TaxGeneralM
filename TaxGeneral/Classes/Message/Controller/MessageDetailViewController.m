@@ -11,7 +11,7 @@
 #import "MessageDetailUtil.h"
 #import "YZRefreshHeader.h"
 
-@interface MessageDetailViewController ()
+@interface MessageDetailViewController () <MessageDetailViewCellDelegate>
 
 @property (nonatomic, strong) NSMutableArray *data;             // 消息数据内容列表
 @property (nonatomic, assign) int pageNo;                       // 页码值
@@ -27,18 +27,20 @@ static int const pageSize = 10;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [Variable shareInstance].msgRefresh = YES;
+    
     _data = [[NSMutableArray alloc] init];
     _msgDetailUtil = [[MessageDetailUtil alloc] init];
     
     [self.view setBackgroundColor:DEFAULT_BACKGROUND_COLOR];
     [self.tableView setBackgroundColor:DEFAULT_BACKGROUND_COLOR];
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
-    self.tableView.showsVerticalScrollIndicator = NO;   // 去掉右侧滚动条
+    //self.tableView.showsVerticalScrollIndicator = NO;   // 去掉右侧滚动条
     
     [self.tableView registerClass:[MessageDetailViewCell class] forCellReuseIdentifier:reuseIdentifier];
     [self.tableView setSeparatorStyle: UITableViewCellSeparatorStyleNone];
     
-    [self autoLoadData];
+    [self loadData];
     
     if(_totalPage > 1){
         // 设置下拉刷新
@@ -60,7 +62,8 @@ static int const pageSize = 10;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     MessageDetailViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier forIndexPath:indexPath];
     [cell setMessageDetailModel:[_data objectAtIndex:indexPath.section]];
-    
+    cell.indexPath = indexPath;
+    cell.delegate = self;
     return cell;
 }
 
@@ -99,16 +102,29 @@ static int const pageSize = 10;
     }
 }
 
-#pragma mark - 加载数据
-- (void)autoLoadData{
+#pragma mark - <MessageDetailViewCellDelegate>菜单代理点击方法
+- (void)msgDetailViewCellMenuClicked:(MessageDetailViewCell *)cell type:(MsgDetailViewCellMenuType)type{
     
-    // 从本地缓存中获取信息数据
-    NSDictionary *dataDict = [_msgDetailUtil loadMsgDataWithFile];
-    if(dataDict != nil){
-        [self handleDataDict:dataDict];// 数据处理
+    MessageDetailModel *model = cell.messageDetailModel;
+    
+    if(type == MsgDetailViewCellMenuTypeCopy){
+        UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard]; // 黏贴板
+        NSString *pasteString = [NSString stringWithFormat:@"标题：%@\n时间：%@\n摘要：%@", model.title, model.date, model.content];
+        if(model.url.length > 0){
+            pasteString = [NSString stringWithFormat:@"%@\n链接：%@", pasteString, model.url];
+        }
+        [pasteBoard setString:pasteString];
+        DLog(@"Yan -> 复制内容结果为：%@", pasteString);
     }
-    
-    // 从数据库获取
+    if(type == MsgDetailViewCellMenuTypeDelete){
+        [_data removeObjectAtIndex:cell.indexPath.row];
+        [self.tableView reloadData];
+    }
+}
+
+#pragma mark - 加载数据
+- (void)loadData{
+    // 从服务器获取最新数据
     _pageNo = _totalPage;
     NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
     [param setObject:[NSNumber numberWithInt:_pageNo] forKey:@"pageNo"];
@@ -121,15 +137,39 @@ static int const pageSize = 10;
         [self.tableView reloadData];
         [self reloadAfterMessage:NO];
     } failed:^(NSString *error) {
-        DLog(@"%@",error);
+        [YZProgressHUD showHUDView:self.navigationController.view Mode:SHOWMODE Text:error];
     }];
 }
 
 #pragma mark - 加载更多方法
 - (void)loadMoreData{
-    sleep(1);
-    // 结束刷新
-    [self.tableView.mj_header endRefreshing];
+    _pageNo--;
+    NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
+    [param setObject:[NSNumber numberWithInt:_pageNo] forKey:@"pageNo"];
+    [param setObject:[NSNumber numberWithInt:pageSize] forKey:@"pageSize"];
+    [param setObject:_sourceCode forKey:@"sourcecode"];
+    [param setObject:_pushUserCode forKey:@"pushusercode"];
+    
+    [_msgDetailUtil loadMsgDataWithParam:param dataBlock:^(NSDictionary *dataDict) {
+        // 加载结束
+        [self.tableView.mj_header endRefreshing];
+        if(_pageNo == 1){
+            self.tableView.mj_header = nil;
+        }
+        
+        NSArray *results = [dataDict objectForKey:@"results"];
+        // 逆序小日期在前大日期在后
+        for(int i = (int)results.count - 1; i >= 0 ; i-- ){
+            MessageDetailModel *model = [MessageDetailModel createWithDict:results[i]];
+            [_data insertObject:model atIndex:0];
+        }
+        [self.tableView reloadData];
+    } failed:^(NSString *error) {
+        _pageNo++;
+        // 加载结束
+        [self.tableView.mj_header endRefreshing];
+        [YZProgressHUD showHUDView:self.navigationController.view Mode:SHOWMODE Text:error];
+    }];
 }
 
 #pragma mark - 处理数据

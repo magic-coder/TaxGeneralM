@@ -19,6 +19,8 @@
 @property (nonatomic, strong) UILabel *nameLabel;
 @property (nonatomic, strong) UILabel *dateLabel;
 @property (nonatomic, strong) UILabel *messageLabel;
+@property (nonatomic, strong) UIImageView *redMarkView;
+@property (nonatomic, strong) UILabel *redMark;
 
 @end
 
@@ -34,6 +36,7 @@
         [self addSubview:self.nameLabel];
         [self addSubview:self.dateLabel];
         [self addSubview:self.messageLabel];
+        [self addSubview:self.redMarkView];
     }
     return self;
 }
@@ -52,6 +55,12 @@
     float imageWidth = self.frameHeight * 0.72;
     float space = self.leftFreeSpace;
     [_avatarView setFrame:CGRectMake(space, space, imageWidth, imageWidth)];
+    
+    float redMarkX = space + imageWidth;
+    float redMarkY = space;
+    float redMarkW = 24;
+    float redMarkH = 24;
+    [_redMarkView setFrame:CGRectMake(redMarkX - 12, redMarkY - 12, redMarkW, redMarkH)];
     
     float labelX = space * 2 + imageWidth;
     float labelY = self.frameHeight * 0.135;
@@ -77,6 +86,15 @@
     [_nameLabel setText:_messageListModel.name];
     [_dateLabel setText:_messageListModel.date];
     [_messageLabel setText:_messageListModel.message];
+    
+    
+    _messageListModel.unReadCount = @"1";
+    if([_messageListModel.unReadCount intValue] > 0){
+        _redMarkView.hidden = NO;
+        [_redMark setText:_messageListModel.unReadCount];
+    }else{
+        _redMarkView.hidden = YES;
+    }
     
     [self layoutSubviews];
 }
@@ -170,6 +188,30 @@
         [_messageLabel setFont:[UIFont systemFontOfSize:14]];
     }
     return _messageLabel;
+}
+
+-(UIImageView *)redMarkView{
+    if(_redMarkView == nil){
+        _redMarkView = [[UIImageView alloc] init];
+        [_redMarkView setImage:[UIImage imageNamed:@"msg_red_mark"]];
+        _redMarkView.layer.masksToBounds = YES;
+        _redMarkView.layer.cornerRadius = 12.0f;
+        [_redMarkView addSubview:self.redMark];
+    }
+    return _redMarkView;
+}
+
+- (UILabel *)redMark{
+    if(_redMark == nil){
+        _redMark = [[UILabel alloc] init];
+        [_redMark setFrame:CGRectMake(0, 0, 24, 24)];
+        [_redMark setTextColor:[UIColor whiteColor]];
+        [_redMark setFont:[UIFont boldSystemFontOfSize:12]];
+        [_redMark setTextAlignment:NSTextAlignmentCenter];
+        _redMark.layer.masksToBounds = YES;
+        _redMark.layer.cornerRadius = 12.0f;
+    }
+    return _redMark;
 }
 
 @end

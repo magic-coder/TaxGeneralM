@@ -15,7 +15,8 @@
 
 @interface MessageDetailViewCell()
 
-@property (nonatomic, strong) UIView *baseView;
+//@property (nonatomic, strong) UIView *baseView;
+@property (nonatomic, strong) UIImageView *baseView;
 
 @property (nonatomic, assign) float baseSpace;
 
@@ -37,11 +38,58 @@
 #pragma mark - 初始化加载
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+        self.selectionStyle = UITableViewCellSelectionStyleNone;    // cell点击变色效果
         self.backgroundColor = [UIColor clearColor];
         self.contentView.backgroundColor = [UIColor clearColor];
+        [self addGestureRecognizer: [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressAction:)]];// 添加长按手势方法（长按显示菜单）
         [self.contentView addSubview:self.baseView];
     }
     return self;
+}
+
+#pragma mark - 长按手势方法
+- (void)longPressAction:(UILongPressGestureRecognizer *)longPressGesture{
+    if (longPressGesture.state == UIGestureRecognizerStateBegan) {
+        [self becomeFirstResponder];
+        UIMenuController *menu = [UIMenuController sharedMenuController];
+        UIMenuItem *copyItem = [[UIMenuItem alloc] initWithTitle:@"复制" action:@selector(copyItemClicked:)];
+        UIMenuItem *deleteItem = [[UIMenuItem alloc] initWithTitle:@"删除" action:@selector(deleteItemClicked:)];
+        [menu setMenuItems:[NSArray arrayWithObjects:copyItem, deleteItem, nil]];
+        [menu setTargetRect:self.bounds inView:self];
+        [menu setMenuVisible:YES animated:YES];
+        
+        _baseView.image = [self originImage:[UIImage imageNamed:@"msg_detail_bgHL"] scaleToSize:_baseView.size];
+    }else{
+        _baseView.image = [self originImage:[UIImage imageNamed:@"msg_detail_bg"] scaleToSize:_baseView.size];
+    }
+}
+
+#pragma mark 长按处理Action事件
+-(BOOL)canPerformAction:(SEL)action withSender:(id)sender{
+    if(action ==@selector(copyItemClicked:)){
+        return YES;
+    }else if (action==@selector(deleteItemClicked:)){
+        return YES;
+    }
+    return [super canPerformAction:action withSender:sender];
+}
+#pragma mark 成为第一响应者方法
+- (BOOL)canBecomeFirstResponder{
+    return YES;
+}
+
+#pragma mark 菜单meun对应的方法实现
+- (void)copyItemClicked:(id)sender{
+    // 如果协议响应了msgDetailViewCellMenuClicked:type::方法
+    if([_delegate respondsToSelector:@selector(msgDetailViewCellMenuClicked:type:)]){
+        [_delegate msgDetailViewCellMenuClicked:self type:MsgDetailViewCellMenuTypeCopy];
+    }
+}
+- (void)deleteItemClicked:(id)sender{
+    // 如果协议响应了msgDetailViewCellMenuClicked:type::方法
+    if([_delegate respondsToSelector:@selector(msgDetailViewCellMenuClicked:type:)]){
+        [_delegate msgDetailViewCellMenuClicked:self type:MsgDetailViewCellMenuTypeDelete];
+    }
 }
 
 #pragma mark - 设置model的值并添加组件
@@ -147,20 +195,45 @@
     
     // 设置基本视图的frame
     _baseView.frame = CGRectMake(15, 0, WIDTH_SCREEN-30, cellHeight);
+    [_baseView setImage:[self originImage:[UIImage imageNamed:@"msg_detail_bg"] scaleToSize:_baseView.frame.size]];
     
     // 点击效果
+    /*
     UIView *backView = [[UIView alloc] initWithFrame:_baseView.frame];
     self.selectedBackgroundView = backView;
     [backView.layer setCornerRadius:5.0f];
-    self.selectedBackgroundView.backgroundColor = DEFAULT_SELECTED_GRAY_COLOR;
+    */
+    //self.selectedBackgroundView.backgroundColor = [UIColor redColor];
     
 }
 
 #pragma mark - Common Getter and Setter
+/*
 - (UIView *)baseView{
     if(_baseView == nil){
         _baseView = [[UIView alloc] init];
         _baseView.backgroundColor = [UIColor whiteColor];
+        _baseView.layer.masksToBounds = YES;
+        [_baseView.layer setCornerRadius:5.0f];
+        
+        [_baseView addSubview:self.titleLabel];
+        [_baseView addSubview:self.dateLabel];
+        [_baseView addSubview:self.firstLine];
+        [_baseView addSubview:self.abstractLabel];
+        [_baseView addSubview:self.contentLabel];
+        [_baseView addSubview:self.secondLine];
+        [_baseView addSubview:self.detailLabel];
+        [_baseView addSubview:self.arrowImageView];
+    }
+    
+    return _baseView;
+}
+*/
+
+-(UIImageView *)baseView{
+    if(_baseView == nil){
+        _baseView = [[UIImageView alloc] init];
+        _baseView.layer.masksToBounds = YES;
         [_baseView.layer setCornerRadius:5.0f];
         
         [_baseView addSubview:self.titleLabel];
@@ -256,6 +329,15 @@
         _arrowImageView.image = [UIImage imageNamed:@"msg_right_arrow"];
     }
     return _arrowImageView;
+}
+
+#pragma mark - 根据视图的大小来计算图片的大小
+-(UIImage *)originImage:(UIImage *)image scaleToSize:(CGSize)size{
+    UIGraphicsBeginImageContext(size);
+    [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
+    UIImage *scaledImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return scaledImage;
 }
 
 /**

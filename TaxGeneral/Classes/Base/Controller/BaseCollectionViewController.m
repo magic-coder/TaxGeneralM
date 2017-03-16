@@ -48,7 +48,7 @@ static NSString * const reusableView = @"reusableView";
     //self.collectionView.backgroundColor = DEFAULT_BACKGROUND_COLOR;
     
     self.collectionView.alwaysBounceVertical = NO;// 总是可垂直滑动
-    self.collectionView.showsVerticalScrollIndicator = NO; // 隐藏垂直滚动条
+    //self.collectionView.showsVerticalScrollIndicator = NO; // 隐藏垂直滚动条
     
     // Register cell classes
     [self.collectionView registerClass:[BaseCollectionViewCell class] forCellWithReuseIdentifier:reuseBaseIdentifier];
@@ -98,7 +98,7 @@ static NSString * const reusableView = @"reusableView";
             [groupAll.items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 BaseCollectionModelItem *allItem = (BaseCollectionModelItem *)obj;
                 for(BaseCollectionModelItem *mineObj in groupMine.items){
-                    if([mineObj.title isEqualToString:allItem.title] && [mineObj.image isEqualToString:allItem.image] && indexPath.row == idx){
+                    if([mineObj.no isEqualToString:allItem.no] && indexPath.row == idx){
                         cell.editBtnStyle = CollectionCellEditBtnStyleSel;
                     }
                 }

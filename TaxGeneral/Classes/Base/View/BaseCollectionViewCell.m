@@ -110,7 +110,7 @@
     }
     
     // 如果image存在，进行设置图片的样式
-    if(self.item.image){
+    if(self.item.webImg || self.item.localImg){
         [_imageView setFrame:CGRectMake(self.frameWidth*0.5f-self.frameHeight*0.3f*0.5f, self.frameHeight*0.5f-self.frameHeight*0.3f*0.7f, self.frameHeight*0.3f, self.frameHeight*0.3f)];
         [_imageView setContentMode:UIViewContentModeScaleToFill];
     }
@@ -136,7 +136,8 @@
 #pragma mark - 重写item的Setter方法
 - (void)setItem:(BaseCollectionModelItem *)item{
     _item = item;
-    _imageView.image = [UIImage imageNamed:self.item.image];
+    // 从远程URL获取图片(默认本地图标)
+    [_imageView sd_setImageWithURL:[NSURL URLWithString:self.item.webImg] placeholderImage:[UIImage imageNamed:self.item.localImg] options:SDWebImageAllowInvalidSSLCertificates completed:nil];
     _titleLabel.text = self.item.title;
     
     [self layoutSubviews];

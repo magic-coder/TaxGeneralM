@@ -13,20 +13,14 @@
 #pragma mark - BaseCollectionModelItem方法
 @implementation BaseCollectionModelItem
 
-#pragma mark 创建一个item方法
-+(BaseCollectionModelItem *)createWithTitle:(NSString *)title image:(NSString *)image{
-    BaseCollectionModelItem *item = [[BaseCollectionModelItem alloc] init];
-    item.title = title;
-    item.image = image;
-    return item;
-}
-
 #pragma mark 根据字典创建一个item
 + (BaseCollectionModelItem *)createWithDict:(NSDictionary *)dict{
     BaseCollectionModelItem *item = [[BaseCollectionModelItem alloc] init];
     item.no = [dict objectForKey:@"appno"];
     item.title = [dict objectForKey:@"appname"];
-    item.image = [NSString stringWithFormat:@"app_%@", item.no];
+    item.webImg = [dict objectForKey:@"appimage"];// 服务器logo图标
+    item.localImg = [NSString stringWithFormat:@"app_%@", item.no]; // 加载本地default图标(根据应用序列号生成)
+    item.url = [dict objectForKey:@"appurl"];
     return item;
 }
 

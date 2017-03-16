@@ -13,9 +13,11 @@
 @interface BaseCollectionModelItem : NSObject
 
 /************************ 属性 ************************/
-@property (nonatomic, strong) NSString *no;
-@property (nonatomic, strong) NSString *title;
-@property (nonatomic, strong) NSString *image;
+@property (nonatomic, strong) NSString *no;     // 应用NO
+@property (nonatomic, strong) NSString *title;  // 应用名称
+@property (nonatomic, strong) NSString *webImg;  // 服务器应用图标
+@property (nonatomic, strong) NSString *localImg;  // 本地默认logo
+@property (nonatomic, strong) NSString *url;    // 应用链接URL（Web应用）
 /*
 @property (nonatomic, assign) NSInteger uids;
 @property (nonatomic, assign) NSInteger sids;
@@ -23,7 +25,6 @@
  */
 
 /************************ 类方法 ************************/
-+ (BaseCollectionModelItem *)createWithTitle:(NSString *)title image:(NSString *)image;
 + (BaseCollectionModelItem *)createWithDict:(NSDictionary *)dict;
 
 @end

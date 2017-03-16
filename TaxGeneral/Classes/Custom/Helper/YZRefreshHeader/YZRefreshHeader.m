@@ -23,7 +23,7 @@
     [super prepare];
     
     // 设置控件的高度
-    self.mj_h = 50;
+    self.mj_h = 0;
     
     // loading
     UIActivityIndicatorView *loading = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -36,7 +36,7 @@
 {
     [super placeSubviews];
     
-    self.loading.center = CGPointMake(self.mj_w * 0.5, self.mj_h * 0.5);
+    self.loading.center = CGPointMake(self.mj_w * 0.5, /*self.mj_h * 0.5*/15);
 }
 
 #pragma mark 监听scrollView的contentOffset改变
@@ -63,6 +63,8 @@
 #pragma mark 监听控件的刷新状态
 - (void)setState:(MJRefreshState)state
 {
+    DLog(@"Yan -> %f", self.frame.size.height);
+    
     MJRefreshCheckState;
     switch (state) {
         case MJRefreshStateIdle:

@@ -10,9 +10,24 @@
 
 #import <UIKit/UIKit.h>
 #import "MessageDetailModel.h"
+@class MessageDetailViewCell;
+
+typedef NS_ENUM(NSInteger, MsgDetailViewCellMenuType) {
+    MsgDetailViewCellMenuTypeCopy,  // 复制
+    MsgDetailViewCellMenuTypeDelete // 删除
+};
+
+@protocol MessageDetailViewCellDelegate <NSObject>
+
+-(void)msgDetailViewCellMenuClicked:(MessageDetailViewCell *)cell type:(MsgDetailViewCellMenuType)type;
+
+@end
 
 @interface MessageDetailViewCell : UITableViewCell
 
+@property (nonatomic, strong) NSIndexPath *indexPath;
 @property (nonatomic, strong) MessageDetailModel *messageDetailModel;
+
+@property (nonatomic, weak) id<MessageDetailViewCellDelegate> delegate;
 
 @end

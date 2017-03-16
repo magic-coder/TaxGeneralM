@@ -99,21 +99,12 @@
     
     BaseCollectionViewCell *cell = (BaseCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
     UIViewController *viewController = nil;
-    NSString *url = nil;
-    if([cell.titleLabel.text isEqualToString:@"办税地图"]){
+    NSString *url = SERVER_URL;
+    
+    if([cell.item.title isEqualToString:@"办税地图"]){
         viewController = [[MapListViewController alloc] init];
-    }else if([cell.titleLabel.text isEqualToString:@"通知公告"]){
-        url = [NSString stringWithFormat:@"%@public/notice/index", SERVER_URL];
-    }else if([cell.titleLabel.text isEqualToString:@"税务动态"]){
-        url = [NSString stringWithFormat:@"%@public/taxdynamics/index", SERVER_URL];
-    }else if([cell.titleLabel.text isEqualToString:@"工作安排"]){
-        url = [NSString stringWithFormat:@"%@public/workschedule/index", SERVER_URL];
-    }else if([cell.titleLabel.text isEqualToString:@"地税文化"]){
-        url = [NSString stringWithFormat:@"%@public/taxculture/index", SERVER_URL];
-    }else if([cell.titleLabel.text isEqualToString:@"通讯录"]){
-        url = [NSString stringWithFormat:@"%@litter/initLitter", SERVER_URL];
     }else{
-        url = SERVER_URL;
+        url = cell.item.url;
     }
     
     if(viewController != nil || url != nil){
@@ -183,20 +174,20 @@
     // 我的应用数据
     int mine_ids = 1;
     for(BaseCollectionModelItem *mineItem in mineGroup.items){
-        NSDictionary *mineDict = [NSDictionary dictionaryWithObjectsAndKeys: mineItem.no, @"appno", mineItem.title, @"appname", [NSString stringWithFormat:@"%d", mine_ids], @"userappsort", nil];
+        NSDictionary *mineDict = [NSDictionary dictionaryWithObjectsAndKeys: mineItem.no, @"appno", mineItem.title, @"appname", mineItem.webImg, @"appimage", mineItem.url, @"appurl", [NSString stringWithFormat:@"%d", mine_ids], @"userappsort", nil];
         [mineData addObject:mineDict];
         mine_ids++;
     }
     // 其他应用数据
     int other_ids = 1;
     for(BaseCollectionModelItem *otherItem in otherGroup.items){
-        NSDictionary *otherDict = [NSDictionary dictionaryWithObjectsAndKeys: otherItem.no, @"appno", otherItem.title, @"appname", [NSString stringWithFormat:@"%d", other_ids], @"userappsort", nil];
+        NSDictionary *otherDict = [NSDictionary dictionaryWithObjectsAndKeys: otherItem.no, @"appno", otherItem.title, @"appname", otherItem.webImg, @"appimage", otherItem.url, @"appurl", [NSString stringWithFormat:@"%d", other_ids], @"userappsort", nil];
         [otherData addObject:otherDict];
         other_ids++;
     }
     // 全部应用
     for(BaseCollectionModelItem *allItem in allGroup.items){
-        NSDictionary *allDict = [NSDictionary dictionaryWithObjectsAndKeys: allItem.no, @"appno", allItem.title, @"appname", nil];
+        NSDictionary *allDict = [NSDictionary dictionaryWithObjectsAndKeys: allItem.no, @"appno", allItem.title, @"appname", allItem.webImg, @"appimage", allItem.url, @"appurl", nil];
         [allData addObject:allDict];
     }
     

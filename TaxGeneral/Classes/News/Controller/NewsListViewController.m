@@ -45,7 +45,7 @@ static int const pageSize = 10;
     
     self.view.backgroundColor = DEFAULT_BACKGROUND_COLOR;
     self.tableView.backgroundColor = [UIColor whiteColor];
-    self.tableView.showsVerticalScrollIndicator = NO;// 隐藏纵向滚动条
+    //self.tableView.showsVerticalScrollIndicator = NO;// 隐藏纵向滚动条
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;// 自定义cell样式
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];// 去除底部多余分割线
     
@@ -171,9 +171,8 @@ static int const pageSize = 10;
             }
         }
     } failed:^(NSString *error) {
-        
+        _pageNo--;
         [self.tableView.mj_footer resetNoMoreData];
-        
         [YZProgressHUD showHUDView:self.navigationController.view Mode:SHOWMODE Text:error];
     }];
 }

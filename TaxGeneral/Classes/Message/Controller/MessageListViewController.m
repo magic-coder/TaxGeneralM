@@ -60,13 +60,15 @@ static int const pageSize = 10;
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
+    BOOL isRefresh = [Variable shareInstance].msgRefresh;
+    
     // 判断是否登录，若没登录则返回登录页面
     if([self isLogin]){
         // 先判断角标
         UITabBarItem * item = [self.tabBarController.tabBar.items objectAtIndex:2];
-        if(item.badgeValue != nil || [self.title isEqualToString:@"未连接"]){
+        if(item.badgeValue != nil || [self.title isEqualToString:@"未连接"] || isRefresh){
             [self autoLoadData];
-            item.badgeValue = nil;
+            //item.badgeValue = nil;
         }else{
             NSDictionary *dataDict = [_msgListUtil loadMsgDataWithFile];
             if(dataDict != nil){
@@ -250,12 +252,19 @@ static int const pageSize = 10;
     NSArray *results = [dict objectForKey:@"results"];
     NSMutableArray *sysData = [[NSMutableArray alloc] init];
     NSMutableArray *userData = [[NSMutableArray alloc] init];
+    int badge = 0;
     for(NSDictionary *dict in results){
         MessageListModel *model = [MessageListModel createWithDict:dict];
         if(![model.sourceCode isEqualToString:@"01"]){
             [sysData addObject:model];
         }else{
             [userData addObject:model];
+        }
+        
+        badge += [model.unReadCount intValue];
+        if(badge > 0){
+            UITabBarItem * item = [self.tabBarController.tabBar.items objectAtIndex:2];
+            item.badgeValue = [NSString stringWithFormat:@"%d", badge];
         }
     }
     [_data addObject:sysData];

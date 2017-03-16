@@ -29,7 +29,7 @@
             break;
         case SHOWMODE:
             hud.mode = MBProgressHUDModeText;
-            [hud hide:YES afterDelay:3.f];
+            [hud hide:YES afterDelay:2.f];
             break;
         default:
             break;

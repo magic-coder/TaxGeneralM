@@ -13,7 +13,7 @@
 @interface Variable : NSObject
 
 @property (nonatomic, assign) NSInteger lastSelectedIds;// TabBar记录最近一次选中的视图
-
+@property (nonatomic, assign) BOOL msgRefresh;  // 标记视图是否刷新
 /**
  * @breif 实现声明单例方法 GCD
  */
