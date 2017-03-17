@@ -13,6 +13,7 @@
 - (instancetype)initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
         self.backgroundColor = DEFAULT_BLUE_COLOR;
+        //self.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"app_top_bg" scaleToSize:frame.size]];
         self.userInteractionEnabled = YES;
         self.multipleTouchEnabled = YES;
         //控制子视图不能超出父视图的范围

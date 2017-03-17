@@ -24,6 +24,7 @@
 
 @interface AppViewController () <UINavigationControllerDelegate, AppTopViewDelegate>
 
+@property (nonatomic, strong) AppTopView *topView;
 @property (nonatomic, assign) BOOL adjustStatus;// 调整状态
 @property (nonatomic, strong) AppUtil *appUtil;
 
@@ -45,9 +46,9 @@
     
     self.collectionStyle = CollectionStyleNone;
     
-    AppTopView *topView = [[AppTopView alloc] initWithFrame:CGRectMake(0.f, 0.f, WIDTH_SCREEN, 160.f)];
-    topView.delegate = self;
-    [self.view addSubview:topView];
+    _topView = [[AppTopView alloc] initWithFrame:CGRectMake(0.f, 0.f, WIDTH_SCREEN, 160.f)];
+    _topView.delegate = self;
+    [self.view addSubview:_topView];
     
     self.collectionView.frame = CGRectMake(0.f, 160.f-HEIGHT_STATUS, WIDTH_SCREEN, HEIGHT_SCREEN+HEIGHT_STATUS-160.f);
 }

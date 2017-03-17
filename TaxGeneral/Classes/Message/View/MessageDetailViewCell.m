@@ -58,9 +58,9 @@
         [menu setTargetRect:self.bounds inView:self];
         [menu setMenuVisible:YES animated:YES];
         
-        _baseView.image = [self originImage:[UIImage imageNamed:@"msg_detail_bgHL"] scaleToSize:_baseView.size];
+        _baseView.image = [UIImage imageNamed:@"msg_detail_bgHL" scaleToSize:_baseView.size];
     }else{
-        _baseView.image = [self originImage:[UIImage imageNamed:@"msg_detail_bg"] scaleToSize:_baseView.size];
+        _baseView.image = [UIImage imageNamed:@"msg_detail_bg" scaleToSize:_baseView.size];
     }
 }
 
@@ -195,7 +195,7 @@
     
     // 设置基本视图的frame
     _baseView.frame = CGRectMake(15, 0, WIDTH_SCREEN-30, cellHeight);
-    [_baseView setImage:[self originImage:[UIImage imageNamed:@"msg_detail_bg"] scaleToSize:_baseView.frame.size]];
+    [_baseView setImage:[UIImage imageNamed:@"msg_detail_bg" scaleToSize:_baseView.size]];
     
     // 点击效果
     /*
@@ -329,15 +329,6 @@
         _arrowImageView.image = [UIImage imageNamed:@"msg_right_arrow"];
     }
     return _arrowImageView;
-}
-
-#pragma mark - 根据视图的大小来计算图片的大小
--(UIImage *)originImage:(UIImage *)image scaleToSize:(CGSize)size{
-    UIGraphicsBeginImageContext(size);
-    [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
-    UIImage *scaledImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return scaledImage;
 }
 
 /**

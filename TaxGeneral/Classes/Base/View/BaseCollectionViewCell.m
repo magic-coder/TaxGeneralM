@@ -137,7 +137,8 @@
 - (void)setItem:(BaseCollectionModelItem *)item{
     _item = item;
     // 从远程URL获取图片(默认本地图标)
-    [_imageView sd_setImageWithURL:[NSURL URLWithString:self.item.webImg] placeholderImage:[UIImage imageNamed:self.item.localImg] options:SDWebImageAllowInvalidSSLCertificates completed:nil];
+    item.webImg = @"";
+    [_imageView sd_setImageWithURL:[NSURL URLWithString:item.webImg] placeholderImage:[UIImage imageNamed:item.localImg] options:SDWebImageAllowInvalidSSLCertificates completed:nil];
     _titleLabel.text = self.item.title;
     
     [self layoutSubviews];

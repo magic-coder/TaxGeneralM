@@ -60,7 +60,6 @@
 		1856DA3F1E482C900092DE3F /* AccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1856DA3E1E482C900092DE3F /* AccountViewController.m */; };
 		1856DA4E1E48765E0092DE3F /* ServiceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1856DA4D1E48765E0092DE3F /* ServiceViewController.m */; };
 		1856DA511E4877D90092DE3F /* SafeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1856DA501E4877D90092DE3F /* SafeViewController.m */; };
-		1856DA541E48782A0092DE3F /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1856DA531E48782A0092DE3F /* AboutViewController.m */; };
 		18779CF41D62B9FF00191646 /* MessageListUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 18779CF31D62B9FF00191646 /* MessageListUtil.m */; };
 		188052211D3CBEC200C36F00 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 188052201D3CBEC200C36F00 /* main.m */; };
 		188052241D3CBEC200C36F00 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 188052231D3CBEC200C36F00 /* AppDelegate.m */; };
@@ -183,6 +182,10 @@
 		18EA03AE1E3607C100393735 /* BPushCerResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 18EA03AB1E3607C100393735 /* BPushCerResource.bundle */; };
 		18EA03AF1E3607C100393735 /* libBPush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 18EA03AC1E3607C100393735 /* libBPush.a */; };
 		18EA03B01E3607C100393735 /* test.caf in Resources */ = {isa = PBXBuildFile; fileRef = 18EA03AD1E3607C100393735 /* test.caf */; };
+		18F122A71E7B7B2200E12175 /* UIImage+YZ.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F122A61E7B7B2200E12175 /* UIImage+YZ.m */; };
+		18F122B11E7BB35600E12175 /* AboutFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F122B01E7BB35600E12175 /* AboutFooterView.m */; };
+		18F122B41E7BB36E00E12175 /* AboutHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F122B31E7BB36E00E12175 /* AboutHeaderView.m */; };
+		18F122B71E7BB3E700E12175 /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F122B61E7BB3E700E12175 /* AboutViewController.m */; };
 		18F3C3531E0CFF2200F2B046 /* BaiduMapAPI_Base.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18F3C34C1E0CFF2200F2B046 /* BaiduMapAPI_Base.framework */; };
 		18F3C3541E0CFF2200F2B046 /* BaiduMapAPI_Cloud.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18F3C34D1E0CFF2200F2B046 /* BaiduMapAPI_Cloud.framework */; };
 		18F3C3551E0CFF2200F2B046 /* BaiduMapAPI_Location.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18F3C34E1E0CFF2200F2B046 /* BaiduMapAPI_Location.framework */; };
@@ -346,8 +349,6 @@
 		1856DA4D1E48765E0092DE3F /* ServiceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ServiceViewController.m; path = Classes/Mine/Controller/ServiceViewController.m; sourceTree = "<group>"; };
 		1856DA4F1E4877D90092DE3F /* SafeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SafeViewController.h; path = Classes/Mine/Controller/SafeViewController.h; sourceTree = "<group>"; };
 		1856DA501E4877D90092DE3F /* SafeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SafeViewController.m; path = Classes/Mine/Controller/SafeViewController.m; sourceTree = "<group>"; };
-		1856DA521E48782A0092DE3F /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AboutViewController.h; path = Classes/Mine/Controller/AboutViewController.h; sourceTree = "<group>"; };
-		1856DA531E48782A0092DE3F /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AboutViewController.m; path = Classes/Mine/Controller/AboutViewController.m; sourceTree = "<group>"; };
 		186BEC941D3F5302003F84A4 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		18779CF21D62B9FF00191646 /* MessageListUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageListUtil.h; path = Classes/Message/Util/MessageListUtil.h; sourceTree = "<group>"; };
 		18779CF31D62B9FF00191646 /* MessageListUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MessageListUtil.m; path = Classes/Message/Util/MessageListUtil.m; sourceTree = "<group>"; };
@@ -593,6 +594,14 @@
 		18EA03AB1E3607C100393735 /* BPushCerResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = BPushCerResource.bundle; sourceTree = "<group>"; };
 		18EA03AC1E3607C100393735 /* libBPush.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libBPush.a; sourceTree = "<group>"; };
 		18EA03AD1E3607C100393735 /* test.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = test.caf; sourceTree = "<group>"; };
+		18F122A51E7B7B2200E12175 /* UIImage+YZ.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+YZ.h"; path = "Classes/Custom/Category/UIImage+YZ.h"; sourceTree = "<group>"; };
+		18F122A61E7B7B2200E12175 /* UIImage+YZ.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+YZ.m"; path = "Classes/Custom/Category/UIImage+YZ.m"; sourceTree = "<group>"; };
+		18F122AF1E7BB35600E12175 /* AboutFooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AboutFooterView.h; path = Classes/Mine/View/About/AboutFooterView.h; sourceTree = "<group>"; };
+		18F122B01E7BB35600E12175 /* AboutFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AboutFooterView.m; path = Classes/Mine/View/About/AboutFooterView.m; sourceTree = "<group>"; };
+		18F122B21E7BB36E00E12175 /* AboutHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AboutHeaderView.h; path = Classes/Mine/View/About/AboutHeaderView.h; sourceTree = "<group>"; };
+		18F122B31E7BB36E00E12175 /* AboutHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AboutHeaderView.m; path = Classes/Mine/View/About/AboutHeaderView.m; sourceTree = "<group>"; };
+		18F122B51E7BB3E700E12175 /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AboutViewController.h; path = Classes/Mine/Controller/AboutViewController.h; sourceTree = "<group>"; };
+		18F122B61E7BB3E700E12175 /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AboutViewController.m; path = Classes/Mine/Controller/AboutViewController.m; sourceTree = "<group>"; };
 		18F3C34C1E0CFF2200F2B046 /* BaiduMapAPI_Base.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BaiduMapAPI_Base.framework; path = BaiduMapAPI/BaiduMapAPI_Base.framework; sourceTree = "<group>"; };
 		18F3C34D1E0CFF2200F2B046 /* BaiduMapAPI_Cloud.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BaiduMapAPI_Cloud.framework; path = BaiduMapAPI/BaiduMapAPI_Cloud.framework; sourceTree = "<group>"; };
 		18F3C34E1E0CFF2200F2B046 /* BaiduMapAPI_Location.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BaiduMapAPI_Location.framework; path = BaiduMapAPI/BaiduMapAPI_Location.framework; sourceTree = "<group>"; };
@@ -889,6 +898,7 @@
 			isa = PBXGroup;
 			children = (
 				18BE9D0F1D51945F00575D0E /* Controller */,
+				18F122AA1E7BB2E400E12175 /* View */,
 				1856DA391E4827340092DE3F /* Util */,
 			);
 			name = Mine;
@@ -1134,6 +1144,8 @@
 			children = (
 				18A966BA1D531A2300A8E539 /* UIView+YZ.h */,
 				18A966BB1D531A2300A8E539 /* UIView+YZ.m */,
+				18F122A51E7B7B2200E12175 /* UIImage+YZ.h */,
+				18F122A61E7B7B2200E12175 /* UIImage+YZ.m */,
 				18A966BD1D531E4900A8E539 /* UIDevice+YZ.h */,
 				18A966BE1D531E4900A8E539 /* UIDevice+YZ.m */,
 			);
@@ -1655,8 +1667,8 @@
 		18DEE9521E4AA59500536155 /* About */ = {
 			isa = PBXGroup;
 			children = (
-				1856DA521E48782A0092DE3F /* AboutViewController.h */,
-				1856DA531E48782A0092DE3F /* AboutViewController.m */,
+				18F122B51E7BB3E700E12175 /* AboutViewController.h */,
+				18F122B61E7BB3E700E12175 /* AboutViewController.m */,
 			);
 			name = About;
 			sourceTree = "<group>";
@@ -1768,6 +1780,25 @@
 			);
 			name = normalversion;
 			path = Venders/normalversion;
+			sourceTree = "<group>";
+		};
+		18F122AA1E7BB2E400E12175 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				18F122AB1E7BB2EA00E12175 /* About */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		18F122AB1E7BB2EA00E12175 /* About */ = {
+			isa = PBXGroup;
+			children = (
+				18F122B21E7BB36E00E12175 /* AboutHeaderView.h */,
+				18F122B31E7BB36E00E12175 /* AboutHeaderView.m */,
+				18F122AF1E7BB35600E12175 /* AboutFooterView.h */,
+				18F122B01E7BB35600E12175 /* AboutFooterView.m */,
+			);
+			name = About;
 			sourceTree = "<group>";
 		};
 		18F3C34B1E0CFF2200F2B046 /* Frameworks */ = {
@@ -2057,6 +2088,7 @@
 				18A966CC1D532A1600A8E539 /* BaseTableViewController.m in Sources */,
 				18293D951D631A7F008A4A8C /* MJRefreshConst.m in Sources */,
 				18293D8D1D631A7F008A4A8C /* MJRefreshAutoStateFooter.m in Sources */,
+				18F122B11E7BB35600E12175 /* AboutFooterView.m in Sources */,
 				18BC91751DF00E5300AD6AA8 /* NewsViewController.m in Sources */,
 				18293D921D631A7F008A4A8C /* MJRefreshNormalHeader.m in Sources */,
 				18DEE95A1E4AA92C00536155 /* BaseScrollView.m in Sources */,
@@ -2070,7 +2102,6 @@
 				18B2B9031D3E205E00250EA8 /* LoginViewController.m in Sources */,
 				18AA319A1D47384500862187 /* MASCompositeConstraint.m in Sources */,
 				18DCAF9B1E2715AF009F019D /* BaseSandBoxUtil.m in Sources */,
-				1856DA541E48782A0092DE3F /* AboutViewController.m in Sources */,
 				18FF35261E5AEF60000887E2 /* MapListUtil.m in Sources */,
 				18293CA51D6300D8008A4A8C /* ChatViewController.m in Sources */,
 				18C994FE1DEC0966006A040F /* WMMenuView.m in Sources */,
@@ -2121,10 +2152,13 @@
 				18237B721E49D0BF00A5A9C4 /* TaxCalendarViewController.m in Sources */,
 				188C752B1E1606A30056E40D /* DeviceInfoModel.m in Sources */,
 				188052211D3CBEC200C36F00 /* main.m in Sources */,
+				18F122B71E7BB3E700E12175 /* AboutViewController.m in Sources */,
 				18AA319E1D47384500862187 /* MASViewAttribute.m in Sources */,
 				18D5B25E1E6FD21E00F5F555 /* SDWebImagePrefetcher.m in Sources */,
 				18DB6C0F1E495A600079120D /* QuestionViewController.m in Sources */,
+				18F122A71E7B7B2200E12175 /* UIImage+YZ.m in Sources */,
 				18AA317A1D4737B400862187 /* AFSecurityPolicy.m in Sources */,
+				18F122B41E7BB36E00E12175 /* AboutHeaderView.m in Sources */,
 				188A79181D5D59AC001BF99A /* BaseCollectionUtil.m in Sources */,
 				18AA31B41D4744D900862187 /* MBProgressHUD.m in Sources */,
 				18D5B2591E6FD21E00F5F555 /* SDWebImageCompat.m in Sources */,

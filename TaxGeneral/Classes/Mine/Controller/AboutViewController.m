@@ -2,61 +2,87 @@
 //  AboutViewController.m
 //  TaxGeneralM
 //
-//  Created by Apple on 2017/2/6.
+//  Created by Apple on 2017/3/17.
 //  Copyright © 2017年 Yanzheng. All rights reserved.
 //
 
 #import "AboutViewController.h"
+#import "AboutHeaderView.h"
+#import "AboutFooterView.h"
 
 @interface AboutViewController ()
+
+@property (nonatomic, strong) NSArray *data;     // 数据列表
+
+@property (nonatomic, strong) AboutHeaderView *headerView;  // 顶部视图
+@property (nonatomic, strong) AboutFooterView *footerView;  // 底部视图
 
 @end
 
 @implementation AboutViewController
 
+static NSString * const reuseIdentifier = @"aboutTableViewCell";
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
     
-    self.view.backgroundColor = DEFAULT_BACKGROUND_COLOR;
+    _data = @[@"官网", @"功能介绍", @"去评分"];
     
+    [self.view setBackgroundColor:DEFAULT_BACKGROUND_COLOR];
+    [self.tableView setBackgroundColor:[UIColor whiteColor]];
+    self.tableView.showsVerticalScrollIndicator = NO;// 隐藏纵向滚动条
+    self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
     
-    BaseScrollView *scrollView = [[BaseScrollView alloc] init];
+    _headerView = [[AboutHeaderView alloc] initWithFrame:CGRectMake(0, 0, WIDTH_SCREEN, 160)];
+    self.tableView.tableHeaderView = _headerView;
     
-    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(WIDTH_SCREEN/2-30, 30, 60, 60)];
-    logoImageView.image = [UIImage imageNamed:@"about_logo"];
-    [scrollView addSubview:logoImageView];
+    _footerView = [[AboutFooterView alloc] initWithFrame:CGRectMake(0, 0, WIDTH_SCREEN, HEIGHT_SCREEN-HEIGHT_STATUS-HEIGHT_NAVBAR-160-43*3-20)];
+    self.tableView.tableFooterView = _footerView;
     
-    //第一步，让label铺满整个scrollView显示的区域
-    UILabel *infoLabel = [self labelWithFrame:CGRectMake(0, 120, scrollView.frame.size.width, 20)];
-    infoLabel.text = @"互联网+税务 iPhone客户端 V1.0";
-    [scrollView addSubview:infoLabel];
-    
-    UILabel *desLabel = [self labelWithFrame:CGRectMake(20, 160, scrollView.frame.size.width-40, 60)];
-    desLabel.text = @"互联网+税务 平台分为三个版本分别是：管理端、企业端、自然人端，该app是为税务干部及纳税人提供便捷服务的应用程序，其中包含了办税地图、全局通讯录、税企文化、会议通知、运维监控、网络云盘等一系列的个性化便捷的功能。";
-    [scrollView addSubview:desLabel];
-    
-    [self.view addSubview:scrollView];
-    
-}
-
-#pragma mark - 创建基本通用样式的Label
-- (UILabel *)labelWithFrame:(CGRect)frame{
-    UILabel *label = [[UILabel alloc] initWithFrame:frame];
-    label.numberOfLines = 0;
-    label.textColor = [UIColor grayColor];
-    label.textAlignment = NSTextAlignmentCenter;
-    //label.font = [UIFont fontWithName:@"Helvetica" size:13.0f];
-    label.font = [UIFont systemFontOfSize:13.0f];
-    //字体自适应
-    label.adjustsFontSizeToFitWidth = YES;
-    
-    return label;
+    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:reuseIdentifier];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Table view data source
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return _data.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;   // 右侧小箭头
+    
+    cell.textLabel.text = _data[indexPath.row];
+    
+    return cell;
+}
+
+#pragma mark 返回行高
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return 43.0f;
+}
+
+#pragma mark - cell点击事件
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    // 点击后将颜色变回来
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    if(indexPath.row == 0){
+        NSString *urlString = @"http://www.xads.gov.cn";
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", urlString]];
+        [[UIApplication sharedApplication] openURL:url];
+    }
+    
 }
 
 @end

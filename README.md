@@ -51,7 +51,8 @@
 
 # 自己扩展的类(Extend)
 	UIView+YZ
-	UIDevice+YZ
+	UIImage+YZ
+	UIDevice+YZ	
 	
 # 系统色彩值(SystemColor)
 	**Sytle One**

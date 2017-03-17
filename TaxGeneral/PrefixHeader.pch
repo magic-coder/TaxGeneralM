@@ -23,6 +23,7 @@
 #import "YZActionSheet.h"
 #import "YZMenu.h"
 #import "UIView+YZ.h"
+#import "UIImage+YZ.h"
 #import "UIDevice+YZ.h"
 #import "UIImageView+WebCache.h"
 

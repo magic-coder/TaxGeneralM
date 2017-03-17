@@ -1,5 +1,5 @@
 //
-//  AboutViewController.h
+//  AboutFooterView.h
 //  TaxGeneralM
 //
 //  Created by Apple on 2017/3/17.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AboutViewController : UITableViewController
+@interface AboutFooterView : UIView
 
 @end

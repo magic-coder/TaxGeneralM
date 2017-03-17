@@ -1,5 +1,5 @@
 //
-//  AboutViewController.h
+//  AboutHeaderView.h
 //  TaxGeneralM
 //
 //  Created by Apple on 2017/3/17.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AboutViewController : UITableViewController
+@interface AboutHeaderView : UIView
 
 @end
