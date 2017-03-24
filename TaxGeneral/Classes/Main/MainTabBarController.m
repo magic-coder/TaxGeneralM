@@ -10,7 +10,6 @@
 
 #import "MainTabBarController.h"
 #import "MainNavigationController.h"
-#import "LoginViewController.h"
 
 #define CLASSNAME       @"className"
 #define TITLE           @"title"

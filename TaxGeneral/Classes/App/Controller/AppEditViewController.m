@@ -33,14 +33,14 @@
     self.collectionStyle = CollectionStyleEdit;
     self.data = [self.appUtil loadDataWithType:AppItemsTypeEdit];
     if(self.data == nil){
-        [YZProgressHUD showHUDView:self.navigationController.view Mode:LOCKMODE Text:@"加载中..."];
+        [YZProgressHUD showHUDView:self.view Mode:LOCKMODE Text:@"加载中..."];
         [self.appUtil initDataWithType:AppItemsTypeEdit dataBlock:^(NSMutableArray *dataArray) {
-            [YZProgressHUD hiddenHUDForView:self.navigationController.view];
+            [YZProgressHUD hiddenHUDForView:self.view];
             self.data = dataArray;
             [self.collectionView reloadData];
         } failed:^(NSString *error) {
-            [YZProgressHUD hiddenHUDForView:self.navigationController.view];
-            [YZProgressHUD showHUDView:self.navigationController.view Mode:SHOWMODE Text:error];
+            [YZProgressHUD hiddenHUDForView:self.view];
+            [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:error];
         }];
     }
     
@@ -96,9 +96,9 @@
     
     BOOL res = [[AppUtil alloc] writeNewAppData:dataDict];
     if(res){
-        [YZProgressHUD showHUDView:self.navigationController.view Mode:SHOWMODE Text:@"保存成功!"];
+        [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:@"保存成功!"];
     }else{
-        [YZProgressHUD showHUDView:self.navigationController.view Mode:SHOWMODE Text:@"对不起，保存失败!"];
+        [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:@"对不起，保存失败!"];
     }
 }
 

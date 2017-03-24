@@ -10,7 +10,6 @@
 
 #import "LoginViewController.h"
 #import "MainTabBarController.h"
-#import "DeviceInfoModel.h"
 
 #define LABELSIZE CGSizeMake(70, 20)
 #define TEXTFIELDSIZE CGSizeMake(180, 30)
@@ -232,62 +231,24 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
     DLog(@"userCode=%@，password=%@",userCode, password);
     
     if(userCode.length > 0 && password.length > 0){
-        
-        NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:DEVICE_INFO];
-        DeviceInfoModel *model = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-        
+
         NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-        [dict setObject:@"app" forKey:@"loginType"];
         [dict setObject:userCode forKey:@"userCode"];
         [dict setObject:password forKey:@"password"];
-        [dict setObject:model.deviceModel forKey:@"phonemodel"];
-        [dict setObject:model.systemVersion forKey:@"osversion"];
-        [dict setObject:@"4" forKey:@"phonetype"];
-        [dict setObject:model.deviceIdentifier forKey:@"deviceid"];
         
-        NSString *jsonString = [BaseDataUtil dataToJsonString:dict];
-        
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:jsonString, @"msg", nil];
-        NSString *url = @"account/login";
-        [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:parameters success:^(NSDictionary *responseDic) {
+        [LoginUtil loginWithAppDict:dict success:^{
+            [YZProgressHUD hiddenHUDForView:self.view];
             
-            // 获取请求状态值
-            DLog(@"statusCode = %@", [responseDic objectForKey:@"statusCode"]);
-            NSString *statusCode = [responseDic objectForKey:@"statusCode"];
-            if([statusCode isEqualToString:@"00"]){
-                DLog(@"请求报文成功，开始进行处理...");
-                NSDictionary *businessData = [responseDic objectForKey:@"businessData"];
-                [dict setObject:[businessData objectForKey:@"userName"] forKey:@"userName"];
-                [dict setObject:[businessData objectForKey:@"orgCode"] forKey:@"orgCode"];
-                [dict setObject:[businessData objectForKey:@"orgName"] forKey:@"orgName"];
-                [dict setObject:[businessData objectForKey:@"token"] forKey:@"token"];
-                // 获取系统当前时间(登录时间)
-                NSDate *sendDate = [NSDate date];
-                NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-                [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-                NSString *loginDate = [dateFormatter stringFromDate:sendDate];
-                [dict setObject:loginDate forKey:@"loginDate"];
-                
-                // 登录成功将信息保存到用户单例模式中
-                [[NSUserDefaults standardUserDefaults] setObject:dict forKey:LOGIN_SUCCESS];
-                [[NSUserDefaults standardUserDefaults] synchronize]; // 强制写入
-                
-                [YZProgressHUD hiddenHUDForView:self.view];
-                
-                CATransition *animation = [CATransition animation];
-                animation.duration = 1.0f;
-                animation.timingFunction = UIViewAnimationCurveEaseInOut;
-                animation.type = @"rippleEffect";
-                //animation.type = kCATransitionMoveIn;
-                animation.subtype = kCATransitionFromBottom;
-                [self.view.window.layer addAnimation:animation forKey:nil];
-                
-                [self dismissViewControllerAnimated:YES completion:nil];
-            }else{
-                [YZProgressHUD hiddenHUDForView:self.view];
-                [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:[responseDic objectForKey:@"msg"]];
-            }
-        } failure:^(NSString *error) {
+            CATransition *animation = [CATransition animation];
+            animation.duration = 1.0f;
+            animation.timingFunction = UIViewAnimationCurveEaseInOut;
+            animation.type = @"rippleEffect";
+            //animation.type = kCATransitionMoveIn;
+            animation.subtype = kCATransitionFromBottom;
+            [self.view.window.layer addAnimation:animation forKey:nil];
+            
+            [self dismissViewControllerAnimated:YES completion:nil];
+        } failed:^(NSString *error) {
             [YZProgressHUD hiddenHUDForView:self.view];
             [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:error];
         }];

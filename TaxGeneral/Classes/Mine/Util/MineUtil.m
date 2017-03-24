@@ -123,7 +123,7 @@
 
 + (NSMutableArray *)getServiceItems{
     NSMutableArray *items = [[NSMutableArray alloc] init];
-    BaseTableModelItem *item1 = [BaseTableModelItem createWithTitle:@"客服电话" subTitle:@"400-896-9699"];
+    BaseTableModelItem *item1 = [BaseTableModelItem createWithTitle:@"客服电话" subTitle:@"12366"];
     item1.accessoryType = UITableViewCellAccessoryNone;
     BaseTableModelItem *item2 = [BaseTableModelItem createWithTitle:@"客服邮箱" subTitle:@"yanzheng@prient.com"];
     item2.accessoryType = UITableViewCellAccessoryNone;
@@ -133,20 +133,6 @@
     BaseTableModelItem *item3= [BaseTableModelItem createWithTitle:@"常见问题"];
     BaseTableModelGroup *group2 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:nil settingItems:item3, nil];
     [items addObject:group2];
-    
-    return items;
-}
-
-+ (NSMutableArray *)getQuestionItems{
-    NSMutableArray *items = [[NSMutableArray alloc] init];
-    BaseTableModelGroup *group1 = [[BaseTableModelGroup alloc] initWithHeaderTitle:@"问：登录时提示账号或密码错误？" footerTitle:@"答：检查核对账户，密码8位字母（大小写）和数字。" settingItems: nil];
-    [items addObject:group1];
-    
-    BaseTableModelGroup *group2 = [[BaseTableModelGroup alloc] initWithHeaderTitle:@"问：如何删除信息列表中的信息？" footerTitle:@"答：在列表页中向左滑动或者长按都会显示删除按钮，然后进行删除。" settingItems: nil];
-    [items addObject:group2];
-    
-    BaseTableModelGroup *group3 = [[BaseTableModelGroup alloc] initWithHeaderTitle:@"问：如何进行密码重置？" footerTitle:@"答：密码重置时，税务人员输入登录用户名。点击“重置”后，系统通过短信发送验证码到手机（手机号码与核心征管中记录的一致），验证通过后，进入密码重置页面。输入新密码即可。" settingItems: nil];
-    [items addObject:group3];
     
     return items;
 }

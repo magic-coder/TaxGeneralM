@@ -87,8 +87,6 @@
     [_dateLabel setText:_messageListModel.date];
     [_messageLabel setText:_messageListModel.message];
     
-    
-    _messageListModel.unReadCount = @"1";
     if([_messageListModel.unReadCount intValue] > 0){
         _redMarkView.hidden = NO;
         [_redMark setText:_messageListModel.unReadCount];

@@ -168,8 +168,14 @@
     [_titleLabel setText:_newsModel.title];
     if(_newsModel.style == NewsModelStyleFewImage){
         NSString *fewImageName = [_newsModel.images objectAtIndex:0];
-        //[_fewImageView setImage:[UIImage imageNamed:fewImageName]];
-        [_fewImageView sd_setImageWithURL:[NSURL URLWithString:fewImageName] placeholderImage:PLACEHOLDER_IMAGE options:SDWebImageAllowInvalidSSLCertificates completed:nil];
+        // 从远程url获取https图片
+        // [_fewImageView sd_setImageWithURL:[NSURL URLWithString:fewImageName] placeholderImage:PLACEHOLDER_IMAGE options:SDWebImageAllowInvalidSSLCertificates completed:nil];
+        [_fewImageView sd_setImageWithURL:[NSURL URLWithString:fewImageName] placeholderImage:PLACEHOLDER_IMAGE options:SDWebImageAllowInvalidSSLCertificates completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+            // 在回调block中进行图片裁剪处理（去除一圈白边）
+            CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], CGRectMake(20, 20, image.size.width-40, image.size.height-40));
+            _fewImageView.image =[UIImage imageWithCGImage:imageRef];
+        }];
+        
         _fewImageView.hidden = NO;
         _leftImageView.hidden = YES;
         _centerImageView.hidden = YES;
@@ -178,12 +184,28 @@
         NSString *leftImageName = [_newsModel.images objectAtIndex:0];
         NSString *centerImageName = [_newsModel.images objectAtIndex:1];
         NSString *rightImageName = [_newsModel.images objectAtIndex:2];
-        //[_leftImageView setImage:[UIImage imageNamed:leftImageName]];
-        //[_centerImageView setImage:[UIImage imageNamed:centerImageName]];
-        //[_rightImageView setImage:[UIImage imageNamed:rightImageName]];
+        // 从远程url获取https图片
+        /*
         [_leftImageView sd_setImageWithURL:[NSURL URLWithString:leftImageName] placeholderImage:PLACEHOLDER_IMAGE options:SDWebImageAllowInvalidSSLCertificates completed:nil];
         [_centerImageView sd_setImageWithURL:[NSURL URLWithString:centerImageName] placeholderImage:PLACEHOLDER_IMAGE options:SDWebImageAllowInvalidSSLCertificates completed:nil];
         [_rightImageView sd_setImageWithURL:[NSURL URLWithString:rightImageName] placeholderImage:PLACEHOLDER_IMAGE options:SDWebImageAllowInvalidSSLCertificates completed:nil];
+        */
+        [_leftImageView sd_setImageWithURL:[NSURL URLWithString:leftImageName] placeholderImage:PLACEHOLDER_IMAGE options:SDWebImageAllowInvalidSSLCertificates completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+            // 在回调block中进行图片裁剪处理（去除一圈白边）
+            CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], CGRectMake(20, 20, image.size.width-40, image.size.height-40));
+            _leftImageView.image =[UIImage imageWithCGImage:imageRef];
+        }];
+        [_centerImageView sd_setImageWithURL:[NSURL URLWithString:centerImageName] placeholderImage:PLACEHOLDER_IMAGE options:SDWebImageAllowInvalidSSLCertificates completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+            // 在回调block中进行图片裁剪处理（去除一圈白边）
+            CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], CGRectMake(20, 20, image.size.width-40, image.size.height-40));
+            _centerImageView.image =[UIImage imageWithCGImage:imageRef];
+        }];
+        [_rightImageView sd_setImageWithURL:[NSURL URLWithString:rightImageName] placeholderImage:PLACEHOLDER_IMAGE options:SDWebImageAllowInvalidSSLCertificates completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+            // 在回调block中进行图片裁剪处理（去除一圈白边）
+            CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], CGRectMake(20, 20, image.size.width-40, image.size.height-40));
+            _rightImageView.image =[UIImage imageWithCGImage:imageRef];
+        }];
+        
         _fewImageView.hidden = YES;
         _leftImageView.hidden = NO;
         _centerImageView.hidden = NO;

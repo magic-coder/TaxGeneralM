@@ -10,6 +10,6 @@
 
 @interface AccountUtil : NSObject
 
-- (void)accountLogout:(void(^)())success failed:(void(^)(NSString *error))failed;
++ (void)accountLogout;
 
 @end

@@ -15,6 +15,7 @@
         self.backgroundColor = DEFAULT_BACKGROUND_COLOR;
         
         UILabel *taxLabel = [self labelWithFrame:CGRectMake(0, frame.size.height-80, WIDTH_SCREEN, 20)];
+        taxLabel.font = [UIFont systemFontOfSize:13.0f];
         taxLabel.text = @"西安市地方税务局";
         [self addSubview:taxLabel];
         

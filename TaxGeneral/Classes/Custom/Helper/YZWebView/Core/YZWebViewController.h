@@ -15,6 +15,8 @@
 
 @property (nonatomic, strong)NSURL *url;
 
+@property (nonatomic ,strong) NSURLRequest *req;
+
 @property (nonatomic, strong)UIColor *tintColor;
 
 @property (nonatomic, readonly)YZWebView *webView;
@@ -29,7 +31,6 @@
  * @brief 根据本地文件路径加载
  */
 - (instancetype)initWithFile:(NSString *)url;
-
 
 - (void)invokeJavaScript:(NSString *)function;
 

@@ -26,7 +26,7 @@ static NSString * const reuseIdentifier = @"aboutTableViewCell";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _data = @[@"官网", @"功能介绍", @"去评分"];
+    _data = @[@"功能介绍", @"检测更新", @"去评分"];
     
     [self.view setBackgroundColor:DEFAULT_BACKGROUND_COLOR];
     [self.tableView setBackgroundColor:[UIColor whiteColor]];
@@ -77,10 +77,8 @@ static NSString * const reuseIdentifier = @"aboutTableViewCell";
     // 点击后将颜色变回来
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    if(indexPath.row == 0){
-        NSString *urlString = @"http://www.xads.gov.cn";
-        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@", urlString]];
-        [[UIApplication sharedApplication] openURL:url];
+    if(indexPath.row == 1){
+        [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:@"当前版本已是最新版本"];
     }
     
 }

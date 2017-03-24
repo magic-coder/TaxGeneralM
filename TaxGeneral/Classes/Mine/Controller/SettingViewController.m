@@ -50,7 +50,7 @@
     if([item.title isEqualToString:@"清理缓存"]){
         [YZActionSheet showActionSheetWithTitle:nil cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@[@"确定"] handler:^(YZActionSheet *actionSheet, NSInteger index) {
             if(index == 1){
-                MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+                MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
                 dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
                     
                     // Switch to determinate mode
@@ -125,7 +125,7 @@
     // 写入本地SandBox设置文件中
     BOOL res = [[SettingUtil alloc] writeSettingData:settingDict];
     if(!res){
-        [YZProgressHUD showHUDView:self.navigationController.view Mode:SHOWMODE Text:@"设置异常！"];
+        [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:@"设置异常！"];
     }
     
 }

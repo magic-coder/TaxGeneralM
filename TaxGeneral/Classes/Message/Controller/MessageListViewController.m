@@ -9,7 +9,6 @@
 #import "MessageListViewController.h"
 #import "MessageListViewCell.h"
 #import "MessageListUtil.h"
-#import "LoginViewController.h"
 #import "MJRefresh.h"
 
 #import "ChatViewController.h"
@@ -66,7 +65,7 @@ static int const pageSize = 10;
     if([self isLogin]){
         // 先判断角标
         UITabBarItem * item = [self.tabBarController.tabBar.items objectAtIndex:2];
-        if(item.badgeValue != nil || [self.title isEqualToString:@"未连接"] || isRefresh){
+        if(item.badgeValue != nil || ![self.navigationItem.title isEqualToString:@"消息"] || isRefresh){
             [self autoLoadData];
             //item.badgeValue = nil;
         }else{
@@ -235,12 +234,37 @@ static int const pageSize = 10;
         [self handleDataDict:dataDict];// 数据处理
         
         self.navigationItem.titleView = nil;
-        self.title = @"消息";
+        self.navigationItem.title = @"消息";
         [self.tableView reloadData];
     } failed:^(NSString *error) {
-        self.navigationItem.titleView = nil;
-        self.title = @"未连接";
-        [YZProgressHUD showHUDView:self.navigationController.view Mode:SHOWMODE Text:error];
+        if([error isEqualToString:@"510"]){
+            self.navigationItem.titleView = nil;
+            self.navigationItem.title = @"未登录";
+            [YZAlertView showAlertWith:self title:@"" message:@"当前登录已失效，请重新登录！" callbackBlock:^(NSInteger btnIndex) {
+                // 注销方法
+                [YZProgressHUD showHUDView:self.view Mode:LOCKMODE Text:@"注销中..."];
+                [AccountUtil accountLogout];
+                [YZProgressHUD hiddenHUDForView:self.view];
+                
+                LoginViewController *loginVC = [[LoginViewController alloc] init];
+                loginVC.isLogin = YES;
+                
+                // 水波纹动画效果
+                CATransition *animation = [CATransition animation];
+                animation.duration = 1.0f;
+                animation.timingFunction = UIViewAnimationCurveEaseInOut;
+                animation.type = @"rippleEffect";
+                //animation.type = kCATransitionMoveIn;
+                animation.subtype = kCATransitionFromTop;
+                [self.view.window.layer addAnimation:animation forKey:nil];
+                
+                [self presentViewController:loginVC animated:YES completion:nil];
+            } cancelButtonTitle:@"重新登录" destructiveButtonTitle:nil otherButtonTitles: nil];
+        }else{
+            self.navigationItem.titleView = nil;
+            self.navigationItem.title = @"未连接";
+            [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:error];
+        }
     }];
 }
 

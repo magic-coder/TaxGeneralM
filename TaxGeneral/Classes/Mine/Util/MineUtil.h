@@ -23,8 +23,6 @@
 
 +(NSMutableArray *) getServiceItems;    // 获取我的服务列表
 
-+(NSMutableArray *) getQuestionItems;   // 常见问题
-
 +(NSMutableArray *) getSettingItems;    // 获取设置信息列表
 
 @end

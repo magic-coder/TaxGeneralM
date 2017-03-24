@@ -80,6 +80,8 @@
 		188C75211E14C9AF0056E40D /* AppTopView.m in Sources */ = {isa = PBXBuildFile; fileRef = 188C75201E14C9AF0056E40D /* AppTopView.m */; };
 		188C752B1E1606A30056E40D /* DeviceInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 188C752A1E1606A30056E40D /* DeviceInfoModel.m */; };
 		188C75321E1653240056E40D /* AppEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 188C75311E1653240056E40D /* AppEditViewController.m */; };
+		18A08CCC1E80BB3C0027FF70 /* LoginUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A08CCB1E80BB3C0027FF70 /* LoginUtil.m */; };
+		18A08CCF1E80FD1E0027FF70 /* QuestionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A08CCE1E80FD1E0027FF70 /* QuestionViewController.m */; };
 		18A4F8111D4996230044734E /* MainNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A4F8101D4996230044734E /* MainNavigationController.m */; };
 		18A4F8141D4996460044734E /* MainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A4F8131D4996460044734E /* MainTabBarController.m */; };
 		18A7F8951D5AC11C007D4E1B /* BaseCordovaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A7F8941D5AC11C007D4E1B /* BaseCordovaViewController.m */; };
@@ -154,7 +156,6 @@
 		18D71EF91DED200300BDB5C7 /* NewsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D71EF81DED200300BDB5C7 /* NewsModel.m */; };
 		18D71EFC1DED212B00BDB5C7 /* NewsUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D71EFB1DED212B00BDB5C7 /* NewsUtil.m */; };
 		18D752B71DF1055400545368 /* NewsLoopView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D752B61DF1055400545368 /* NewsLoopView.m */; };
-		18DB6C0F1E495A600079120D /* QuestionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DB6C0E1E495A600079120D /* QuestionViewController.m */; };
 		18DB6C121E495C6C0079120D /* ScheduleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DB6C111E495C6C0079120D /* ScheduleViewController.m */; };
 		18DC62111E6415CD001834D1 /* YZAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DC62071E6415CD001834D1 /* YZAlertView.m */; };
 		18DC62121E6415CD001834D1 /* YZNetworkingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DC620A1E6415CD001834D1 /* YZNetworkingManager.m */; };
@@ -388,6 +389,10 @@
 		188C75301E1653240056E40D /* AppEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppEditViewController.h; path = Classes/App/Controller/AppEditViewController.h; sourceTree = "<group>"; };
 		188C75311E1653240056E40D /* AppEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppEditViewController.m; path = Classes/App/Controller/AppEditViewController.m; sourceTree = "<group>"; };
 		189899341D504B8900B3CF71 /* Marcos.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Marcos.h; path = Classes/Global/Marcos.h; sourceTree = "<group>"; };
+		18A08CCA1E80BB3C0027FF70 /* LoginUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginUtil.h; path = Classes/Login/Util/LoginUtil.h; sourceTree = "<group>"; };
+		18A08CCB1E80BB3C0027FF70 /* LoginUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginUtil.m; path = Classes/Login/Util/LoginUtil.m; sourceTree = "<group>"; };
+		18A08CCD1E80FD1E0027FF70 /* QuestionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QuestionViewController.h; path = Classes/Mine/Controller/QuestionViewController.h; sourceTree = "<group>"; };
+		18A08CCE1E80FD1E0027FF70 /* QuestionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QuestionViewController.m; path = Classes/Mine/Controller/QuestionViewController.m; sourceTree = "<group>"; };
 		18A4F80F1D4996230044734E /* MainNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainNavigationController.h; path = Classes/Main/MainNavigationController.h; sourceTree = "<group>"; };
 		18A4F8101D4996230044734E /* MainNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainNavigationController.m; path = Classes/Main/MainNavigationController.m; sourceTree = "<group>"; };
 		18A4F8121D4996460044734E /* MainTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainTabBarController.h; path = Classes/Main/MainTabBarController.h; sourceTree = "<group>"; };
@@ -541,8 +546,6 @@
 		18D71EFB1DED212B00BDB5C7 /* NewsUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NewsUtil.m; path = Classes/News/Util/NewsUtil.m; sourceTree = "<group>"; };
 		18D752B51DF1055400545368 /* NewsLoopView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NewsLoopView.h; path = Classes/News/View/NewsLoopView.h; sourceTree = "<group>"; };
 		18D752B61DF1055400545368 /* NewsLoopView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NewsLoopView.m; path = Classes/News/View/NewsLoopView.m; sourceTree = "<group>"; };
-		18DB6C0D1E495A600079120D /* QuestionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QuestionViewController.h; path = Classes/Mine/Controller/QuestionViewController.h; sourceTree = "<group>"; };
-		18DB6C0E1E495A600079120D /* QuestionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QuestionViewController.m; path = Classes/Mine/Controller/QuestionViewController.m; sourceTree = "<group>"; };
 		18DB6C101E495C6C0079120D /* ScheduleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ScheduleViewController.h; path = Classes/Mine/Controller/ScheduleViewController.h; sourceTree = "<group>"; };
 		18DB6C111E495C6C0079120D /* ScheduleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ScheduleViewController.m; path = Classes/Mine/Controller/ScheduleViewController.m; sourceTree = "<group>"; };
 		18DC62061E6415CD001834D1 /* YZAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YZAlertView.h; sourceTree = "<group>"; };
@@ -1076,6 +1079,15 @@
 			name = View;
 			sourceTree = "<group>";
 		};
+		18A08CC91E80BB1A0027FF70 /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				18A08CCA1E80BB3C0027FF70 /* LoginUtil.h */,
+				18A08CCB1E80BB3C0027FF70 /* LoginUtil.m */,
+			);
+			name = Util;
+			sourceTree = "<group>";
+		};
 		18A966AF1D52D46C00A8E539 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
@@ -1323,6 +1335,7 @@
 			isa = PBXGroup;
 			children = (
 				18BE9D0E1D51830700575D0E /* Controller */,
+				18A08CC91E80BB1A0027FF70 /* Util */,
 			);
 			name = Login;
 			sourceTree = "<group>";
@@ -1687,8 +1700,8 @@
 			children = (
 				1856DA4C1E48765E0092DE3F /* ServiceViewController.h */,
 				1856DA4D1E48765E0092DE3F /* ServiceViewController.m */,
-				18DB6C0D1E495A600079120D /* QuestionViewController.h */,
-				18DB6C0E1E495A600079120D /* QuestionViewController.m */,
+				18A08CCD1E80FD1E0027FF70 /* QuestionViewController.h */,
+				18A08CCE1E80FD1E0027FF70 /* QuestionViewController.m */,
 			);
 			name = Service;
 			sourceTree = "<group>";
@@ -2155,7 +2168,6 @@
 				18F122B71E7BB3E700E12175 /* AboutViewController.m in Sources */,
 				18AA319E1D47384500862187 /* MASViewAttribute.m in Sources */,
 				18D5B25E1E6FD21E00F5F555 /* SDWebImagePrefetcher.m in Sources */,
-				18DB6C0F1E495A600079120D /* QuestionViewController.m in Sources */,
 				18F122A71E7B7B2200E12175 /* UIImage+YZ.m in Sources */,
 				18AA317A1D4737B400862187 /* AFSecurityPolicy.m in Sources */,
 				18F122B41E7BB36E00E12175 /* AboutHeaderView.m in Sources */,
@@ -2198,8 +2210,10 @@
 				18D5B25D1E6FD21E00F5F555 /* SDWebImageManager.m in Sources */,
 				18BF04921D5478B4000650ED /* SettingViewController.m in Sources */,
 				18AA319F1D47384500862187 /* MASViewConstraint.m in Sources */,
+				18A08CCF1E80FD1E0027FF70 /* QuestionViewController.m in Sources */,
 				18A966BC1D531A2300A8E539 /* UIView+YZ.m in Sources */,
 				183C19D01E69514100D7203F /* NSObject+MJClass.m in Sources */,
+				18A08CCC1E80BB3C0027FF70 /* LoginUtil.m in Sources */,
 				18DC62311E6417F7001834D1 /* YZWebView.m in Sources */,
 				183C19CB1E69514100D7203F /* MJExtensionConst.m in Sources */,
 				18DC62131E6415CD001834D1 /* YZProgressHUD.m in Sources */,

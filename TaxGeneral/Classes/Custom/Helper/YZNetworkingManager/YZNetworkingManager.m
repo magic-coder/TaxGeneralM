@@ -46,10 +46,11 @@
     
     // 4.设置请求类型
     manager.requestSerializer = [AFHTTPRequestSerializer serializer];
-    /*
-    [manager.requestSerializer setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-    [manager.requestSerializer setValue:@"gizp" forHTTPHeaderField:@"Content-Encoding"];
-     */
+    
+    [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    //[manager.requestSerializer setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+    //[manager.requestSerializer setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    //[manager.requestSerializer setValue:@"gizp" forHTTPHeaderField:@"Content-Encoding"];
     
     // 5.请求超时，时间设置
     manager.requestSerializer.timeoutInterval = 10.0;
@@ -144,6 +145,7 @@
         DLog(@"json解析失败：%@",error);
         return nil;
     }
+    
     return dic;
 }
 

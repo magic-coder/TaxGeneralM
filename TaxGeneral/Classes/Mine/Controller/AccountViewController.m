@@ -8,7 +8,6 @@
 
 #import "AccountViewController.h"
 #import "MineUtil.h"
-#import "AccountUtil.h"
 
 @interface AccountViewController ()
 
@@ -31,14 +30,12 @@
     if([item.title isEqualToString:@"退出登录"]){
         [YZActionSheet showActionSheetWithTitle:@"退出登录后下次使用时需重新登录，您确定要退出吗？" cancelButtonTitle:@"取消" destructiveButtonTitle:@"退出" otherButtonTitles:nil handler:^(YZActionSheet *actionSheet, NSInteger index) {
             if(-1 == index){
-                [YZProgressHUD showHUDView:self.navigationController.view Mode:LOCKMODE Text:@"注销中..."];
-                [[AccountUtil alloc] accountLogout:^{
-                    [YZProgressHUD hiddenHUDForView:self.navigationController.view];
-                    [self.navigationController popViewControllerAnimated:YES];
-                } failed:^(NSString *error) {
-                    [YZProgressHUD hiddenHUDForView:self.navigationController.view];
-                    [YZProgressHUD showHUDView:self.navigationController.view Mode:SHOWMODE Text:error];
-                }];
+                [YZProgressHUD showHUDView:self.view Mode:LOCKMODE Text:@"注销中..."];
+                
+                [AccountUtil accountLogout];
+                
+                [YZProgressHUD hiddenHUDForView:self.view];
+                [self.navigationController popViewControllerAnimated:YES];
             }
         }];
     }

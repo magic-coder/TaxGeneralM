@@ -146,7 +146,7 @@ static int const pageSize = 10;
         // 结束刷新
         [self.tableView.mj_header endRefreshing];
         
-        [YZProgressHUD showHUDView:self.navigationController.view Mode:SHOWMODE Text:error];
+        [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:error];
     }];
 }
 
@@ -173,7 +173,7 @@ static int const pageSize = 10;
     } failed:^(NSString *error) {
         _pageNo--;
         [self.tableView.mj_footer resetNoMoreData];
-        [YZProgressHUD showHUDView:self.navigationController.view Mode:SHOWMODE Text:error];
+        [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:error];
     }];
 }
 

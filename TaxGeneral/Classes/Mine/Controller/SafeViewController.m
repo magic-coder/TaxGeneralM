@@ -108,7 +108,7 @@
         [settingDict setValue:[NSNumber numberWithBool:sender.isOn] forKey:@"touchID"];
         BOOL res = [settingUtil writeSettingData:settingDict];
         if(!res){
-            [YZProgressHUD showHUDView:self.navigationController.view Mode:SHOWMODE Text:@"设置异常！"];
+            [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:@"设置异常！"];
         }
         
     }];

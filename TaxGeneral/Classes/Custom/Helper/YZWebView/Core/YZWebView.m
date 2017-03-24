@@ -213,14 +213,13 @@
 #pragma mark 在收到响应(response)之后，决定是否跳转的代理
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler{
     DLog(@"%@",navigationResponse.response.URL);
-    BOOL decision = YES;
-    /*
-    if ([self.delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
-        //decision = [self.delegate webView:self shouldStartLoadWithRequest:navigationAction.request navigationType:(YZWebViewNavigationType)navigationAction.navigationType];
+    
+    BOOL decision = NO;
+    if ([self.delegate respondsToSelector:@selector(webView:shouldStartLoadWithResponse:)]) {
+        decision = [self.delegate webView:self shouldStartLoadWithResponse:navigationResponse.response];
     }
-    */
+    
     if (!decision) {
-        [[UIApplication sharedApplication] openURL:navigationResponse.response.URL];
         decisionHandler(WKNavigationResponsePolicyCancel);// 不允许跳转
         return;
     }else{

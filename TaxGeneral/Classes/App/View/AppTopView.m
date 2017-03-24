@@ -21,6 +21,7 @@
         
         UILabel *titleLabel = [[UILabel alloc] init];
         titleLabel.frame = CGRectMake(WIDTH_SCREEN/2-50, HEIGHT_STATUS+5, 100, 30);
+        titleLabel.font = [UIFont boldSystemFontOfSize:16.0f];
         titleLabel.textAlignment = NSTextAlignmentCenter;
         titleLabel.text = @"应用";
         titleLabel.textColor = [UIColor whiteColor];

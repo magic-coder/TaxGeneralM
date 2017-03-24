@@ -20,4 +20,12 @@
     return scaledImage;
 }
 
+#pragma mark - 裁剪图片
++ (UIImage *)clipImage:(UIImage *)image rect:(CGRect)rect{
+    CGImageRef imageRef = CGImageCreateWithImageInRect(image.CGImage, rect);
+    UIImage *thumbScale = [UIImage imageWithCGImage:imageRef];
+    CGImageRelease(imageRef);
+    return thumbScale;
+}
+
 @end

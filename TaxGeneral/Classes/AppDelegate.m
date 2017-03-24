@@ -14,7 +14,6 @@
 #import "DeviceInfoModel.h"
 
 #import "ViewController.h"
-#import "LoginViewController.h"
 #import "TouchIDViewController.h"
 #import "WUGesturesUnlockViewController.h"
 #import "MessageListViewController.h"
@@ -164,6 +163,7 @@
     }
     // App图片添加3DTouch按压方法 ->End<-
     
+    // 判断用户是否登录
     /*
     NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS];
     if(nil != userDict){
@@ -192,6 +192,12 @@
         [_window setRootViewController:_loginViewController];
     }
     */
+    
+    // 初始化完毕存储Cookie(用于自动登录的会话共享)
+    NSURL *cookieHost = [NSURL URLWithString:SERVER_URL];
+    NSDictionary *propertiesDict = [NSDictionary dictionaryWithObjectsAndKeys:[cookieHost host], NSHTTPCookieDomain, [cookieHost path], NSHTTPCookiePath, @"COOKIE_NAME", NSHTTPCookieName, @"COOKIE_VALUE", NSHTTPCookieValue, nil];
+    NSHTTPCookie *cookie = [NSHTTPCookie cookieWithProperties:propertiesDict];
+    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
     
     [_window makeKeyAndVisible];
     
@@ -231,6 +237,8 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    // 当应用程序挂起并从新进入时，设置cookie的接受政策
+    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookieAcceptPolicy:NSHTTPCookieAcceptPolicyAlways];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {

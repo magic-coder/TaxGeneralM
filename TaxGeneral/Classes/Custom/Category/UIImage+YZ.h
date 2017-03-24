@@ -13,4 +13,7 @@
 // 根据视图的大小来计算图片的大小
 + (UIImage *)imageNamed:(NSString *)name scaleToSize:(CGSize)size;
 
+// 根据大小裁剪图片
++ (UIImage *)clipImage:(UIImage *)image rect:(CGRect)rect;
+
 @end

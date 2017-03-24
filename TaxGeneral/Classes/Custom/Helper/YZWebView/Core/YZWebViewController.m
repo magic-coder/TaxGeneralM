@@ -14,7 +14,6 @@
 
 @interface YZWebViewController ()<YZWebViewDelegate>
 
-@property (nonatomic ,strong) NSURLRequest *req;
 @property (nonatomic ,assign) BOOL hiddenNavtionBar;
 @end
 
@@ -117,6 +116,53 @@
         return YES;
     }
 }
+-(BOOL)webView:(YZWebView *)webView shouldStartLoadWithResponse:(NSURLResponse *)response{
+    //DLog(@"Yan -> %@", webView.URL.absoluteString);
+    
+    // 如果响应的地址是指定域名，则允许跳转
+    if ([webView.URL.absoluteString hasSuffix:@"login"]) {
+        
+        [LoginUtil loginWithTokenSuccess:^{
+            //[webView loadUrl:[_url absoluteString]];
+            // 携带cookie进行请求
+            NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:_url];
+            NSArray * cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
+            NSDictionary * headers = [NSHTTPCookie requestHeaderFieldsWithCookies:cookies];
+            [request setHTTPShouldHandleCookies:YES];
+            [request setAllHTTPHeaderFields:headers];
+            [webView loadRequest:request];
+        } failed:^(NSString *error) {
+            if([error isEqualToString:@"510"]){
+                [YZAlertView showAlertWith:self title:@"" message:@"当前登录已失效，请重新登录！" callbackBlock:^(NSInteger btnIndex) {
+                    // 注销方法
+                    [YZProgressHUD showHUDView:self.view Mode:LOCKMODE Text:@"注销中..."];
+                    [AccountUtil accountLogout];
+                    [YZProgressHUD hiddenHUDForView:self.view];
+                    
+                    LoginViewController *loginVC = [[LoginViewController alloc] init];
+                    loginVC.isLogin = YES;
+                    
+                    // 水波纹动画效果
+                    CATransition *animation = [CATransition animation];
+                    animation.duration = 1.0f;
+                    animation.timingFunction = UIViewAnimationCurveEaseInOut;
+                    animation.type = @"rippleEffect";
+                    //animation.type = kCATransitionMoveIn;
+                    animation.subtype = kCATransitionFromTop;
+                    [self.view.window.layer addAnimation:animation forKey:nil];
+                    
+                    [self presentViewController:loginVC animated:YES completion:nil];
+                    
+                } cancelButtonTitle:@"重新登录" destructiveButtonTitle:nil otherButtonTitles: nil];
+            }else{
+                [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:error];
+            }
+        }];
+        return NO;
+    }else{
+        return YES;
+    }
+}
 - (void)webViewDidStartLoad:(YZWebView *)webView{
     DLog(@"Yan -> 页面开始加载时调用 : didStartProvisionalNavigation");
 }
@@ -133,7 +179,9 @@
     }
 }
 - (void)webView:(YZWebView *)webView withError:(NSError *)error{
-    [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:@"网络连接异常！"];
+    if(error.code < 0 && error.code != NSURLErrorCancelled){
+        [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:@"网络连接异常！"];
+    }
     //DLog(@"Yan ->  页面加载失败 : %@", error.localizedDescription);
 }
 - (void)webView:(YZWebView *)webVie updateProgress:(NSProgress *)progress{

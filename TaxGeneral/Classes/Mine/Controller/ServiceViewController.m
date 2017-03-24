@@ -36,7 +36,12 @@
     
     UIViewController *viewController = nil;
     if([item.title isEqualToString:@"客服电话"]){
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"tel:4008969699"]];
+        NSString *str = [NSString stringWithFormat:@"tel://%@", item.subTitle];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str]];
+    }
+    if([item.title isEqualToString:@"客服邮箱"]){
+        NSString *str = [NSString stringWithFormat:@"mailto://%@", item.subTitle];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str]];
     }
     if([item.title isEqualToString:@"常见问题"]){
         QuestionViewController *questionViewController = [[QuestionViewController alloc] init];

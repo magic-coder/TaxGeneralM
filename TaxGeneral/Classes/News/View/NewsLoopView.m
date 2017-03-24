@@ -105,10 +105,17 @@
     CGFloat height = self.frame.size.height;
     for (int i = 0; i < 3; i++) {
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(i * width, 0, width, height)];
-        // 从远程URL获取图片
-        [imageView sd_setImageWithURL:[NSURL URLWithString:self.currentImages[i]] placeholderImage:[UIImage imageNamed:@"common_news_placeholder"] options:SDWebImageAllowInvalidSSLCertificates completed:nil];
         // 获取本地图片
         // imageView.image = [UIImage imageNamed:self.currentImages[i]];
+        
+        // 从远程URL获取图片
+        //[imageView sd_setImageWithURL:[NSURL URLWithString:self.currentImages[i]] placeholderImage:[UIImage imageNamed:@"common_news_placeholder"] options:SDWebImageAllowInvalidSSLCertificates completed:nil];
+        [imageView sd_setImageWithURL:[NSURL URLWithString:self.currentImages[i]] placeholderImage:[UIImage imageNamed:@"common_news_placeholder"] options:SDWebImageAllowInvalidSSLCertificates completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+            // 在回调block中进行图片裁剪处理（去除一圈白边）
+            CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], CGRectMake(20, 20, image.size.width-40, image.size.height-40));
+            imageView.image =[UIImage imageWithCGImage:imageRef];
+        }];
+        
         [scrollView addSubview:imageView];
     }
     scrollView.scrollsToTop = NO;
@@ -130,10 +137,16 @@
     NSArray *subViews = self.scrollView.subviews;
     for (int i = 0; i < subViews.count; i++) {
         UIImageView *imageView = (UIImageView *)subViews[i];
-        // 从远程URL获取图片
-        [imageView sd_setImageWithURL:[NSURL URLWithString:self.currentImages[i]] placeholderImage:[UIImage imageNamed:@"common_news_placeholder"] options:SDWebImageAllowInvalidSSLCertificates completed:nil];
         // 获取本地图片
         // imageView.image = [UIImage imageNamed:self.currentImages[i]];
+        
+        // 从远程URL获取图片
+        //[imageView sd_setImageWithURL:[NSURL URLWithString:self.currentImages[i]] placeholderImage:[UIImage imageNamed:@"common_news_placeholder"] options:SDWebImageAllowInvalidSSLCertificates completed:nil];
+        [imageView sd_setImageWithURL:[NSURL URLWithString:self.currentImages[i]] placeholderImage:[UIImage imageNamed:@"common_news_placeholder"] options:SDWebImageAllowInvalidSSLCertificates completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+            // 在回调block中进行图片裁剪处理（去除一圈白边）
+            CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], CGRectMake(20, 20, image.size.width-40, image.size.height-40));
+            imageView.image =[UIImage imageWithCGImage:imageRef];
+        }];
     }
     
     [self.scrollView setContentOffset:CGPointMake(self.frame.size.width, 0)];

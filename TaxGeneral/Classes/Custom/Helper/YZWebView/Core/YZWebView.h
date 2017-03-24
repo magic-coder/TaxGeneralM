@@ -26,6 +26,7 @@ typedef NS_ENUM(NSInteger, YZWebViewNavigationType) {
 @protocol YZWebViewDelegate <NSObject>
 @optional
 - (BOOL)webView:(YZWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(YZWebViewNavigationType)navigationType;// 发送请求前决定是否跳转
+- (BOOL)webView:(YZWebView *)webView shouldStartLoadWithResponse:(NSURLResponse *)response;// 请求响应后决定是否跳转
 - (void)webView:(YZWebView *)webView withError:(NSError *)error;
 - (void)webViewDidFinshLoad:(YZWebView *)webView;
 - (void)webViewDidStartLoad:(YZWebView *)webView;

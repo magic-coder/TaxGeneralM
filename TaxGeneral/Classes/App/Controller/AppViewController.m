@@ -8,7 +8,6 @@
 
 #import "AppViewController.h"
 #import "BaseCollectionViewCell.h"
-#import "LoginViewController.h"
 #import "AppTopView.h"
 #import "AppUtil.h"
 
@@ -64,14 +63,14 @@
         if(self.data != nil){
             [self.collectionView reloadData];
         }else{
-            [YZProgressHUD showHUDView:self.navigationController.view Mode:LOCKMODE Text:@"加载中..."];
+            [YZProgressHUD showHUDView:self.view Mode:LOCKMODE Text:@"加载中..."];
             [_appUtil initDataWithType:AppItemsTypeNone dataBlock:^(NSMutableArray *dataArray) {
-                [YZProgressHUD hiddenHUDForView:self.navigationController.view];
+                [YZProgressHUD hiddenHUDForView:self.view];
                 self.data = dataArray;
                 [self.collectionView reloadData];
             } failed:^(NSString *error) {
-                [YZProgressHUD hiddenHUDForView:self.navigationController.view];
-                [YZProgressHUD showHUDView:self.navigationController.view Mode:SHOWMODE Text:error];
+                [YZProgressHUD hiddenHUDForView:self.view];
+                [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:error];
             }];
         }
     }else{
@@ -110,7 +109,15 @@
     
     if(viewController != nil || url != nil){
         if(viewController == nil){
-            viewController = [[BaseWebViewController alloc] initWithURL:url];
+            NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+            NSArray * cookies = [[NSHTTPCookieStorage  sharedHTTPCookieStorage] cookies];
+            NSDictionary * headers = [NSHTTPCookie requestHeaderFieldsWithCookies:cookies];
+            [request setHTTPShouldHandleCookies:YES];
+            [request setAllHTTPHeaderFields:headers];
+            BaseWebViewController *baseWebVC = [[BaseWebViewController alloc] init];
+            baseWebVC.url = [NSURL URLWithString:url];
+            baseWebVC.req = request;
+            viewController = baseWebVC;
         }
         
         viewController.title = cell.titleLabel.text; // 设置标题
@@ -122,15 +129,21 @@
 - (void)appTopViewBtnClick:(UIButton *)sender{
     
     UIViewController *viewController= nil;
+    NSURL *url = nil;
+    
+    BOOL isWeb = NO;    // 是否为web页面
     
     if(sender.titleLabel.text == nil){// 进入应用管理器
         viewController = [[AppEditViewController alloc] init];
     }
     if([sender.titleLabel.text isEqualToString:@"通知公告"]){
-        viewController = [[BaseWebViewController alloc] initWithURL:[NSString stringWithFormat:@"%@public/notice/index", SERVER_URL]];
+        isWeb = YES;
+        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@public/notice/index", SERVER_URL]];
     }
     if([sender.titleLabel.text isEqualToString:@"通讯录"]){
-        viewController = [[BaseWebViewController alloc] initWithURL:[NSString stringWithFormat:@"%@litter/initLitter", SERVER_URL]];
+        isWeb = YES;
+        // 携带cookie进行请求
+        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@litter/initLitter", SERVER_URL]];
     }
     if([sender.titleLabel.text isEqualToString:@"办税地图"]){
         viewController = [[MapListViewController alloc] init];
@@ -139,7 +152,19 @@
         viewController = [[QuestionViewController alloc] init];
     }
     
-    if(viewController != nil){
+    if(viewController != nil || url != nil){
+        if(viewController == nil){
+            NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url];
+            NSArray * cookies = [[NSHTTPCookieStorage  sharedHTTPCookieStorage] cookies];
+            NSDictionary * headers = [NSHTTPCookie requestHeaderFieldsWithCookies:cookies];
+            [request setHTTPShouldHandleCookies:YES];
+            [request setAllHTTPHeaderFields:headers];
+            BaseWebViewController *baseWebVC = [[BaseWebViewController alloc] init];
+            baseWebVC.url = url;
+            baseWebVC.req = request;
+            viewController = baseWebVC;
+        }
+        
         viewController.title = sender.titleLabel.text;
         [self.navigationController pushViewController:viewController animated:YES];
     }
