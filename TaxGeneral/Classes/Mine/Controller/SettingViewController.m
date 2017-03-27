@@ -1,10 +1,12 @@
-//
-//  SettingViewController.m
-//  TaxGeneral
-//
-//  Created by Apple on 16/8/5.
-//  Copyright © 2016年 Yanzheng. All rights reserved.
-//
+/************************************************************
+ Class    : SettingViewController.m
+ Describe : 设置界面
+ Company  : Prient
+ Author   : Yanzheng
+ Date     : 2016-08-05
+ Version  : 1.0
+ Declare  : Copyright © 2016 Yanzheng. All rights reserved.
+ ************************************************************/
 
 #import "SettingViewController.h"
 #import "MineUtil.h"
@@ -125,7 +127,7 @@
     // 写入本地SandBox设置文件中
     BOOL res = [[SettingUtil alloc] writeSettingData:settingDict];
     if(!res){
-        [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:@"设置异常！"];
+        [YZProgressHUD showHUDView:NAV_VIEW Mode:SHOWMODE Text:@"设置异常！"];
     }
     
 }

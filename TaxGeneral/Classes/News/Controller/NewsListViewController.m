@@ -1,10 +1,12 @@
-//
-//  NewsListViewController.m
-//  TaxGeneral
-//
-//  Created by Apple on 2016/12/1.
-//  Copyright © 2016年 Yanzheng. All rights reserved.
-//
+/************************************************************
+ Class    : NewsViewController.m
+ Describe : 税闻列表界面
+ Company  : Prient
+ Author   : Yanzheng
+ Date     : 2016-12-01
+ Version  : 1.0
+ Declare  : Copyright © 2016 Yanzheng. All rights reserved.
+ ************************************************************/
 
 #import "NewsListViewController.h"
 #import "NewsTableViewCell.h"
@@ -146,7 +148,7 @@ static int const pageSize = 10;
         // 结束刷新
         [self.tableView.mj_header endRefreshing];
         
-        [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:error];
+        [YZProgressHUD showHUDView:NAV_VIEW Mode:SHOWMODE Text:error];
     }];
 }
 
@@ -173,7 +175,7 @@ static int const pageSize = 10;
     } failed:^(NSString *error) {
         _pageNo--;
         [self.tableView.mj_footer resetNoMoreData];
-        [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:error];
+        [YZProgressHUD showHUDView:NAV_VIEW Mode:SHOWMODE Text:error];
     }];
 }
 

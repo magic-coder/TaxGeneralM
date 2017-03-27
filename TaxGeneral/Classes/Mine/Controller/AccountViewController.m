@@ -1,10 +1,12 @@
-//
-//  AccountViewController.m
-//  TaxGeneralM
-//
-//  Created by Apple on 2017/2/6.
-//  Copyright © 2017年 Yanzheng. All rights reserved.
-//
+/************************************************************
+ Class    : AccountViewController.m
+ Describe : 账户管理界面
+ Company  : Prient
+ Author   : Yanzheng
+ Date     : 2017-02-06
+ Version  : 1.0
+ Declare  : Copyright © 2017 Yanzheng. All rights reserved.
+ ************************************************************/
 
 #import "AccountViewController.h"
 #import "MineUtil.h"
@@ -30,11 +32,7 @@
     if([item.title isEqualToString:@"退出登录"]){
         [YZActionSheet showActionSheetWithTitle:@"退出登录后下次使用时需重新登录，您确定要退出吗？" cancelButtonTitle:@"取消" destructiveButtonTitle:@"退出" otherButtonTitles:nil handler:^(YZActionSheet *actionSheet, NSInteger index) {
             if(-1 == index){
-                [YZProgressHUD showHUDView:self.view Mode:LOCKMODE Text:@"注销中..."];
-                
                 [AccountUtil accountLogout];
-                
-                [YZProgressHUD hiddenHUDForView:self.view];
                 [self.navigationController popViewControllerAnimated:YES];
             }
         }];

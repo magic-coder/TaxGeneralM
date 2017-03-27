@@ -1,10 +1,12 @@
-//
-//  MessageListViewController.m
-//  TaxGeneral
-//
-//  Created by Apple on 16/8/15.
-//  Copyright © 2016年 Yanzheng. All rights reserved.
-//
+/************************************************************
+ Class    : MessageListViewController.m
+ Describe : 消息列表界面
+ Company  : Prient
+ Author   : Yanzheng
+ Date     : 2016-08-15
+ Version  : 1.0
+ Declare  : Copyright © 2016 Yanzheng. All rights reserved.
+ ************************************************************/
 
 #import "MessageListViewController.h"
 #import "MessageListViewCell.h"
@@ -242,9 +244,9 @@ static int const pageSize = 10;
             self.navigationItem.title = @"未登录";
             [YZAlertView showAlertWith:self title:@"" message:@"当前登录已失效，请重新登录！" callbackBlock:^(NSInteger btnIndex) {
                 // 注销方法
-                [YZProgressHUD showHUDView:self.view Mode:LOCKMODE Text:@"注销中..."];
+                [YZProgressHUD showHUDView:NAV_VIEW Mode:LOCKMODE Text:@"注销中..."];
                 [AccountUtil accountLogout];
-                [YZProgressHUD hiddenHUDForView:self.view];
+                [YZProgressHUD hiddenHUDForView:NAV_VIEW];
                 
                 LoginViewController *loginVC = [[LoginViewController alloc] init];
                 loginVC.isLogin = YES;
@@ -263,7 +265,7 @@ static int const pageSize = 10;
         }else{
             self.navigationItem.titleView = nil;
             self.navigationItem.title = @"未连接";
-            [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:error];
+            [YZProgressHUD showHUDView:NAV_VIEW Mode:SHOWMODE Text:error];
         }
     }];
 }

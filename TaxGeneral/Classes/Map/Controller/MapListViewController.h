@@ -1,10 +1,12 @@
-//
-//  MapListViewController.h
-//  TaxGeneralM
-//
-//  Created by Apple on 2017/2/21.
-//  Copyright © 2017年 Yanzheng. All rights reserved.
-//
+/************************************************************
+ Class    : MapListViewController.h
+ Describe : 地图机构列表（tree结构）
+ Company  : Prient
+ Author   : Yanzheng
+ Date     : 2017-02-21
+ Version  : 1.0
+ Declare  : Copyright © 2017 Yanzheng. All rights reserved.
+ ************************************************************/
 
 #import <UIKit/UIKit.h>
 

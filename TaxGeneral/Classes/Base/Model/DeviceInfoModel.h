@@ -1,10 +1,12 @@
-//
-//  DeviceInfoModel.h
-//  TaxGeneral
-//
-//  Created by Apple on 2016/12/30.
-//  Copyright © 2016年 Yanzheng. All rights reserved.
-//
+/************************************************************
+ Class    : DeviceInfoModel.h
+ Describe : 设备基本信息模型
+ Company  : Prient
+ Author   : Yanzheng
+ Date     : 2016-12-30
+ Version  : 1.0
+ Declare  : Copyright © 2016 Yanzheng. All rights reserved.
+ ************************************************************/
 
 #import <Foundation/Foundation.h>
 

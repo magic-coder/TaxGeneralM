@@ -1,10 +1,12 @@
-//
-//  MineUtil.m
-//  TaxGeneralM
-//
-//  Created by Apple on 2017/2/6.
-//  Copyright © 2017年 Yanzheng. All rights reserved.
-//
+/************************************************************
+ Class    : MineUtil.m
+ Describe : 我的界面工具类，加载各子模块内容
+ Company  : Prient
+ Author   : Yanzheng
+ Date     : 2017-02-06
+ Version  : 1.0
+ Declare  : Copyright © 2017 Yanzheng. All rights reserved.
+ ************************************************************/
 
 #import "MineUtil.h"
 #import "SettingUtil.h"

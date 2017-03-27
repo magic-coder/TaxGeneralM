@@ -59,4 +59,7 @@
 #define LOGIN_SUCCESS   @"loginSuccess"
 #define DEVICE_INFO     @"deviceInfo"
 
+#pragma mark - Common View
+#define NAV_VIEW self.navigationController.view
+
 #endif /* Marcos_h */

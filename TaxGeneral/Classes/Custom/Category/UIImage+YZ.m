@@ -1,10 +1,12 @@
-//
-//  UIImage+YZ.m
-//  TaxGeneralM
-//
-//  Created by Apple on 2017/3/17.
-//  Copyright © 2017年 Yanzheng. All rights reserved.
-//
+/************************************************************
+ Class    : UIImage+YZ.h
+ Describe : 自定义的UIImage图片处理类，包含自定义方法
+ Company  : Prient
+ Author   : Yanzheng
+ Date     : 2017-03-24
+ Version  : 1.0
+ Declare  : Copyright © 2017 Yanzheng. All rights reserved.
+ ************************************************************/
 
 #import "UIImage+YZ.h"
 

@@ -1,10 +1,12 @@
-//
-//  SafeViewController.m
-//  TaxGeneralM
-//
-//  Created by Apple on 2017/2/6.
-//  Copyright © 2017年 Yanzheng. All rights reserved.
-//
+/************************************************************
+ Class    : SafeViewController.m
+ Describe : 安全中心内容界面
+ Company  : Prient
+ Author   : Yanzheng
+ Date     : 2017-02-06
+ Version  : 1.0
+ Declare  : Copyright © 2017 Yanzheng. All rights reserved.
+ ************************************************************/
 
 #import "SafeViewController.h"
 #import "MineUtil.h"
@@ -108,7 +110,7 @@
         [settingDict setValue:[NSNumber numberWithBool:sender.isOn] forKey:@"touchID"];
         BOOL res = [settingUtil writeSettingData:settingDict];
         if(!res){
-            [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:@"设置异常！"];
+            [YZProgressHUD showHUDView:NAV_VIEW Mode:SHOWMODE Text:@"设置异常！"];
         }
         
     }];

@@ -1,6 +1,6 @@
 /************************************************************
  Class    : YZWebView.m
- Describe : This is Yanzheng custom WebView is easy to use
+ Describe : 自定义WebView（包含了UIWebView、WKWebView）以及代理方法
  Company  : Prient
  Author   : Yanzheng
  Date     : 2017-01-16

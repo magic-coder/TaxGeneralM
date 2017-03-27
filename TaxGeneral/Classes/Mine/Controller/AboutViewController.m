@@ -1,10 +1,12 @@
-//
-//  AboutViewController.m
-//  TaxGeneralM
-//
-//  Created by Apple on 2017/3/17.
-//  Copyright © 2017年 Yanzheng. All rights reserved.
-//
+/************************************************************
+ Class    : AboutViewController.m
+ Describe : 关于界面
+ Company  : Prient
+ Author   : Yanzheng
+ Date     : 2017-03-17
+ Version  : 1.0
+ Declare  : Copyright © 2017 Yanzheng. All rights reserved.
+ ************************************************************/
 
 #import "AboutViewController.h"
 #import "AboutHeaderView.h"
@@ -78,7 +80,7 @@ static NSString * const reuseIdentifier = @"aboutTableViewCell";
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     if(indexPath.row == 1){
-        [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:@"当前版本已是最新版本"];
+        [YZProgressHUD showHUDView:NAV_VIEW Mode:SHOWMODE Text:@"当前版本已是最新版本"];
     }
     
 }

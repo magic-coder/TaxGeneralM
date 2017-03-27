@@ -1,10 +1,12 @@
-//
-//  YZMenuItem.h
-//  TaxGeneralM
-//
-//  Created by Apple on 2017/2/27.
-//  Copyright © 2017年 Yanzheng. All rights reserved.
-//
+/************************************************************
+ Class    : YZMenuItem.h
+ Describe : 自定义气泡浮出菜单组件项目
+ Company  : Prient
+ Author   : Yanzheng
+ Date     : 2017-02-27
+ Version  : 1.0
+ Declare  : Copyright © 2017 Yanzheng. All rights reserved.
+ ************************************************************/
 
 #import <Foundation/Foundation.h>
 

@@ -1,10 +1,12 @@
-//
-//  ChatViewController.m
-//  TaxGeneral
-//
-//  Created by Apple on 16/8/16.
-//  Copyright © 2016年 Yanzheng. All rights reserved.
-//
+/************************************************************
+ Class    : ChatViewController.m
+ Describe : 对话框（聊天）界面
+ Company  : Prient
+ Author   : Yanzheng
+ Date     : 2016-08-16
+ Version  : 1.0
+ Declare  : Copyright © 2016 Yanzheng. All rights reserved.
+ ************************************************************/
 
 #import "ChatViewController.h"
 

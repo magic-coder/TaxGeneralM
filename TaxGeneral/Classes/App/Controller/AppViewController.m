@@ -1,10 +1,12 @@
-//
-//  AppViewController.m
-//  TaxGeneral
-//
-//  Created by Apple on 2017/01/17.
-//  Copyright © 2017年 Yanzheng. All rights reserved.
-//
+/************************************************************
+ Class    : AppViewController.m
+ Describe : 应用列表界面
+ Company  : Prient
+ Author   : Yanzheng
+ Date     : 2017-01-17
+ Version  : 1.0
+ Declare  : Copyright © 2017 Yanzheng. All rights reserved.
+ ************************************************************/
 
 #import "AppViewController.h"
 #import "BaseCollectionViewCell.h"
@@ -18,8 +20,6 @@
 #import "TestWebViewController.h"
 
 #import "AppEditViewController.h"
-
-#import "BaseCollectionUtil.h"
 
 @interface AppViewController () <UINavigationControllerDelegate, AppTopViewDelegate>
 
@@ -63,14 +63,14 @@
         if(self.data != nil){
             [self.collectionView reloadData];
         }else{
-            [YZProgressHUD showHUDView:self.view Mode:LOCKMODE Text:@"加载中..."];
+            [YZProgressHUD showHUDView:NAV_VIEW Mode:LOCKMODE Text:@"加载中..."];
             [_appUtil initDataWithType:AppItemsTypeNone dataBlock:^(NSMutableArray *dataArray) {
-                [YZProgressHUD hiddenHUDForView:self.view];
+                [YZProgressHUD hiddenHUDForView:NAV_VIEW];
                 self.data = dataArray;
                 [self.collectionView reloadData];
             } failed:^(NSString *error) {
-                [YZProgressHUD hiddenHUDForView:self.view];
-                [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:error];
+                [YZProgressHUD hiddenHUDForView:NAV_VIEW];
+                [YZProgressHUD showHUDView:NAV_VIEW Mode:SHOWMODE Text:error];
             }];
         }
     }else{

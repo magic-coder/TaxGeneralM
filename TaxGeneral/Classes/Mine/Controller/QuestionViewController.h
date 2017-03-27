@@ -1,10 +1,12 @@
-//
-//  QuestionViewController.h
-//  TaxGeneralM
-//
-//  Created by Apple on 2017/3/21.
-//  Copyright © 2017年 Yanzheng. All rights reserved.
-//
+/************************************************************
+ Class    : QuestionViewController.h
+ Describe : 常见问题界面
+ Company  : Prient
+ Author   : Yanzheng
+ Date     : 2017-03-21
+ Version  : 1.0
+ Declare  : Copyright © 2017 Yanzheng. All rights reserved.
+ ************************************************************/
 
 #import <UIKit/UIKit.h>
 

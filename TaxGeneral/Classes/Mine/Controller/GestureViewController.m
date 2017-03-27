@@ -1,10 +1,12 @@
-//
-//  GestureViewController.m
-//  TaxGeneralM
-//
-//  Created by Apple on 2017/2/9.
-//  Copyright © 2017年 Yanzheng. All rights reserved.
-//
+/************************************************************
+ Class    : GestureViewController.m
+ Describe : 安全中心->手势密码界面
+ Company  : Prient
+ Author   : Yanzheng
+ Date     : 2017-02-09
+ Version  : 1.0
+ Declare  : Copyright © 2017 Yanzheng. All rights reserved.
+ ************************************************************/
 
 #import "GestureViewController.h"
 #import "MineUtil.h"
@@ -30,7 +32,7 @@
     UIViewController *viewController = nil;
     if([item.title isEqualToString:@"删除手势密码"]){
         [WUGesturesUnlockViewController deleteGesturesPassword];
-        [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:@"手势密码删除成功！"];
+        [YZProgressHUD showHUDView:NAV_VIEW Mode:SHOWMODE Text:@"手势密码删除成功！"];
         // 模拟延迟加载数据，因此2秒后才调用（真实开发中，可以移除这段gcd代码）
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self.navigationController popViewControllerAnimated:YES];

@@ -1,6 +1,6 @@
 /************************************************************
  Class    : NewsModel.m
- Describe : 定义税文结构模型
+ Describe : 定义税闻结构模型
  Company  : Prient
  Author   : Yanzheng
  Date     : 2016-12-02

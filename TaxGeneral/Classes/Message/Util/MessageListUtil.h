@@ -1,10 +1,12 @@
-//
-//  MessageListUtil.h
-//  TaxGeneral
-//
-//  Created by Apple on 16/8/16.
-//  Copyright © 2016年 Yanzheng. All rights reserved.
-//
+/************************************************************
+ Class    : MessageListUtil.h
+ Describe : 消息列表工具类
+ Company  : Prient
+ Author   : Yanzheng
+ Date     : 2016-08-16
+ Version  : 1.0
+ Declare  : Copyright © 2016 Yanzheng. All rights reserved.
+ ************************************************************/
 
 #import <Foundation/Foundation.h>
 #import "MessageListModel.h"

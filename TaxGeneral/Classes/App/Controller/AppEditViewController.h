@@ -1,10 +1,12 @@
-//
-//  AppEditViewController.h
-//  TaxGeneral
-//
-//  Created by Apple on 2016/12/30.
-//  Copyright © 2016年 Yanzheng. All rights reserved.
-//
+/************************************************************
+ Class    : AppEditViewController.h
+ Describe : 应用管理器界面
+ Company  : Prient
+ Author   : Yanzheng
+ Date     : 2017-01-20
+ Version  : 1.0
+ Declare  : Copyright © 2017 Yanzheng. All rights reserved.
+ ************************************************************/
 
 #import "BaseCollectionViewController.h"
 

@@ -1,6 +1,6 @@
 /************************************************************
  Class    : NewsLoopView.m
- Describe : 顶部焦点自动轮播视图
+ Describe : 税闻顶部焦点自动轮播视图
  Company  : Prient
  Author   : Yanzheng
  Date     : 2016-12-02

@@ -1,10 +1,12 @@
-//
-//  SettingUtil.h
-//  TaxGeneralM
-//
-//  Created by Apple on 2017/2/9.
-//  Copyright © 2017年 Yanzheng. All rights reserved.
-//
+/************************************************************
+ Class    : SettingUtil.h
+ Describe : 设置界面工具类，处理用户设置数据
+ Company  : Prient
+ Author   : Yanzheng
+ Date     : 2017-02-09
+ Version  : 1.0
+ Declare  : Copyright © 2017 Yanzheng. All rights reserved.
+ ************************************************************/
 
 #import <Foundation/Foundation.h>
 

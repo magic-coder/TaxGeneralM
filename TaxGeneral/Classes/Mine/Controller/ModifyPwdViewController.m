@@ -1,10 +1,12 @@
-//
-//  ModifyPwdViewController.m
-//  TaxGeneralM
-//
-//  Created by Apple on 2017/2/7.
-//  Copyright © 2017年 Yanzheng. All rights reserved.
-//
+/************************************************************
+ Class    : ModifyPwdViewController.m
+ Describe : 安全中心->密码修改界面
+ Company  : Prient
+ Author   : Yanzheng
+ Date     : 2017-02-07
+ Version  : 1.0
+ Declare  : Copyright © 2017 Yanzheng. All rights reserved.
+ ************************************************************/
 
 #import "ModifyPwdViewController.h"
 

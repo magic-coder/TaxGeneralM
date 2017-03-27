@@ -24,7 +24,7 @@
     self.webView.backgroundColor = DEFAULT_BACKGROUND_COLOR;
     
     self.title = _currentTitle;
-    //[YZProgressHUD showHUDView:self.view Mode:LOCKMODE Text:@"加载中..."];
+    //[YZProgressHUD showHUDView:NAV_VIEW Mode:LOCKMODE Text:@"加载中..."];
 }
 
 /*

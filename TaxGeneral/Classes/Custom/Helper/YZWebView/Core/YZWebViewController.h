@@ -1,6 +1,6 @@
 /************************************************************
  Class    : YZWebViewController.h
- Describe : This is YZWebViewController
+ Describe : 自定义包含调用页面js方法的WebViewController
  Company  : Prient
  Author   : Yanzheng
  Date     : 2017-01-16

@@ -1,10 +1,12 @@
-//
-//  AppEditViewController.m
-//  TaxGeneral
-//
-//  Created by Apple on 2016/12/30.
-//  Copyright © 2016年 Yanzheng. All rights reserved.
-//
+/************************************************************
+ Class    : AppEditViewController.m
+ Describe : 应用管理器界面
+ Company  : Prient
+ Author   : Yanzheng
+ Date     : 2017-01-20
+ Version  : 1.0
+ Declare  : Copyright © 2017 Yanzheng. All rights reserved.
+ ************************************************************/
 
 #import "AppEditViewController.h"
 #import "AppUtil.h"
@@ -33,14 +35,14 @@
     self.collectionStyle = CollectionStyleEdit;
     self.data = [self.appUtil loadDataWithType:AppItemsTypeEdit];
     if(self.data == nil){
-        [YZProgressHUD showHUDView:self.view Mode:LOCKMODE Text:@"加载中..."];
+        [YZProgressHUD showHUDView:NAV_VIEW Mode:LOCKMODE Text:@"加载中..."];
         [self.appUtil initDataWithType:AppItemsTypeEdit dataBlock:^(NSMutableArray *dataArray) {
-            [YZProgressHUD hiddenHUDForView:self.view];
+            [YZProgressHUD hiddenHUDForView:NAV_VIEW];
             self.data = dataArray;
             [self.collectionView reloadData];
         } failed:^(NSString *error) {
-            [YZProgressHUD hiddenHUDForView:self.view];
-            [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:error];
+            [YZProgressHUD hiddenHUDForView:NAV_VIEW];
+            [YZProgressHUD showHUDView:NAV_VIEW Mode:SHOWMODE Text:error];
         }];
     }
     

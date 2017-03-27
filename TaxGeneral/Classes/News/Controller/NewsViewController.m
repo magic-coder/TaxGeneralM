@@ -1,10 +1,12 @@
-//
-//  NewsViewController.m
-//  TaxGeneral
-//
-//  Created by Apple on 2016/12/1.
-//  Copyright © 2016年 Yanzheng. All rights reserved.
-//
+/************************************************************
+ Class    : NewsViewController.m
+ Describe : 税闻界面（包含顶部分类的总界面）[由于分类少，暂不用该界面]
+ Company  : Prient
+ Author   : Yanzheng
+ Date     : 2016-12-01
+ Version  : 1.0
+ Declare  : Copyright © 2016 Yanzheng. All rights reserved.
+ ************************************************************/
 
 #import "NewsViewController.h"
 #import "NewsListViewController.h"

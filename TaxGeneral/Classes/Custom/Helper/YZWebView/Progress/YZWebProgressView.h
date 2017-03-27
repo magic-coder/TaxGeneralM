@@ -1,6 +1,6 @@
 /************************************************************
  Class    : YZWebProgressView.h
- Describe : This is YZWebProgressView
+ Describe : 自定义脉冲样式加载进度条
  Company  : Prient
  Author   : Yanzheng
  Date     : 2017-01-16

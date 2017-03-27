@@ -1,10 +1,12 @@
-//
-//  MessageListUtil.m
-//  TaxGeneral
-//
-//  Created by Apple on 16/8/16.
-//  Copyright © 2016年 Yanzheng. All rights reserved.
-//
+/************************************************************
+ Class    : MessageListUtil.m
+ Describe : 消息列表工具类
+ Company  : Prient
+ Author   : Yanzheng
+ Date     : 2016-08-16
+ Version  : 1.0
+ Declare  : Copyright © 2016 Yanzheng. All rights reserved.
+ ************************************************************/
 
 #import "MessageListUtil.h"
 
@@ -65,6 +67,7 @@
     [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:parameters success:^(NSDictionary *responseDic) {
         NSString *statusCode = [responseDic objectForKey:@"statusCode"];
         DLog(@"Yan -> 请求处理结果状态值 : statusCode = %@", statusCode);
+        DLog(@"%@",[statusCode isEqualToString:@"500"]?@"YES":@"NO");
         if([statusCode isEqualToString:@"00"]){
             dataBlock([self handleDataDict:responseDic]);
         }else if([statusCode isEqualToString:@"500"]){

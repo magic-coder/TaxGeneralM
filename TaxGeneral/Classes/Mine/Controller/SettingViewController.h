@@ -1,10 +1,12 @@
-//
-//  SettingViewController.h
-//  TaxGeneral
-//
-//  Created by Apple on 16/8/5.
-//  Copyright © 2016年 Yanzheng. All rights reserved.
-//
+/************************************************************
+ Class    : SettingViewController.h
+ Describe : 设置界面
+ Company  : Prient
+ Author   : Yanzheng
+ Date     : 2016-08-05
+ Version  : 1.0
+ Declare  : Copyright © 2016 Yanzheng. All rights reserved.
+ ************************************************************/
 
 #import "BaseTableViewController.h"
 

@@ -1,10 +1,12 @@
-//
-//  MessageListViewCell.m
-//  TaxGeneral
-//
-//  Created by Apple on 16/8/15.
-//  Copyright © 2016年 Yanzheng. All rights reserved.
-//
+/************************************************************
+ Class    : MessageListViewCell.m
+ Describe : 消息列表界面自定义cell
+ Company  : Prient
+ Author   : Yanzheng
+ Date     : 2016-08-15
+ Version  : 1.0
+ Declare  : Copyright © 2016 Yanzheng. All rights reserved.
+ ************************************************************/
 
 #import "MessageListViewCell.h"
 

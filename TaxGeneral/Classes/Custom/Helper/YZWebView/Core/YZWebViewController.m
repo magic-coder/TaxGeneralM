@@ -1,6 +1,6 @@
 /************************************************************
  Class    : YZWebViewController.m
- Describe : This is YZWebViewController
+ Describe : 自定义包含调用页面js方法的WebViewController
  Company  : Prient
  Author   : Yanzheng
  Date     : 2017-01-16
@@ -135,9 +135,9 @@
             if([error isEqualToString:@"510"]){
                 [YZAlertView showAlertWith:self title:@"" message:@"当前登录已失效，请重新登录！" callbackBlock:^(NSInteger btnIndex) {
                     // 注销方法
-                    [YZProgressHUD showHUDView:self.view Mode:LOCKMODE Text:@"注销中..."];
+                    [YZProgressHUD showHUDView:NAV_VIEW Mode:LOCKMODE Text:@"注销中..."];
                     [AccountUtil accountLogout];
-                    [YZProgressHUD hiddenHUDForView:self.view];
+                    [YZProgressHUD hiddenHUDForView:NAV_VIEW];
                     
                     LoginViewController *loginVC = [[LoginViewController alloc] init];
                     loginVC.isLogin = YES;
@@ -155,7 +155,7 @@
                     
                 } cancelButtonTitle:@"重新登录" destructiveButtonTitle:nil otherButtonTitles: nil];
             }else{
-                [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:error];
+                [YZProgressHUD showHUDView:NAV_VIEW Mode:SHOWMODE Text:error];
             }
         }];
         return NO;
@@ -180,7 +180,7 @@
 }
 - (void)webView:(YZWebView *)webView withError:(NSError *)error{
     if(error.code < 0 && error.code != NSURLErrorCancelled){
-        [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:@"网络连接异常！"];
+        [YZProgressHUD showHUDView:NAV_VIEW Mode:SHOWMODE Text:@"网络连接异常！"];
     }
     //DLog(@"Yan ->  页面加载失败 : %@", error.localizedDescription);
 }

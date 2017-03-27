@@ -1,10 +1,12 @@
-//
-//  MineViewController.m
-//  TaxGeneral
-//
-//  Created by Apple on 16/8/3.
-//  Copyright © 2016年 Yanzheng. All rights reserved.
-//
+/************************************************************
+ Class    : MineViewController.h
+ Describe : 我的界面首页项目内容
+ Company  : Prient
+ Author   : Yanzheng
+ Date     : 2016-08-03
+ Version  : 1.0
+ Declare  : Copyright © 2016 Yanzheng. All rights reserved.
+ ************************************************************/
 
 #import "MineViewController.h"
 #import "MineUtil.h"

@@ -1,10 +1,12 @@
-//
-//  AppUtil.h
-//  TaxGeneral
-//
-//  Created by Apple on 2016/12/29.
-//  Copyright © 2016年 Yanzheng. All rights reserved.
-//
+/************************************************************
+ Class    : AppUtil.h
+ Describe : 应用界面工具类，用于处理应用列表数据
+ Company  : Prient
+ Author   : Yanzheng
+ Date     : 2016-12-29
+ Version  : 1.0
+ Declare  : Copyright © 2016 Yanzheng. All rights reserved.
+ ************************************************************/
 
 #import <Foundation/Foundation.h>
 

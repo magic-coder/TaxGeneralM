@@ -1,10 +1,12 @@
-//
-//  MessageListModel.m
-//  TaxGeneral
-//
-//  Created by Apple on 16/8/15.
-//  Copyright © 2016年 Yanzheng. All rights reserved.
-//
+/************************************************************
+ Class    : MessageListModel.m
+ Describe : 消息列表模型
+ Company  : Prient
+ Author   : Yanzheng
+ Date     : 2016-08-15
+ Version  : 1.0
+ Declare  : Copyright © 2016 Yanzheng. All rights reserved.
+ ************************************************************/
 
 #import "MessageListModel.h"
 

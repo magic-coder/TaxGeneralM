@@ -1,10 +1,12 @@
-//
-//  MessageDetailModel.h
-//  TaxGeneralM
-//
-//  Created by Apple on 2017/2/14.
-//  Copyright © 2017年 Yanzheng. All rights reserved.
-//
+/************************************************************
+ Class    : MessageDetailModel.h
+ Describe : 消息内容展示模型
+ Company  : Prient
+ Author   : Yanzheng
+ Date     : 2017-02-14
+ Version  : 1.0
+ Declare  : Copyright © 2017 Yanzheng. All rights reserved.
+ ************************************************************/
 
 #import <Foundation/Foundation.h>
 

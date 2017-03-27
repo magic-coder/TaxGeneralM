@@ -1,6 +1,6 @@
 /************************************************************
  Class    : NewsTableViewCell.h
- Describe : 税文列表cell（三种样式：文本、单图、多图）
+ Describe : 自定义税文列表cell（三种样式：文本、单图、多图）
  Company  : Prient
  Author   : Yanzheng
  Date     : 2016-12-02

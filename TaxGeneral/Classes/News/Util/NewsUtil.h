@@ -1,6 +1,6 @@
 /************************************************************
  Class    : NewsUtil.h
- Describe : 税文列表内容获取方法类
+ Describe : 税闻列表内容获取方法类
  Company  : Prient
  Author   : Yanzheng
  Date     : 2016-12-02

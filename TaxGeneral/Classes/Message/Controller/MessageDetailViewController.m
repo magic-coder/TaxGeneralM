@@ -1,10 +1,12 @@
-//
-//  MessageDetailViewController.m
-//  TaxGeneralM
-//
-//  Created by Apple on 2017/2/15.
-//  Copyright © 2017年 Yanzheng. All rights reserved.
-//
+/************************************************************
+ Class    : MessageDetailViewController.m
+ Describe : 消息内容展示明细界面
+ Company  : Prient
+ Author   : Yanzheng
+ Date     : 2017-02-15
+ Version  : 1.0
+ Declare  : Copyright © 2017 Yanzheng. All rights reserved.
+ ************************************************************/
 
 #import "MessageDetailViewController.h"
 #import "MessageDetailViewCell.h"
@@ -137,7 +139,7 @@ static int const pageSize = 10;
         [self.tableView reloadData];
         [self reloadAfterMessage:NO];
     } failed:^(NSString *error) {
-        [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:error];
+        [YZProgressHUD showHUDView:NAV_VIEW Mode:SHOWMODE Text:error];
     }];
 }
 
@@ -168,7 +170,7 @@ static int const pageSize = 10;
         _pageNo++;
         // 加载结束
         [self.tableView.mj_header endRefreshing];
-        [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:error];
+        [YZProgressHUD showHUDView:NAV_VIEW Mode:SHOWMODE Text:error];
     }];
 }
 

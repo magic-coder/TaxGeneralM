@@ -1,10 +1,12 @@
-//
-//  AppTopView.m
-//  TaxGeneral
-//
-//  Created by Apple on 2016/12/29.
-//  Copyright © 2016年 Yanzheng. All rights reserved.
-//
+/************************************************************
+ Class    : AppTopView.m
+ Describe : 应用界面顶部头视图
+ Company  : Prient
+ Author   : Yanzheng
+ Date     : 2016-12-29
+ Version  : 1.0
+ Declare  : Copyright © 2016 Yanzheng. All rights reserved.
+ ************************************************************/
 
 #import "AppTopView.h"
 

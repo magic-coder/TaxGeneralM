@@ -185,11 +185,7 @@
             [YZAlertView showAlertWith:self title:@"" message:@"手势密码输入错误次数过多，需要注销后重新登录！" callbackBlock:^(NSInteger btnIndex) {
                 errorCount = 5;
                 // 注销方法
-                [YZProgressHUD showHUDView:self.view Mode:LOCKMODE Text:@"注销中..."];
-                
                 [AccountUtil accountLogout];
-                
-                [YZProgressHUD hiddenHUDForView:self.view];
                 
                 LoginViewController *loginVC = [[LoginViewController alloc] init];
                 loginVC.isLogin = YES;
