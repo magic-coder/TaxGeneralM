@@ -119,8 +119,13 @@ static int const pageSize = 10;
         DLog(@"Yan -> 复制内容结果为：%@", pasteString);
     }
     if(type == MsgDetailViewCellMenuTypeDelete){
-        [_data removeObjectAtIndex:cell.indexPath.row];
-        [self.tableView reloadData];
+        
+        [YZActionSheet showActionSheetWithTitle:@"是否删除该条消息？" cancelButtonTitle:@"取消" destructiveButtonTitle:@"确定" otherButtonTitles:nil handler:^(YZActionSheet *actionSheet, NSInteger index) {
+            if(index == -1){
+                [_data removeObjectAtIndex:cell.indexPath.row];
+                [self.tableView reloadData];
+            }
+        }];
     }
 }
 

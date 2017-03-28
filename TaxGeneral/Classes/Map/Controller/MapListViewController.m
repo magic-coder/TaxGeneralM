@@ -33,13 +33,25 @@ static NSString * const reuseIdentifier = @"reuseIdentifierGroup";
     [self.view setBackgroundColor:DEFAULT_BACKGROUND_COLOR];
     [self.tableView setBackgroundColor:[UIColor whiteColor]];
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
-    self.tableView.showsVerticalScrollIndicator = NO;   // 去掉右侧滚动条
+    //self.tableView.showsVerticalScrollIndicator = NO;   // 去掉右侧滚动条
     [self.tableView registerClass:[MapListViewCell class] forCellReuseIdentifier:reuseIdentifier];
     [self.tableView setSeparatorStyle: UITableViewCellSeparatorStyleSingleLine];
     
-    _data = [MapListUtil getMapData];
+    // _data = [[MapListUtil alloc] getMapData];
+    // _tempData = [self createTempData:_data];
     
-    _tempData = [self createTempData:_data];
+    [YZProgressHUD showHUDView:self.view Mode:LOCKMODE Text:@"加载中..."];
+    [[MapListUtil alloc] loadMapDataBlock:^(NSMutableArray *dataArray) {
+        _data = dataArray;
+        _tempData = [self createTempData:_data];
+        
+        [YZProgressHUD hiddenHUDForView:self.view];
+        [self.tableView reloadData];
+    } failed:^(NSString *error) {
+        [YZProgressHUD hiddenHUDForView:self.view];
+        [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:error];
+    }];
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -51,8 +63,7 @@ static NSString * const reuseIdentifier = @"reuseIdentifierGroup";
  */
 -(NSMutableArray *)createTempData : (NSArray *)data{
     NSMutableArray *tempArray = [NSMutableArray array];
-    for (int i=0; i<data.count; i++) {
-        MapListModel *model = [_data objectAtIndex:i];
+    for(MapListModel *model in data){
         if (model.isExpand) {
             [tempArray addObject:model];
         }
@@ -98,15 +109,14 @@ static NSString * const reuseIdentifier = @"reuseIdentifierGroup";
 #pragma mark - Optional
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
-    
     //先修改数据源
     MapListModel *parentModel = [_tempData objectAtIndex:indexPath.row];
     NSUInteger startPosition = indexPath.row+1;
     NSUInteger endPosition = startPosition;
     BOOL isExpand = NO;
-    for (int i=0; i<_data.count; i++) {
+    for (int i=0; i < _data.count; i++) {
         MapListModel *model = [_data objectAtIndex:i];
-        if (model.parentCode == parentModel.nodeCode) {
+        if ([model.parentCode isEqualToString:parentModel.nodeCode]) {
             model.isExpand = !model.isExpand;
             if (model.isExpand) {
                 [_tempData insertObject:model atIndex:endPosition];

@@ -24,10 +24,11 @@
 @interface MapViewController () <UIGestureRecognizerDelegate, BMKMapViewDelegate, BMKLocationServiceDelegate, BMKGeoCodeSearchDelegate, BMKRouteSearchDelegate>
 
 @property (nonatomic, strong) BMKMapView *mapView;
-@property (nonatomic, strong) UIView *topLine;       // 底部视图顶线
-@property (nonatomic, strong) UILabel *titleLabel;   // 底部标题
-@property (nonatomic, strong) UILabel *addressLabel; // 底部地址
-@property (nonatomic, strong) UIButton *gpsBtn;      // 底部按钮
+@property (nonatomic, strong) UIView *topLine;          // 底部视图顶线
+@property (nonatomic, strong) UILabel *titleLabel;      // 底部标题
+@property (nonatomic, strong) UILabel *addressLabel;    // 底部地址
+@property (nonatomic, strong) UIButton *telbtn;         // 底部电话
+@property (nonatomic, strong) UIButton *gpsBtn;         // 底部按钮
 
 @property (nonatomic, assign) CLLocationCoordinate2D targetCoordinate;// 目标坐标
 @property (nonatomic, assign) CLLocationCoordinate2D mineCoordinate;// 我的坐标
@@ -122,21 +123,37 @@
     _topLine.frame = CGRectMake(0, _mapView.frameHeight, WIDTH_SCREEN, 0.5f);
     [_topLine setBackgroundColor:DEFAULT_LINE_GRAY_COLOR];
     [self.view addSubview:_topLine];
-    
+    NSInteger space;
+    if(_model.tel.length > 0){
+        space = 12;
+    }else{
+        space = 22;
+    }
     _titleLabel = [[UILabel alloc] init];
     _titleLabel.numberOfLines = 0;
     _titleLabel.font = TITLE_FONT;
     _titleLabel.textColor = [UIColor blackColor];
     _titleLabel.text = _model.name;
-    _titleLabel.frame = CGRectMake(15, _mapView.frameHeight+20, WIDTH_SCREEN-80, 20);
+    _titleLabel.frame = CGRectMake(15, _mapView.frameHeight+space, WIDTH_SCREEN-80, 20);
     [self.view addSubview:_titleLabel];
     
     _addressLabel = [[UILabel alloc] init];
     _addressLabel.numberOfLines = 0;
     _addressLabel.font = ADDRESS_FONT;
     _addressLabel.textColor = [UIColor lightGrayColor];
-    _addressLabel.frame = CGRectMake(15, _mapView.frameHeight+22+_titleLabel.frameHeight, WIDTH_SCREEN-80, 20);
+    _addressLabel.text = _model.address;
+    _addressLabel.frame = CGRectMake(15, _mapView.frameHeight+space+2+_titleLabel.frameHeight, WIDTH_SCREEN-80, 20);
     [self.view addSubview:_addressLabel];
+    
+    _telbtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    _telbtn.frame = CGRectMake(15, _mapView.frameHeight+space+2+_titleLabel.frameHeight+_addressLabel.frameHeight, WIDTH_SCREEN-80, 20);
+    [_telbtn setTitleColor:DEFAULT_BLUE_COLOR forState:UIControlStateNormal];
+    [_telbtn setTitleColor:DEFAULT_LIGHT_BLUE_COLOR forState:UIControlStateHighlighted];
+    [_telbtn setTitle:_model.tel forState:UIControlStateNormal];
+    [_telbtn.titleLabel setFont:[UIFont systemFontOfSize:13.0f]];
+    _telbtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    [_telbtn addTarget:self action:@selector(onClickTel:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:_telbtn];
     
     _gpsBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     _gpsBtn.frame = CGRectMake(WIDTH_SCREEN-65, _mapView.frameHeight+12.5f, 55, 55);
@@ -221,9 +238,6 @@
         NSString* showmeg;
         showmeg = [NSString stringWithFormat:@"%@",item.title];
         DLog(@"反向地理编码，%@", showmeg);
-        
-        _addressLabel.text = showmeg;// 设置底部地址标签
-        
     }
 }
 
@@ -582,6 +596,22 @@
 #pragma mark 底部定位按钮定位方法
 -(void)locationAction:(UIButton *)sender{
     _mapView.centerCoordinate = _mineCoordinate;
+}
+#pragma mark 打开电话
+- (void)onClickTel:(UIButton *)sender{
+    
+    NSString *telStr = sender.titleLabel.text;
+    NSArray *tels = [telStr componentsSeparatedByString:@"、"];
+    if(tels.count > 1){
+        [YZActionSheet showActionSheetWithTitle:@"您是否要拨打电话？" cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:tels handler:^(YZActionSheet *actionSheet, NSInteger index) {
+            DLog(@"%ld", index);
+        }];
+    }else{
+        [YZActionSheet showActionSheetWithTitle:@"您是否要拨打电话？" cancelButtonTitle:@"取消" destructiveButtonTitle:telStr otherButtonTitles:nil handler:^(YZActionSheet *actionSheet, NSInteger index) {
+            NSString *str = [NSString stringWithFormat:@"tel://%@", telStr];
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str]];
+        }];
+    }
 }
 #pragma mark 打开百度地图客户端导航
 -(void)gpsAction:(UIButton *)sender{

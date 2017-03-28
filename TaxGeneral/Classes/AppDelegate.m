@@ -30,8 +30,12 @@
 #endif
 
 #import <AudioToolbox/AudioToolbox.h>
+#import <CoreTelephony/CTCellularData.h>
+#import <CoreLocation/CoreLocation.h>
+//@import CoreTelephony;
+//@import CoreLocation;
 
-@interface AppDelegate () <BMKGeneralDelegate, UIAlertViewDelegate>
+@interface AppDelegate () <BMKGeneralDelegate, UIAlertViewDelegate, CLLocationManagerDelegate>
 
 @property (nonatomic, strong) ViewController *viewController;
 @property (nonatomic, strong) LoginViewController *loginViewController;
@@ -119,14 +123,14 @@
     // 获取单例模式中的用户信息自动登录
     NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS];
     if(nil != userDict){
-        // 若用户开启指纹解锁，进行指纹验证
+        // 指纹验证解锁
         NSDictionary *settingDict = [[SettingUtil alloc] loadSettingData];
         if([[settingDict objectForKey:@"touchID"] boolValue]){
             TouchIDViewController *touchIDVC = [[TouchIDViewController alloc] init];
             [_window setRootViewController:touchIDVC];
         }else{
             NSString *gesturePwd = [[NSUserDefaults standardUserDefaults] objectForKey:@"gesturespassword"];
-            if(gesturePwd.length > 0){
+            if(gesturePwd.length > 0){  // 手势验证解锁
                 WUGesturesUnlockViewController *gesturesUnlockVC= [[WUGesturesUnlockViewController alloc] initWithUnlockType:WUUnlockTypeLoginPwd];
                 [_window setRootViewController:gesturesUnlockVC];
             }else{
@@ -167,22 +171,10 @@
     /*
     NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS];
     if(nil != userDict){
-        NSString *url = @"loginUser.action";
-        
-        [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:userDict success:^(NSDictionary *responseDic) {
-            // 获取请求状态值
-            NSString * responseCode = [responseDic objectForKey:@"repcode"];
-            // 判断请求状态：1、表示成功，0、表示失败
-            if([responseCode isEqualToString:@"1"]){
-                // 登录成功，界面跳转到主页
-                [_window setRootViewController:_mainTabBarController];
-            }else{
-                // 登录失败跳转到登录页
-                [_window setRootViewController:_loginViewController];
-                NSString *msg = [responseDic objectForKey:@"returnMessage"];
-                [YZProgressHUD showHUDView:_loginViewController.view Mode:SHOWMODE Text:msg];
-            }
-        } failure:^(NSString *error) {
+        [LoginUtil loginWithAppDict:userDict success:^{
+            // 登录成功，界面跳转到主页
+            [_window setRootViewController:_mainTabBarController];
+        } failed:^(NSString *error) {
             // 登录失败跳转到登录页
             [_window setRootViewController:_loginViewController];
             [YZProgressHUD showHUDView:_loginViewController.view Mode:SHOWMODE Text:error];
@@ -192,6 +184,8 @@
         [_window setRootViewController:_loginViewController];
     }
     */
+    
+    [self inspectPermission];
     
     // 初始化完毕存储Cookie(用于自动登录的会话共享)
     NSURL *cookieHost = [NSURL URLWithString:SERVER_URL];
@@ -394,6 +388,97 @@
     [BPush showLocalNotificationAtFront:notification identifierKey:nil];
 }
 
+#pragma mark - 权限检查（网络权限、定位权限）
+- (void)inspectPermission{
+    // 应用启动后,检测应用中是否有联网权限
+    CTCellularData *cellularData = [[CTCellularData alloc] init];
+    cellularData.cellularDataRestrictionDidUpdateNotifier = ^(CTCellularDataRestrictedState state){
+        switch (state) {
+            case kCTCellularDataRestricted:
+                DLog(@"app网络权限受限");
+                break;
+            case kCTCellularDataRestrictedStateUnknown:
+                DLog(@"app网络权限不确定");
+                break;
+            case kCTCellularDataNotRestricted:
+                DLog(@"app网络权限不受限");
+                break;
+            default:
+                break;
+        }
+    };
+    
+    CTCellularDataRestrictedState state = cellularData.restrictedState;
+    switch (state) {
+        case kCTCellularDataRestricted:
+            DLog(@"Restricrted");
+            break;
+        case kCTCellularDataNotRestricted:
+            DLog(@"Not Restricted");
+            break;
+        case kCTCellularDataRestrictedStateUnknown:
+            DLog(@"Unknown");
+            break;
+        default:
+            break;
+    }
+    
+    // 检查是否有定位权限
+    BOOL isLocation = [CLLocationManager locationServicesEnabled];
+    if (!isLocation) {
+        NSLog(@"not turn on the location");
+    }
+    CLAuthorizationStatus CLstatus = [CLLocationManager authorizationStatus];
+    switch (CLstatus) {
+        case kCLAuthorizationStatusAuthorizedAlways:
+            NSLog(@"Always Authorized");
+            break;
+        case kCLAuthorizationStatusAuthorizedWhenInUse:
+            NSLog(@"AuthorizedWhenInUse");
+            break;
+        case kCLAuthorizationStatusDenied:
+            NSLog(@"Denied");
+            break;
+        case kCLAuthorizationStatusNotDetermined:
+            NSLog(@"not Determined");
+            break;
+        case kCLAuthorizationStatusRestricted:
+            NSLog(@"Restricted");
+            break;
+        default:
+            break;
+    }
+    
+    CLLocationManager *manager = [[CLLocationManager alloc] init];
+    [manager requestAlwaysAuthorization];//一直获取定位信息
+    [manager requestWhenInUseAuthorization];//使用的时候获取定位信息
+    
+}
+
+// 定位代理方法
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status{
+    switch (status) {
+        case kCLAuthorizationStatusAuthorizedAlways:
+            NSLog(@"Always Authorized");
+            break;
+        case kCLAuthorizationStatusAuthorizedWhenInUse:
+            NSLog(@"AuthorizedWhenInUse");
+            break;
+        case kCLAuthorizationStatusDenied:
+            NSLog(@"Denied");
+            break;
+        case kCLAuthorizationStatusNotDetermined:
+            NSLog(@"not Determined");
+            break;
+        case kCLAuthorizationStatusRestricted:
+            NSLog(@"Restricted");
+            break;
+        default:
+            break;
+    }
+    
+}
+
 #pragma mark - 获取设备的基本信息并存入NSUserDefaults中
 - (void)deviceInfo{
     NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:DEVICE_INFO];
@@ -463,4 +548,5 @@
     }
     return result;
 }
+
 @end

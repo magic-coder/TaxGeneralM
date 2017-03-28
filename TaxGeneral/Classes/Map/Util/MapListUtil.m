@@ -13,7 +13,7 @@
 
 @implementation MapListUtil
 
-+ (NSMutableArray *)getMapData{
+- (NSMutableArray *)getMapData{
     MapListModel *group1 = [MapListModel createWithParentCode:@"0" nodeCode:@"1" level:0 name:@"业务类型" latitude:nil longitude:nil isExpand:YES];
     MapListModel *station11 = [MapListModel createWithParentCode:@"1" nodeCode:@"11" level:1 name:@"局机关" latitude:nil longitude:nil isExpand:NO];
     MapListModel *station12 = [MapListModel createWithParentCode:@"1" nodeCode:@"12" level:1 name:@"政务大厅（中心）" latitude:nil longitude:nil isExpand:NO];
@@ -34,6 +34,36 @@
     NSMutableArray *mutableArray = [NSMutableArray arrayWithObjects:group1,station11,station12,station13,station14,station15,institute111,institute112,institute113,group2,institute121,institute122,institute123,institute124,institute125, nil];
     
     return mutableArray;
+}
+
+- (void)loadMapDataBlock:(void (^)(NSMutableArray *))dataBlock failed:(void (^)(NSString *))failed{
+    
+    NSString *url = @"public/taxmap/init";
+    [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:nil success:^(NSDictionary *responseDic) {
+        NSString *statusCode = [responseDic objectForKey:@"statusCode"];
+        DLog(@"Yan -> 请求处理结果状态值 : statusCode = %@", statusCode);
+        if([statusCode isEqualToString:@"00"]){
+            dataBlock([self handleDataDict:responseDic]);
+        }else{
+            failed([responseDic objectForKey:@"msg"]);
+        }
+    } failure:^(NSString *error) {
+        failed(error);
+    }];
+}
+
+#pragma mark - 对返回的数据进行处理
+- (NSMutableArray *)handleDataDict:(NSDictionary *)dict{
+    NSMutableArray *resArray = [[NSMutableArray alloc] init];
+    
+    NSDictionary *businessData = [dict objectForKey:@"businessData"];
+    NSArray *taxMapArray = [businessData objectForKey:@"taxmaplist"];
+    for(NSDictionary *taxMapDict in taxMapArray){
+        MapListModel *model = [ MapListModel createWithDict:taxMapDict];
+        [resArray addObject:model];
+    }
+    
+    return resArray;
 }
      
 @end

@@ -38,6 +38,7 @@
 	BaiduPush
 	WUGestureUnlockView
 	SDWebImage & FLAnimatedImage
+	Sangfor(VPN)
 
 # 自己进行封装的组件(Element)
 	YZNetworkingManager

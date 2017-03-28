@@ -69,6 +69,7 @@ static int const pageSize = 10;
         UITabBarItem * item = [self.tabBarController.tabBar.items objectAtIndex:2];
         if(item.badgeValue != nil || ![self.navigationItem.title isEqualToString:@"消息"] || isRefresh){
             [self autoLoadData];
+            [Variable shareInstance].msgRefresh = NO;
             //item.badgeValue = nil;
         }else{
             NSDictionary *dataDict = [_msgListUtil loadMsgDataWithFile];
