@@ -37,21 +37,8 @@ static NSString * const reuseIdentifier = @"reuseIdentifierGroup";
     [self.tableView registerClass:[MapListViewCell class] forCellReuseIdentifier:reuseIdentifier];
     [self.tableView setSeparatorStyle: UITableViewCellSeparatorStyleSingleLine];
     
-    // _data = [[MapListUtil alloc] getMapData];
-    // _tempData = [self createTempData:_data];
-    
-    [YZProgressHUD showHUDView:self.view Mode:LOCKMODE Text:@"加载中..."];
-    [[MapListUtil alloc] loadMapDataBlock:^(NSMutableArray *dataArray) {
-        _data = dataArray;
-        _tempData = [self createTempData:_data];
-        
-        [YZProgressHUD hiddenHUDForView:self.view];
-        [self.tableView reloadData];
-    } failed:^(NSString *error) {
-        [YZProgressHUD hiddenHUDForView:self.view];
-        [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:error];
-    }];
-    
+    // 初始化数据
+    [self initData];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -183,6 +170,25 @@ static NSString * const reuseIdentifier = @"reuseIdentifierGroup";
         [_tempData removeObjectsInRange:NSMakeRange(startPosition+1, endPosition-startPosition-1)];
     }
     return endPosition;
+}
+
+// 初始化数据
+-(void)initData{
+    _data = [[MapListUtil alloc] getMapData];
+    _tempData = [self createTempData:_data];
+    if(_data.count <= 0){
+        [YZProgressHUD showHUDView:self.view Mode:LOCKMODE Text:@"加载中..."];
+        [[MapListUtil alloc] loadMapDataBlock:^(NSMutableArray *dataArray) {
+            _data = dataArray;
+            _tempData = [self createTempData:_data];
+            
+            [YZProgressHUD hiddenHUDForView:self.view];
+            [self.tableView reloadData];
+        } failed:^(NSString *error) {
+            [YZProgressHUD hiddenHUDForView:self.view];
+            [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:error];
+        }];
+    }
 }
 
 - (void)didReceiveMemoryWarning {

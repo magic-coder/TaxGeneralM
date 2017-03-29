@@ -133,7 +133,11 @@
     _titleLabel.numberOfLines = 0;
     _titleLabel.font = TITLE_FONT;
     _titleLabel.textColor = [UIColor blackColor];
-    _titleLabel.text = _model.name;
+    if([_model.name isEqualToString:@"当前机构"]){
+        _titleLabel.text = _model.deptName;
+    }else{
+        _titleLabel.text = _model.name;
+    }
     _titleLabel.frame = CGRectMake(15, _mapView.frameHeight+space, WIDTH_SCREEN-80, 20);
     [self.view addSubview:_titleLabel];
     
@@ -601,16 +605,26 @@
 - (void)onClickTel:(UIButton *)sender{
     
     NSString *telStr = sender.titleLabel.text;
-    NSArray *tels = [telStr componentsSeparatedByString:@"、"];
+    NSArray *telArray = [telStr componentsSeparatedByString:@"、"];
+    NSMutableArray *tels = [[NSMutableArray alloc] init];
+    for(int i=0; i<telArray.count; i++){
+        if(i>0){
+            [tels addObject:[NSString stringWithFormat:@"029-%@", telArray[i]]];
+        }else{
+            [tels addObject:telArray[i]];
+        }
+        
+    }
     if(tels.count > 1){
-        [YZActionSheet showActionSheetWithTitle:@"您是否要拨打电话？" cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:tels handler:^(YZActionSheet *actionSheet, NSInteger index) {
-            DLog(@"%ld", index);
+        [YZActionSheet showActionSheetWithTitle:nil cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:tels handler:^(YZActionSheet *actionSheet, NSInteger index) {
+            if(index > 0){
+                NSString *str = [NSString stringWithFormat:@"tel://%@", tels[index-1]];
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str]];
+            }
         }];
     }else{
-        [YZActionSheet showActionSheetWithTitle:@"您是否要拨打电话？" cancelButtonTitle:@"取消" destructiveButtonTitle:telStr otherButtonTitles:nil handler:^(YZActionSheet *actionSheet, NSInteger index) {
-            NSString *str = [NSString stringWithFormat:@"tel://%@", telStr];
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str]];
-        }];
+        NSString *str = [NSString stringWithFormat:@"tel://%@", telStr];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str]];
     }
 }
 #pragma mark 打开百度地图客户端导航

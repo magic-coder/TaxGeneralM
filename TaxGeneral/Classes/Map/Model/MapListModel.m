@@ -12,26 +12,13 @@
 
 @implementation MapListModel
 
-+ (MapListModel *)createWithParentCode:(NSString *)parentCode nodeCode:(NSString *)nodeCode level:(NSInteger)level name:(NSString *)name latitude:(NSString *)latitude longitude:(NSString *)longitude isExpand:(BOOL)isExpand{
-    
-    MapListModel *model = [[MapListModel alloc] init];
-    model.parentCode = parentCode;
-    model.nodeCode = nodeCode;
-    model.level = level;
-    model.name = name;
-    model.latitude = latitude;
-    model.longitude = longitude;
-    model.isExpand = isExpand;
-    
-    return model;
-}
-
 + (MapListModel *)createWithDict:(NSDictionary *)dict{
     MapListModel *model = [[MapListModel alloc] init];
     model.parentCode = [dict objectForKey:@"AREAFATHERID"];
     model.nodeCode = [dict objectForKey:@"AREAID"];
     model.level = [[dict objectForKey:@"LEVELS"] integerValue]-1;
     model.name = [dict objectForKey:@"AREANAME"];
+    model.deptName = [dict objectForKey:@"TAXDEPTNAME"];
     model.address = [dict objectForKey:@"ADDRESS"];
     model.tel = [dict objectForKey:@"PHONE"];
     model.latitude = [dict objectForKey:@"LAT"];

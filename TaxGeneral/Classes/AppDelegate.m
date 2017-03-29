@@ -21,6 +21,7 @@
 #import "MapListViewController.h"
 
 #import "SettingUtil.h"
+#import "MapListUtil.h"
 
 #import "BPush.h"
 #import <BaiduMapAPI_Base/BMKBaseComponent.h>
@@ -32,8 +33,6 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import <CoreTelephony/CTCellularData.h>
 #import <CoreLocation/CoreLocation.h>
-//@import CoreTelephony;
-//@import CoreLocation;
 
 @interface AppDelegate () <BMKGeneralDelegate, UIAlertViewDelegate, CLLocationManagerDelegate>
 
@@ -185,13 +184,20 @@
     }
     */
     
-    [self inspectPermission];
+    [self inspectPermission];// 获取权限（网络访问、定位）
     
     // 初始化完毕存储Cookie(用于自动登录的会话共享)
     NSURL *cookieHost = [NSURL URLWithString:SERVER_URL];
     NSDictionary *propertiesDict = [NSDictionary dictionaryWithObjectsAndKeys:[cookieHost host], NSHTTPCookieDomain, [cookieHost path], NSHTTPCookiePath, @"COOKIE_NAME", NSHTTPCookieName, @"COOKIE_VALUE", NSHTTPCookieValue, nil];
     NSHTTPCookie *cookie = [NSHTTPCookie cookieWithProperties:propertiesDict];
     [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+    
+    // 初始化地图数据结构，写入SandBox
+    [[MapListUtil alloc] loadMapDataBlock:^(NSMutableArray *dataArray) {
+        DLog(@"Yan -> 初始化地图Tree数据成功");
+    } failed:^(NSString *error) {
+        DLog(@"Yan -> 初始化地图Tree数据失败：error = %@", error);
+    }];
     
     [_window makeKeyAndVisible];
     
@@ -247,12 +253,15 @@
      UIViewController *touchVC = nil;
      if ([shortcutItem.type isEqualToString:@"item1"]){
          touchVC = [[BaseWebViewController alloc] initWithURL:[NSString stringWithFormat:@"%@public/notice/index", SERVER_URL]];
+         touchVC.title = @"通知公告";
      }
      if ([shortcutItem.type isEqualToString:@"item2"]){
          touchVC = [[MapListViewController alloc] init];
+         touchVC.title = @"办税地图";
      }
      if ([shortcutItem.type isEqualToString:@"item3"]){
          touchVC = [[BaseWebViewController alloc] initWithURL:[NSString stringWithFormat:@"%@litter/initLitter", SERVER_URL]];
+         touchVC.title = @"通讯录";
      }
      
      if(touchVC != nil){
@@ -476,7 +485,6 @@
         default:
             break;
     }
-    
 }
 
 #pragma mark - 获取设备的基本信息并存入NSUserDefaults中

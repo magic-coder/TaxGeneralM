@@ -63,7 +63,7 @@ static NSString * const reuseIdentifier = @"aboutTableViewCell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;   // 右侧小箭头
-    
+    cell.textLabel.font = [UIFont systemFontOfSize:15.5f];
     cell.textLabel.text = _data[indexPath.row];
     
     return cell;
