@@ -19,6 +19,7 @@
 #import "QuestionViewController.h"
 #import "TestWebViewController.h"
 
+#import "AppSubViewController.h"
 #import "AppEditViewController.h"
 
 @interface AppViewController () <UINavigationControllerDelegate, AppTopViewDelegate>
@@ -103,12 +104,15 @@
     
     if([cell.item.title isEqualToString:@"办税地图"]){
         viewController = [[MapListViewController alloc] init];
+    }else if([cell.item.title isEqualToString:@"图片新闻"]){
+        viewController = [[AppSubViewController alloc] init];
     }else{
         url = cell.item.url;
     }
     
     if(viewController != nil || url != nil){
         if(viewController == nil){
+            // 携带cookies请求url
             NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
             NSArray * cookies = [[NSHTTPCookieStorage  sharedHTTPCookieStorage] cookies];
             NSDictionary * headers = [NSHTTPCookie requestHeaderFieldsWithCookies:cookies];

@@ -289,9 +289,11 @@ static int const pageSize = 10;
         }
         
         badge += [model.unReadCount intValue];
+        UITabBarItem * item = [self.tabBarController.tabBar.items objectAtIndex:2];
         if(badge > 0){
-            UITabBarItem * item = [self.tabBarController.tabBar.items objectAtIndex:2];
             item.badgeValue = [NSString stringWithFormat:@"%d", badge];
+        }else{
+            item.badgeValue = nil;
         }
     }
     [_data addObject:sysData];

@@ -122,7 +122,7 @@ static int const pageSize = 10;
         
         [YZActionSheet showActionSheetWithTitle:@"是否删除该条消息？" cancelButtonTitle:@"取消" destructiveButtonTitle:@"确定" otherButtonTitles:nil handler:^(YZActionSheet *actionSheet, NSInteger index) {
             if(index == -1){
-                [_data removeObjectAtIndex:cell.indexPath.row];
+                [_data removeObjectAtIndex:cell.indexPath.section];
                 [self.tableView reloadData];
             }
         }];

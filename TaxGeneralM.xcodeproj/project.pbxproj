@@ -121,6 +121,9 @@
 		18C737521E4C70C30058E7E4 /* WUGesturesUnlockViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C7374E1E4C70C30058E7E4 /* WUGesturesUnlockViewController.m */; };
 		18C737531E4C70C30058E7E4 /* WUGesturesUnlockViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18C7374F1E4C70C30058E7E4 /* WUGesturesUnlockViewController.xib */; };
 		18C737561E4C74BA0058E7E4 /* GestureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C737551E4C74BA0058E7E4 /* GestureViewController.m */; };
+		18C87FA11E8BAD1B00A6986C /* AppSubViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C87FA01E8BAD1B00A6986C /* AppSubViewController.m */; };
+		18C87FA41E8BAD5C00A6986C /* AppSubViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C87FA31E8BAD5C00A6986C /* AppSubViewCell.m */; };
+		18C87FA81E8BAFA800A6986C /* AppSubModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C87FA71E8BAFA800A6986C /* AppSubModel.m */; };
 		18C994FD1DEC0966006A040F /* WMMenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C994F31DEC0966006A040F /* WMMenuItem.m */; };
 		18C994FE1DEC0966006A040F /* WMMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C994F51DEC0966006A040F /* WMMenuView.m */; };
 		18C994FF1DEC0966006A040F /* WMProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C994F71DEC0966006A040F /* WMProgressView.m */; };
@@ -173,6 +176,7 @@
 		18DCAF9B1E2715AF009F019D /* BaseSandBoxUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DCAF9A1E2715AF009F019D /* BaseSandBoxUtil.m */; };
 		18DE0A1D1E66B5D50070E278 /* Variable.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DE0A1C1E66B5D50070E278 /* Variable.m */; };
 		18DEE95A1E4AA92C00536155 /* BaseScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DEE9591E4AA92C00536155 /* BaseScrollView.m */; };
+		18DF11441E8CA8D40034CC3A /* AppSubUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DF11431E8CA8D40034CC3A /* AppSubUtil.m */; };
 		18E00F071E2F0B7A009A609A /* TestWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E00F061E2F0B7A009A609A /* TestWebViewController.m */; };
 		18E00F301E2F5CC9009A609A /* BaseWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E00F2F1E2F5CC9009A609A /* BaseWebViewController.m */; };
 		18E9D4061E52E16200A46BCB /* MessageDetailModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E9D4051E52E16200A46BCB /* MessageDetailModel.m */; };
@@ -472,6 +476,12 @@
 		18C7374F1E4C70C30058E7E4 /* WUGesturesUnlockViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WUGesturesUnlockViewController.xib; sourceTree = "<group>"; };
 		18C737541E4C74BA0058E7E4 /* GestureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GestureViewController.h; path = Classes/Mine/Controller/GestureViewController.h; sourceTree = "<group>"; };
 		18C737551E4C74BA0058E7E4 /* GestureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GestureViewController.m; path = Classes/Mine/Controller/GestureViewController.m; sourceTree = "<group>"; };
+		18C87F9F1E8BAD1B00A6986C /* AppSubViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppSubViewController.h; path = Classes/App/Controller/AppSubViewController.h; sourceTree = "<group>"; };
+		18C87FA01E8BAD1B00A6986C /* AppSubViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppSubViewController.m; path = Classes/App/Controller/AppSubViewController.m; sourceTree = "<group>"; };
+		18C87FA21E8BAD5C00A6986C /* AppSubViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppSubViewCell.h; path = Classes/App/View/AppSubViewCell.h; sourceTree = "<group>"; };
+		18C87FA31E8BAD5C00A6986C /* AppSubViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppSubViewCell.m; path = Classes/App/View/AppSubViewCell.m; sourceTree = "<group>"; };
+		18C87FA61E8BAFA800A6986C /* AppSubModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppSubModel.h; path = Classes/App/Model/AppSubModel.h; sourceTree = "<group>"; };
+		18C87FA71E8BAFA800A6986C /* AppSubModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppSubModel.m; path = Classes/App/Model/AppSubModel.m; sourceTree = "<group>"; };
 		18C994F21DEC0966006A040F /* WMMenuItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMMenuItem.h; sourceTree = "<group>"; };
 		18C994F31DEC0966006A040F /* WMMenuItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMMenuItem.m; sourceTree = "<group>"; };
 		18C994F41DEC0966006A040F /* WMMenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMMenuView.h; sourceTree = "<group>"; };
@@ -576,6 +586,8 @@
 		18DE0A1C1E66B5D50070E278 /* Variable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Variable.m; path = Classes/Global/Variable.m; sourceTree = "<group>"; };
 		18DEE9581E4AA92C00536155 /* BaseScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseScrollView.h; path = Classes/Base/View/BaseScrollView.h; sourceTree = "<group>"; };
 		18DEE9591E4AA92C00536155 /* BaseScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BaseScrollView.m; path = Classes/Base/View/BaseScrollView.m; sourceTree = "<group>"; };
+		18DF11421E8CA8D40034CC3A /* AppSubUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppSubUtil.h; path = Classes/App/Util/AppSubUtil.h; sourceTree = "<group>"; };
+		18DF11431E8CA8D40034CC3A /* AppSubUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppSubUtil.m; path = Classes/App/Util/AppSubUtil.m; sourceTree = "<group>"; };
 		18E00F051E2F0B7A009A609A /* TestWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestWebViewController.h; sourceTree = "<group>"; };
 		18E00F061E2F0B7A009A609A /* TestWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestWebViewController.m; sourceTree = "<group>"; };
 		18E00F2E1E2F5CC9009A609A /* BaseWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseWebViewController.h; path = Classes/Base/Controller/BaseWebViewController.h; sourceTree = "<group>"; };
@@ -680,6 +692,8 @@
 			children = (
 				188C751C1E14C92E0056E40D /* AppUtil.h */,
 				188C751D1E14C92E0056E40D /* AppUtil.m */,
+				18DF11421E8CA8D40034CC3A /* AppSubUtil.h */,
+				18DF11431E8CA8D40034CC3A /* AppSubUtil.m */,
 			);
 			name = Util;
 			sourceTree = "<group>";
@@ -1033,6 +1047,7 @@
 			children = (
 				189B90FD1DF53D24004F84F0 /* Controller */,
 				189B91131DF55712004F84F0 /* View */,
+				18C87FA51E8BAF8000A6986C /* Model */,
 				1802A36B1E126B7D007E88C4 /* Util */,
 			);
 			name = App;
@@ -1043,6 +1058,8 @@
 			children = (
 				188C75191E14C84D0056E40D /* AppViewController.h */,
 				188C751A1E14C84D0056E40D /* AppViewController.m */,
+				18C87F9F1E8BAD1B00A6986C /* AppSubViewController.h */,
+				18C87FA01E8BAD1B00A6986C /* AppSubViewController.m */,
 				188C75301E1653240056E40D /* AppEditViewController.h */,
 				188C75311E1653240056E40D /* AppEditViewController.m */,
 			);
@@ -1054,6 +1071,8 @@
 			children = (
 				188C751F1E14C9AF0056E40D /* AppTopView.h */,
 				188C75201E14C9AF0056E40D /* AppTopView.m */,
+				18C87FA21E8BAD5C00A6986C /* AppSubViewCell.h */,
+				18C87FA31E8BAD5C00A6986C /* AppSubViewCell.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -1373,6 +1392,15 @@
 			);
 			name = WUGestureUnlockView;
 			path = Venders/WUGestureUnlockView;
+			sourceTree = "<group>";
+		};
+		18C87FA51E8BAF8000A6986C /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				18C87FA61E8BAFA800A6986C /* AppSubModel.h */,
+				18C87FA71E8BAFA800A6986C /* AppSubModel.m */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 		18C994EB1DEBD83B006A040F /* News */ = {
@@ -2041,6 +2069,7 @@
 				18237B6D1E49C21D00A5A9C4 /* ModifyPwdViewController.m in Sources */,
 				188052271D3CBEC200C36F00 /* ViewController.m in Sources */,
 				18D5B25A1E6FD21E00F5F555 /* SDWebImageDecoder.m in Sources */,
+				18C87FA41E8BAD5C00A6986C /* AppSubViewCell.m in Sources */,
 				18D5B2531E6FD21E00F5F555 /* FLAnimatedImageView.m in Sources */,
 				18C995001DEC0966006A040F /* WMScrollView.m in Sources */,
 				18D5B2611E6FD21E00F5F555 /* UIImage+MultiFormat.m in Sources */,
@@ -2084,6 +2113,7 @@
 				188C75211E14C9AF0056E40D /* AppTopView.m in Sources */,
 				18AA319C1D47384500862187 /* MASConstraintMaker.m in Sources */,
 				18D5B2551E6FD21E00F5F555 /* NSData+ImageContentType.m in Sources */,
+				18C87FA81E8BAFA800A6986C /* AppSubModel.m in Sources */,
 				18198B831E71390B001CB690 /* AccountUtil.m in Sources */,
 				18AA31A21D47384500862187 /* View+MASAdditions.m in Sources */,
 				18C995071DEC0C18006A040F /* NewsTableViewCell.m in Sources */,
@@ -2114,6 +2144,7 @@
 				183C19CD1E69514100D7203F /* MJProperty.m in Sources */,
 				18D5B2521E6FD21E00F5F555 /* FLAnimatedImageView+WebCache.m in Sources */,
 				180D3B111E53E53800440E99 /* MessageDetailViewController.m in Sources */,
+				18C87FA11E8BAD1B00A6986C /* AppSubViewController.m in Sources */,
 				18237B721E49D0BF00A5A9C4 /* TaxCalendarViewController.m in Sources */,
 				188C752B1E1606A30056E40D /* DeviceInfoModel.m in Sources */,
 				188052211D3CBEC200C36F00 /* main.m in Sources */,
@@ -2124,6 +2155,7 @@
 				18AA317A1D4737B400862187 /* AFSecurityPolicy.m in Sources */,
 				18F122B41E7BB36E00E12175 /* AboutHeaderView.m in Sources */,
 				18AA31B41D4744D900862187 /* MBProgressHUD.m in Sources */,
+				18DF11441E8CA8D40034CC3A /* AppSubUtil.m in Sources */,
 				18D5B2591E6FD21E00F5F555 /* SDWebImageCompat.m in Sources */,
 				188C751B1E14C84D0056E40D /* AppViewController.m in Sources */,
 				18D5B2631E6FD21E00F5F555 /* UIImageView+HighlightedWebCache.m in Sources */,
