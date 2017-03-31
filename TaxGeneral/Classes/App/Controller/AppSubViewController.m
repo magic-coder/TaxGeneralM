@@ -29,7 +29,7 @@ static NSString * const reuseIdentifier = @"appSubCell";
     
     self.view.backgroundColor = DEFAULT_BACKGROUND_COLOR;
     self.tableView.backgroundColor = DEFAULT_BACKGROUND_COLOR;
-    self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+    //self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     
     [self.tableView registerClass:[AppSubViewCell class] forCellReuseIdentifier:reuseIdentifier];
     [self.tableView setSeparatorStyle: UITableViewCellSeparatorStyleNone];
@@ -67,7 +67,7 @@ static NSString * const reuseIdentifier = @"appSubCell";
     
     // 获取当前点击的cell
     AppSubViewCell *cell = (AppSubViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-    DLog(@"Yan -> 点击了cell : %@", cell.model.title);
+    [YZAlertView showBottomTipViewWith:self title:cell.model.no message:cell.model.title];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -31,8 +31,8 @@
 #endif
 
 #import <AudioToolbox/AudioToolbox.h>
-#import <CoreTelephony/CTCellularData.h>
 #import <CoreLocation/CoreLocation.h>
+#import "Reachability.h"
 
 @interface AppDelegate () <BMKGeneralDelegate, UIAlertViewDelegate, CLLocationManagerDelegate>
 
@@ -41,6 +41,8 @@
 @property (nonatomic, strong) MainTabBarController *mainTabBarController;
 
 @property (strong, nonatomic) BMKMapManager *mapManager;
+
+@property (nonatomic, strong) CLLocationManager *locationManager;// 定位权限管理器
 
 @end
 
@@ -55,7 +57,7 @@
     
     // 判断系统版本是否支持
 #if __IPHONE_OS_VERSION_MAX_ALLOWED < __IPHONE_8_0
-    UIAlertView *alertView =[[UIAlertView alloc]initWithTitle:@"对不起，当前系统版本过低" message:@"请在“设置”-“通用”-“软件更新”中升级您的操作系统至ios8.0以上再使用" delegate:self cancelButtonTitle:@"退出应用" otherButtonTitles: nil];
+    UIAlertView *alertView =[[UIAlertView alloc]initWithTitle:@"对不起，当前系统版本过低" message:@"请在iPhone的\"设置-通用-软件更新\"中升级您的操作系统至ios8.0以上再使用。" delegate:self cancelButtonTitle:@"退出应用" otherButtonTitles: nil];
     alertView.tag = 0;
     [alertView show];
 #endif
@@ -399,92 +401,31 @@
 
 #pragma mark - 权限检查（网络权限、定位权限）
 - (void)inspectPermission{
-    // 应用启动后,检测应用中是否有联网权限
-    CTCellularData *cellularData = [[CTCellularData alloc] init];
-    cellularData.cellularDataRestrictionDidUpdateNotifier = ^(CTCellularDataRestrictedState state){
-        switch (state) {
-            case kCTCellularDataRestricted:
-                DLog(@"app网络权限受限");
-                break;
-            case kCTCellularDataRestrictedStateUnknown:
-                DLog(@"app网络权限不确定");
-                break;
-            case kCTCellularDataNotRestricted:
-                DLog(@"app网络权限不受限");
-                break;
-            default:
-                break;
+    
+    // 检测网络连接
+    Reachability *reachability = [Reachability reachabilityWithHostName:SERVER_URL];
+    switch([reachability currentReachabilityStatus]){
+        case NotReachable:{
+            UIAlertView *networkingAlert =[[UIAlertView alloc]initWithTitle:@"没有网络" message:@"请在iPhone的\"设置-无限局域网/蜂窝移动网\"中打开网络连接。" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
+            networkingAlert.tag = 1;
+            [networkingAlert show];
+            DLog(@"没有网络");
+            break;
         }
-    };
-    
-    CTCellularDataRestrictedState state = cellularData.restrictedState;
-    switch (state) {
-        case kCTCellularDataRestricted:
-            DLog(@"Restricrted");
+        case ReachableViaWWAN:
+            DLog(@"3G/4G");
             break;
-        case kCTCellularDataNotRestricted:
-            DLog(@"Not Restricted");
-            break;
-        case kCTCellularDataRestrictedStateUnknown:
-            DLog(@"Unknown");
-            break;
-        default:
+        case ReachableViaWiFi:
+            DLog(@"Wifi网络");
             break;
     }
     
-    // 检查是否有定位权限
-    BOOL isLocation = [CLLocationManager locationServicesEnabled];
-    if (!isLocation) {
-        NSLog(@"not turn on the location");
-    }
-    CLAuthorizationStatus CLstatus = [CLLocationManager authorizationStatus];
-    switch (CLstatus) {
-        case kCLAuthorizationStatusAuthorizedAlways:
-            NSLog(@"Always Authorized");
-            break;
-        case kCLAuthorizationStatusAuthorizedWhenInUse:
-            NSLog(@"AuthorizedWhenInUse");
-            break;
-        case kCLAuthorizationStatusDenied:
-            NSLog(@"Denied");
-            break;
-        case kCLAuthorizationStatusNotDetermined:
-            NSLog(@"not Determined");
-            break;
-        case kCLAuthorizationStatusRestricted:
-            NSLog(@"Restricted");
-            break;
-        default:
-            break;
-    }
-    
-    CLLocationManager *manager = [[CLLocationManager alloc] init];
-    [manager requestAlwaysAuthorization];//一直获取定位信息
-    [manager requestWhenInUseAuthorization];//使用的时候获取定位信息
-    
-}
-
-// 定位代理方法
-- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status{
-    switch (status) {
-        case kCLAuthorizationStatusAuthorizedAlways:
-            NSLog(@"Always Authorized");
-            break;
-        case kCLAuthorizationStatusAuthorizedWhenInUse:
-            NSLog(@"AuthorizedWhenInUse");
-            break;
-        case kCLAuthorizationStatusDenied:
-            NSLog(@"Denied");
-            break;
-        case kCLAuthorizationStatusNotDetermined:
-            NSLog(@"not Determined");
-            break;
-        case kCLAuthorizationStatusRestricted:
-            NSLog(@"Restricted");
-            break;
-        default:
-            break;
-    }
+    // 检测定位权限
+    _locationManager = [[CLLocationManager alloc] init];
+    _locationManager.delegate = self;
+    _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    [_locationManager requestWhenInUseAuthorization];
+    [_locationManager startUpdatingLocation];
 }
 
 #pragma mark - 获取设备的基本信息并存入NSUserDefaults中

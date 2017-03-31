@@ -513,6 +513,12 @@
 #pragma mark 自定义右更多按钮方法（路线规划）
 - (void)moreAction:(UIButton *)sender{
     
+    if(![self isOpenLocation]){
+        [YZAlertView showAlertWith:self title:@"无法使用定位" message:@"请在iPhone的\"设置-隐私-定位服务\"中开启定位。" callbackBlock:^(NSInteger btnIndex) {
+        } cancelButtonTitle:@"确定" destructiveButtonTitle:nil otherButtonTitles: nil];
+        return;
+    }
+    
     NSMutableArray *items = [[NSMutableArray alloc] init];
     //set item
     items = [@[[YZMenuItem menuItem:@"驾乘路线"
@@ -599,6 +605,11 @@
 }
 #pragma mark 底部定位按钮定位方法
 -(void)locationAction:(UIButton *)sender{
+    if(![self isOpenLocation]){
+        [YZAlertView showAlertWith:self title:@"无法使用定位" message:@"请在iPhone的\"设置-隐私-定位服务\"中开启定位。" callbackBlock:^(NSInteger btnIndex) {
+        } cancelButtonTitle:@"确定" destructiveButtonTitle:nil otherButtonTitles: nil];
+        return;
+    }
     _mapView.centerCoordinate = _mineCoordinate;
 }
 #pragma mark 打开电话
@@ -629,6 +640,12 @@
 }
 #pragma mark 打开百度地图客户端导航
 -(void)gpsAction:(UIButton *)sender{
+    
+    if(![self isOpenLocation]){
+        [YZAlertView showAlertWith:self title:@"无法使用定位" message:@"请在iPhone的\"设置-隐私-定位服务\"中开启定位。" callbackBlock:^(NSInteger btnIndex) {
+        } cancelButtonTitle:@"确定" destructiveButtonTitle:nil otherButtonTitles: nil];
+        return;
+    }
     
     [YZActionSheet showActionSheetWithTitle:nil cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@[@"苹果地图", @"高德地图", @"百度地图", @"腾讯地图"] handler:^(YZActionSheet *actionSheet, NSInteger index) {
         
@@ -706,6 +723,23 @@
     }];
 
 }
+
+#pragma mark - 判断定位权限是否开启
+- (BOOL)isOpenLocation{
+    // 检查是否有定位权限
+    BOOL isLocation = [CLLocationManager locationServicesEnabled];
+    if (!isLocation) {
+        return NO;
+    }
+    CLAuthorizationStatus CLstatus = [CLLocationManager authorizationStatus];
+    if(CLstatus == kCLAuthorizationStatusDenied || CLstatus == kCLAuthorizationStatusRestricted){
+        return NO;
+    }else{
+        return YES;
+    }
+    return NO;
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

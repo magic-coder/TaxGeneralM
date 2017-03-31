@@ -113,15 +113,18 @@
     if(viewController != nil || url != nil){
         if(viewController == nil){
             // 携带cookies请求url
-            NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
-            NSArray * cookies = [[NSHTTPCookieStorage  sharedHTTPCookieStorage] cookies];
-            NSDictionary * headers = [NSHTTPCookie requestHeaderFieldsWithCookies:cookies];
+            NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+            NSArray *cookies = [[NSHTTPCookieStorage  sharedHTTPCookieStorage] cookies];
+            NSDictionary *headers = [NSHTTPCookie requestHeaderFieldsWithCookies:cookies];
             [request setHTTPShouldHandleCookies:YES];
             [request setAllHTTPHeaderFields:headers];
             BaseWebViewController *baseWebVC = [[BaseWebViewController alloc] init];
             baseWebVC.url = [NSURL URLWithString:url];
             baseWebVC.req = request;
             viewController = baseWebVC;
+            
+            //viewController = [[BaseWebViewController alloc] initWithURL:url];
+            
         }
         
         viewController.title = cell.titleLabel.text; // 设置标题

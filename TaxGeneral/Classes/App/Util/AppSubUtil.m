@@ -14,7 +14,7 @@
 + (NSMutableArray *)getAppSubData{
     NSMutableArray *mutableArray = [[NSMutableArray alloc] init];
     
-    for(int i=1;i<10;i++){
+    for(int i=1;i<6;i++){
         AppSubModel *model = [[AppSubModel alloc] init];
         model.no = [NSString stringWithFormat:@"21%d", i];
         model.title = [NSString stringWithFormat:@"第二级菜单名称_%d", i];
