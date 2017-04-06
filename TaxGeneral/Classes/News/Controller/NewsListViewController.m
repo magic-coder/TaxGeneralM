@@ -213,6 +213,7 @@ static int const pageSize = 10;
     
     BaseWebViewController *baseWebVC = [[BaseWebViewController alloc] initWithURL:cell.newsModel.url];
     baseWebVC.title = @"税闻详情";
+    baseWebVC.useWKWebView = YES;
     [self.navigationController pushViewController:baseWebVC animated:YES];
     
 }

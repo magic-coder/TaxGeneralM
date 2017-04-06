@@ -112,19 +112,7 @@
     
     if(viewController != nil || url != nil){
         if(viewController == nil){
-            // 携带cookies请求url
-            NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
-            NSArray *cookies = [[NSHTTPCookieStorage  sharedHTTPCookieStorage] cookies];
-            NSDictionary *headers = [NSHTTPCookie requestHeaderFieldsWithCookies:cookies];
-            [request setHTTPShouldHandleCookies:YES];
-            [request setAllHTTPHeaderFields:headers];
-            BaseWebViewController *baseWebVC = [[BaseWebViewController alloc] init];
-            baseWebVC.url = [NSURL URLWithString:url];
-            baseWebVC.req = request;
-            viewController = baseWebVC;
-            
-            //viewController = [[BaseWebViewController alloc] initWithURL:url];
-            
+            viewController = [[BaseWebViewController alloc] initWithURL:url];
         }
         
         viewController.title = cell.titleLabel.text; // 设置标题
@@ -136,21 +124,16 @@
 - (void)appTopViewBtnClick:(UIButton *)sender{
     
     UIViewController *viewController= nil;
-    NSURL *url = nil;
-    
-    BOOL isWeb = NO;    // 是否为web页面
+    NSString *url = nil;
     
     if(sender.titleLabel.text == nil){// 进入应用管理器
         viewController = [[AppEditViewController alloc] init];
     }
     if([sender.titleLabel.text isEqualToString:@"通知公告"]){
-        isWeb = YES;
-        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@public/notice/index", SERVER_URL]];
+        url = [NSString stringWithFormat:@"%@public/notice/index", SERVER_URL];
     }
     if([sender.titleLabel.text isEqualToString:@"通讯录"]){
-        isWeb = YES;
-        // 携带cookie进行请求
-        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@litter/initLitter", SERVER_URL]];
+        url = [NSString stringWithFormat:@"%@litter/initLitter", SERVER_URL];
     }
     if([sender.titleLabel.text isEqualToString:@"办税地图"]){
         viewController = [[MapListViewController alloc] init];
@@ -161,15 +144,7 @@
     
     if(viewController != nil || url != nil){
         if(viewController == nil){
-            NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url];
-            NSArray * cookies = [[NSHTTPCookieStorage  sharedHTTPCookieStorage] cookies];
-            NSDictionary * headers = [NSHTTPCookie requestHeaderFieldsWithCookies:cookies];
-            [request setHTTPShouldHandleCookies:YES];
-            [request setAllHTTPHeaderFields:headers];
-            BaseWebViewController *baseWebVC = [[BaseWebViewController alloc] init];
-            baseWebVC.url = url;
-            baseWebVC.req = request;
-            viewController = baseWebVC;
+            viewController = [[BaseWebViewController alloc] initWithURL:url];
         }
         
         viewController.title = sender.titleLabel.text;

@@ -31,6 +31,7 @@
     for (NSHTTPCookie * cookie in [loginCookie cookies]){
         [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
     }
+    
     // 删除沙盒自动生成的Cookies.binarycookies文件
     NSString * path = NSHomeDirectory();
     NSString * filePath = [path stringByAppendingPathComponent:@"/Library/Cookies/Cookies.binarycookies"];

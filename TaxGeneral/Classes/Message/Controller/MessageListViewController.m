@@ -243,7 +243,7 @@ static int const pageSize = 10;
         if([error isEqualToString:@"510"]){
             self.navigationItem.titleView = nil;
             self.navigationItem.title = @"未登录";
-            [YZAlertView showAlertWith:self title:@"" message:@"当前登录已失效，请重新登录！" callbackBlock:^(NSInteger btnIndex) {
+            [YZAlertView showAlertWith:self title:@"登录失效" message:@"您当前登录信息已失效，请重新登录！" callbackBlock:^(NSInteger btnIndex) {
                 // 注销方法
                 [YZProgressHUD showHUDView:NAV_VIEW Mode:LOCKMODE Text:@"注销中..."];
                 [AccountUtil accountLogout];

@@ -77,6 +77,7 @@
 		188C75211E14C9AF0056E40D /* AppTopView.m in Sources */ = {isa = PBXBuildFile; fileRef = 188C75201E14C9AF0056E40D /* AppTopView.m */; };
 		188C752B1E1606A30056E40D /* DeviceInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 188C752A1E1606A30056E40D /* DeviceInfoModel.m */; };
 		188C75321E1653240056E40D /* AppEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 188C75311E1653240056E40D /* AppEditViewController.m */; };
+		188DC3D51E8FAE7F007F55E8 /* YZCookieSyncManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 188DC3D41E8FAE7F007F55E8 /* YZCookieSyncManager.m */; };
 		18933A891E8E37180062A85A /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 18933A881E8E37180062A85A /* Reachability.m */; };
 		18A08CCC1E80BB3C0027FF70 /* LoginUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A08CCB1E80BB3C0027FF70 /* LoginUtil.m */; };
 		18A08CCF1E80FD1E0027FF70 /* QuestionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A08CCE1E80FD1E0027FF70 /* QuestionViewController.m */; };
@@ -384,6 +385,8 @@
 		188C752A1E1606A30056E40D /* DeviceInfoModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DeviceInfoModel.m; path = Classes/Base/Model/DeviceInfoModel.m; sourceTree = "<group>"; };
 		188C75301E1653240056E40D /* AppEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppEditViewController.h; path = Classes/App/Controller/AppEditViewController.h; sourceTree = "<group>"; };
 		188C75311E1653240056E40D /* AppEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppEditViewController.m; path = Classes/App/Controller/AppEditViewController.m; sourceTree = "<group>"; };
+		188DC3D31E8FAE7F007F55E8 /* YZCookieSyncManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YZCookieSyncManager.h; sourceTree = "<group>"; };
+		188DC3D41E8FAE7F007F55E8 /* YZCookieSyncManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YZCookieSyncManager.m; sourceTree = "<group>"; };
 		18933A871E8E37180062A85A /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		18933A881E8E37180062A85A /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		189899341D504B8900B3CF71 /* Marcos.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Marcos.h; path = Classes/Global/Marcos.h; sourceTree = "<group>"; };
@@ -1645,6 +1648,8 @@
 				18DC62271E6417F7001834D1 /* YZWebView.m */,
 				18DC62281E6417F7001834D1 /* YZWebViewController.h */,
 				18DC62291E6417F7001834D1 /* YZWebViewController.m */,
+				188DC3D31E8FAE7F007F55E8 /* YZCookieSyncManager.h */,
+				188DC3D41E8FAE7F007F55E8 /* YZCookieSyncManager.m */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -2096,6 +2101,7 @@
 				18A966B71D52EA1900A8E539 /* BaseTableViewCell.m in Sources */,
 				18A966CC1D532A1600A8E539 /* BaseTableViewController.m in Sources */,
 				18293D951D631A7F008A4A8C /* MJRefreshConst.m in Sources */,
+				188DC3D51E8FAE7F007F55E8 /* YZCookieSyncManager.m in Sources */,
 				18293D8D1D631A7F008A4A8C /* MJRefreshAutoStateFooter.m in Sources */,
 				18F122B11E7BB35600E12175 /* AboutFooterView.m in Sources */,
 				18BC91751DF00E5300AD6AA8 /* NewsViewController.m in Sources */,

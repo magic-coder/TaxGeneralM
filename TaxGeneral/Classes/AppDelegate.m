@@ -188,12 +188,6 @@
     
     [self inspectPermission];// 获取权限（网络访问、定位）
     
-    // 初始化完毕存储Cookie(用于自动登录的会话共享)
-    NSURL *cookieHost = [NSURL URLWithString:SERVER_URL];
-    NSDictionary *propertiesDict = [NSDictionary dictionaryWithObjectsAndKeys:[cookieHost host], NSHTTPCookieDomain, [cookieHost path], NSHTTPCookiePath, @"COOKIE_NAME", NSHTTPCookieName, @"COOKIE_VALUE", NSHTTPCookieValue, nil];
-    NSHTTPCookie *cookie = [NSHTTPCookie cookieWithProperties:propertiesDict];
-    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
-    
     // 初始化地图数据结构，写入SandBox
     [[MapListUtil alloc] loadMapDataBlock:^(NSMutableArray *dataArray) {
         DLog(@"Yan -> 初始化地图Tree数据成功");
@@ -202,6 +196,8 @@
     }];
     
     [_window makeKeyAndVisible];
+    
+    [NSThread sleepForTimeInterval:1.0f];//设置启动页面时间
     
     return YES;
 }
@@ -239,8 +235,8 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-    // 当应用程序挂起并从新进入时，设置cookie的接受政策
-    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookieAcceptPolicy:NSHTTPCookieAcceptPolicyAlways];
+    
+    [self saveCookies];// 写入cookie
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
@@ -426,6 +422,17 @@
     _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     [_locationManager requestWhenInUseAuthorization];
     [_locationManager startUpdatingLocation];
+}
+
+#pragma mark - 保存写入cookie
+- (void)saveCookies{
+    // 初始化完毕存储Cookie(用于自动登录的会话共享)
+    NSURL *cookieHost = [NSURL URLWithString:SERVER_URL];
+    NSDictionary *propertiesDict = [NSDictionary dictionaryWithObjectsAndKeys:[cookieHost host], NSHTTPCookieDomain, [cookieHost path], NSHTTPCookiePath, @"COOKIE_NAME", NSHTTPCookieName, @"COOKIE_VALUE", NSHTTPCookieValue, nil];
+    NSHTTPCookie *cookie = [NSHTTPCookie cookieWithProperties:propertiesDict];
+    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+    // 当应用程序挂起并从新进入时，设置cookie的接受政策
+    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookieAcceptPolicy:NSHTTPCookieAcceptPolicyAlways];
 }
 
 #pragma mark - 获取设备的基本信息并存入NSUserDefaults中

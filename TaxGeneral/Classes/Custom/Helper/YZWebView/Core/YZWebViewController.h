@@ -15,12 +15,12 @@
 
 @property (nonatomic, strong)NSURL *url;
 
-@property (nonatomic ,strong) NSURLRequest *req;
+@property (nonatomic ,strong) NSMutableURLRequest *req;
 
 @property (nonatomic, strong)UIColor *tintColor;
 
 @property (nonatomic, readonly)YZWebView *webView;
-@property (nonatomic, assign ,getter= isUseUIWebView)BOOL useUIWebView;
+@property (nonatomic, assign ,getter= isUseWKWebView)BOOL useWKWebView;
 
 @property (nonatomic, assign ,getter= isHiddenProgressView)BOOL hiddenProgressView; // defult is NO ,if you set Yes the progressBar will not show .
 /**

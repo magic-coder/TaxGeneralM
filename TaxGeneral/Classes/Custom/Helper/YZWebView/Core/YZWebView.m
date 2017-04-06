@@ -12,14 +12,19 @@
 #import "YZWebViewProress.h"
 #import <WebKit/WebKit.h>
 #import <JavaScriptCore/JavaScriptCore.h>
+#import "YZCookieSyncManager.h"
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_8_0
-@interface YZWebView ()<UIWebViewDelegate,YZWebViewProgressDelegate ,WKUIDelegate,WKNavigationDelegate,WKScriptMessageHandler>
+@interface YZWebView ()<UIWebViewDelegate,NSURLConnectionDataDelegate,YZWebViewProgressDelegate ,WKUIDelegate,WKNavigationDelegate,WKScriptMessageHandler>
 @property (nonatomic, strong) JSContext *context;
 @property (nonatomic, strong) YZWebViewProress *progressProxy;
 @property (nonatomic, strong) NSProgress *estimatedProgress;
+@property (nonatomic,strong) NSURLConnection *urlConnection;
+@property (nonatomic) SSLAuthenticate authenticated;
 #else
-@interface YZWebView ()<YZWebViewProgressDelegate ,UIWebViewDelegate,YZWebViewProgressDelegate>
+@interface YZWebView ()<YZWebViewProgressDelegate,UIWebViewDelegate,NSURLConnectionDataDelegate,YZWebViewProgressDelegate>
 @property (nonatomic, strong) JSContext *context;
+@property (nonatomic,strong) NSURLConnection *urlConnection;
+@property (nonatomic) SSLAuthenticate authenticated;
 #endif
 @end
 @implementation YZWebView
@@ -220,6 +225,7 @@
     }
     
     if (!decision) {
+        [self stopLoading];
         decisionHandler(WKNavigationResponsePolicyCancel);// 不允许跳转
         return;
     }else{
@@ -275,11 +281,50 @@
 #pragma mark - <UIWebViewDelegate> 代理方法
 #pragma mark 在发送请求之前，决定是否跳转的代理
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType{
+    
+    DLog(@"开始加载: %@ CA证书授权:%d", [[request URL] absoluteString], _authenticated);
+    if (!_authenticated) {
+        _authenticated = kNeverAuthenticate;
+        _urlConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+        [_urlConnection start];
+    }
+    
     if ([self.delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
            return  [self.delegate webView:self shouldStartLoadWithRequest:request navigationType:(YZWebViewNavigationType)navigationType];
     }else{
         return YES;
     }
+}
+
+#pragma mark ***NURLConnection 代理方法***
+- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge{
+    DLog(@"WebController 已经得到CA证书授权正在请求 NSURLConnection");
+    
+    if ([challenge previousFailureCount] == 0){
+        _authenticated = kTryAuthenticate;
+        NSURLCredential *credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
+        [challenge.sender useCredential:credential forAuthenticationChallenge:challenge];
+    } else{
+        [[challenge sender] cancelAuthenticationChallenge:challenge];
+    }
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response{
+    DLog(@"WebController 已经收到响应并通过了 NSURLConnection请求");\
+    _authenticated = kTryAuthenticate;
+    [_urlConnection cancel];
+    
+    BOOL decision = NO;
+    if ([self.delegate respondsToSelector:@selector(webView:shouldStartLoadWithResponse:)]) {
+        decision = [self.delegate webView:self shouldStartLoadWithResponse:response];
+    }
+    if(!decision){
+        [self stopLoading];
+    }
+}
+
+- (BOOL)connection:(NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)protectionSpace{
+    return [protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust];
 }
 
 #pragma mark 页面开始加载时调用
@@ -446,9 +491,11 @@
     configuretion.preferences = [[WKPreferences alloc]init];
     configuretion.preferences.minimumFontSize = 10;
     configuretion.preferences.javaScriptEnabled = true;
-    configuretion.processPool = [[WKProcessPool alloc]init];
+    YZCookieSyncManager *cookieSyncManager = [YZCookieSyncManager sharedWKCookieSyncManager];
+    configuretion.processPool = [cookieSyncManager processPool];
     // 默认是不能通过JS自动打开窗口的，必须通过用户交互才能打开
     configuretion.preferences.javaScriptCanOpenWindowsAutomatically = YES;
+    
     return configuretion;
 }
 - (NSString *)title{

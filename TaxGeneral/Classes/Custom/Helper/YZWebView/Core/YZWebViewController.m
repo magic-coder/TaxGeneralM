@@ -38,10 +38,17 @@
     return self;
 }
 
-- (NSURLRequest *)req{
+- (NSMutableURLRequest *)req{
     if (!_req) {
         // 设置请求超时时间为10秒
-        _req = [NSURLRequest requestWithURL:self.url cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10.f];
+        //_req = [NSURLRequest requestWithURL:self.url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10.f];
+        
+        // 携带cookie进行请求
+        _req = [NSMutableURLRequest requestWithURL:self.url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10.f];
+        NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
+        NSDictionary *cookieHeader = [NSHTTPCookie requestHeaderFieldsWithCookies:cookies];
+        [_req setHTTPShouldHandleCookies:YES];
+        [_req setAllHTTPHeaderFields:cookieHeader];
     }
     return _req;
 }
@@ -72,11 +79,10 @@
     //#if __IPHONE_OS_VERSION_MAX_ALLOWED < __IPHONE_8_0
     //#else
     //#endif
-    if (self.useUIWebView) {
-        _webView = [[YZWebView alloc]initWithUIWebView:rect];
+    if (self.useWKWebView) {
+        _webView = [[YZWebView alloc] initWithFrame:rect];
     }else{
-        _webView = [[YZWebView alloc]initWithFrame:rect];
-        
+        _webView = [[YZWebView alloc] initWithUIWebView:rect];
     }
     [_webView loadRequest:self.req];
     _webView.delegate = self;
@@ -109,6 +115,7 @@
 #pragma mark - WebViewDelegate
 -(BOOL)webView:(YZWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(YZWebViewNavigationType)navigationType{
     DLog(@"Yan -> %@", webView.URL.absoluteString);
+    
     // 如果响应的地址是指定域名，则允许跳转
     if ([webView.URL.absoluteString hasPrefix:@"https://itunes.apple.com"]) {
         return NO;
@@ -118,46 +125,43 @@
 }
 -(BOOL)webView:(YZWebView *)webView shouldStartLoadWithResponse:(NSURLResponse *)response{
     //DLog(@"Yan -> %@", webView.URL.absoluteString);
+
+    DLog(@"_url absoluteString = %@",[_url absoluteString]);
     
     // 如果响应的地址是指定域名，则允许跳转
-    if ([webView.URL.absoluteString hasSuffix:@"login"]) {
-        
+    if ([response.URL.absoluteString rangeOfString:@"account/initLogin"].location != NSNotFound) {
+        // 启动/挂起恢复时进行登录操作
         [LoginUtil loginWithTokenSuccess:^{
-            //[webView loadUrl:[_url absoluteString]];
-            // 携带cookie进行请求
-            NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:_url];
-            NSArray * cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
-            NSDictionary * headers = [NSHTTPCookie requestHeaderFieldsWithCookies:cookies];
-            [request setHTTPShouldHandleCookies:YES];
-            [request setAllHTTPHeaderFields:headers];
-            [webView loadRequest:request];
+            DLog(@"Yan -> 初始化登录成功！");
+            
+            [self.webView loadUrl:[_url absoluteString]];
+            // 写入cookie
         } failed:^(NSString *error) {
-            if([error isEqualToString:@"510"]){
-                [YZAlertView showAlertWith:self title:@"" message:@"当前登录已失效，请重新登录！" callbackBlock:^(NSInteger btnIndex) {
-                    // 注销方法
-                    [YZProgressHUD showHUDView:NAV_VIEW Mode:LOCKMODE Text:@"注销中..."];
-                    [AccountUtil accountLogout];
-                    [YZProgressHUD hiddenHUDForView:NAV_VIEW];
-                    
-                    LoginViewController *loginVC = [[LoginViewController alloc] init];
-                    loginVC.isLogin = YES;
-                    
-                    // 水波纹动画效果
-                    CATransition *animation = [CATransition animation];
-                    animation.duration = 1.0f;
-                    animation.timingFunction = UIViewAnimationCurveEaseInOut;
-                    animation.type = @"rippleEffect";
-                    //animation.type = kCATransitionMoveIn;
-                    animation.subtype = kCATransitionFromTop;
-                    [self.view.window.layer addAnimation:animation forKey:nil];
-                    
-                    [self presentViewController:loginVC animated:YES completion:nil];
-                    
-                } cancelButtonTitle:@"重新登录" destructiveButtonTitle:nil otherButtonTitles: nil];
-            }else{
-                [YZProgressHUD showHUDView:NAV_VIEW Mode:SHOWMODE Text:error];
-            }
+            DLog(@"Yan -> 初始化登录失败 error = %@", error);
+            
+            [YZAlertView showAlertWith:self title:@"登录失效" message:@"您当前登录信息已失效，请重新登录！" callbackBlock:^(NSInteger btnIndex) {
+                // 注销方法
+                [YZProgressHUD showHUDView:NAV_VIEW Mode:LOCKMODE Text:@"注销中..."];
+                [AccountUtil accountLogout];
+                [YZProgressHUD hiddenHUDForView:NAV_VIEW];
+                
+                LoginViewController *loginVC = [[LoginViewController alloc] init];
+                loginVC.isLogin = YES;
+                
+                // 水波纹动画效果
+                CATransition *animation = [CATransition animation];
+                animation.duration = 1.0f;
+                animation.timingFunction = UIViewAnimationCurveEaseInOut;
+                animation.type = @"rippleEffect";
+                //animation.type = kCATransitionMoveIn;
+                animation.subtype = kCATransitionFromTop;
+                [self.view.window.layer addAnimation:animation forKey:nil];
+                
+                [self presentViewController:loginVC animated:YES completion:nil];
+                
+            } cancelButtonTitle:@"重新登录" destructiveButtonTitle:nil otherButtonTitles: nil];
         }];
+        
         return NO;
     }else{
         return YES;
@@ -179,7 +183,7 @@
     }
 }
 - (void)webView:(YZWebView *)webView withError:(NSError *)error{
-    if(error.code < 0 && error.code != NSURLErrorCancelled){
+    if(error.code < 0 && error.code != NSURLErrorCancelled && error.code != NSURLErrorServerCertificateUntrusted){
         [YZProgressHUD showHUDView:NAV_VIEW Mode:SHOWMODE Text:@"网络连接异常！"];
     }
     //DLog(@"Yan ->  页面加载失败 : %@", error.localizedDescription);

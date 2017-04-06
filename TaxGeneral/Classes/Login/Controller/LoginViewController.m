@@ -114,6 +114,7 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
     UIImageView* imgUser = [[UIImageView alloc] initWithFrame:CGRectMake(9, 9, 22, 22)];
     imgUser.image = [UIImage imageNamed:@"login_username"];
     [self.usernameTextField.leftView addSubview:imgUser];
+    self.usernameTextField.text = @"26100010001";
     [_smallView addSubview:self.usernameTextField];
     
     self.passwordTextField = [[UITextField alloc]initWithFrame:CGRectMake(CGRectGetMinX(self.usernameTextField.frame), CGRectGetMaxY(self.usernameTextField.frame)+10, CGRectGetWidth(self.usernameTextField.frame), CGRectGetHeight(self.usernameTextField.frame))];
@@ -129,6 +130,7 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
     UIImageView* imgPwd = [[UIImageView alloc] initWithFrame:CGRectMake(6, 6, 28, 28)];
     imgPwd.image = [UIImage imageNamed:@"login_password"];
     [self.passwordTextField.leftView addSubview:imgPwd];
+    self.passwordTextField.text = @"111";
     [_smallView addSubview:self.passwordTextField];
     
     
@@ -248,6 +250,7 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
             [self.view.window.layer addAnimation:animation forKey:nil];
             
             [self dismissViewControllerAnimated:YES completion:nil];
+            
         } failed:^(NSString *error) {
             [YZProgressHUD hiddenHUDForView:self.view];
             [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:error];

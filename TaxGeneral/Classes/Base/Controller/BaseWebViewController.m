@@ -20,7 +20,15 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStylePlain target:nil action:nil];
+    // 需要在跳转之前进行操作
+    // self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStylePlain target:nil action:nil];
+    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(onClickBtn:)];
+    
+}
+
+- (void)onClickBtn:(UIBarButtonItem *)sender{
+    [YZAlertView showBottomTipViewWith:self title:@"url" message:self.webView.URL.absoluteString];
 }
 
 - (void)didReceiveMemoryWarning {

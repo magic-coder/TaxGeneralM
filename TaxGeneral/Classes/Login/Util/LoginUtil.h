@@ -12,8 +12,10 @@
 
 @interface LoginUtil : NSObject
 
+// 通过app进行登录
 + (void)loginWithAppDict:(NSMutableDictionary *)dict success:(void (^)())success failed:(void (^)(NSString *error))failed;
 
+// 通过token进行登录
 + (void)loginWithTokenSuccess:(void (^)())success failed:(void (^)(NSString *error))failed;
 
 @end
