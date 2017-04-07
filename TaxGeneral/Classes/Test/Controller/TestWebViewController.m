@@ -40,7 +40,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.registerMethod = @[@"loginMethod", @"registerMethod", @"changeMethod", @"testMethod"];
+    //self.registerMethod = @[@"loginMethod", @"registerMethod", @"changeMethod", @"testMethod"];
 }
 
 - (void)didReceiveMemoryWarning {

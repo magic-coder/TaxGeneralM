@@ -211,10 +211,9 @@ static int const pageSize = 10;
     NewsTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
     DLog(@"Yan -> 标题为：%@", cell.newsModel.title);
     
-    BaseWebViewController *baseWebVC = [[BaseWebViewController alloc] initWithURL:cell.newsModel.url];
-    baseWebVC.title = @"税闻详情";
-    baseWebVC.useWKWebView = YES;
-    [self.navigationController pushViewController:baseWebVC animated:YES];
+    YZWebViewController *webVC = [[YZWebViewController alloc] initWithURL:cell.newsModel.url];
+    webVC.title = @"税闻详情";
+    [self.navigationController pushViewController:webVC animated:YES];
     
 }
 
@@ -240,9 +239,9 @@ static int const pageSize = 10;
 #pragma mark - 顶部loop的点击代理方法
 - (void)loopViewDidSelectedImage:(NewsLoopView *)loopView index:(int)index{
     DLog(@"Yan -> 点击了第%d个loop视图，其中标题为：%@", index, [loopView.urls objectAtIndex:index]);
-    BaseWebViewController *baseWebVC = [[BaseWebViewController alloc] initWithURL:[loopView.urls objectAtIndex:index]];
-    baseWebVC.title = @"税闻详情";
-    [self.navigationController pushViewController:baseWebVC animated:YES];
+    YZWebViewController *webVC = [[YZWebViewController alloc] initWithURL:[loopView.urls objectAtIndex:index]];
+    webVC.title = @"税闻详情";
+    [self.navigationController pushViewController:webVC animated:YES];
 }
 
 #pragma mark - 展示更新条数（浮动提示层）

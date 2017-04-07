@@ -186,18 +186,30 @@
     }
     */
     
+    [_window setRootViewController:_viewController];
+    
     [self inspectPermission];// 获取权限（网络访问、定位）
     
     // 初始化地图数据结构，写入SandBox
     [[MapListUtil alloc] loadMapDataBlock:^(NSMutableArray *dataArray) {
+        [_window setRootViewController:_mainTabBarController];
         DLog(@"Yan -> 初始化地图Tree数据成功");
     } failed:^(NSString *error) {
         DLog(@"Yan -> 初始化地图Tree数据失败：error = %@", error);
     }];
     
-    [_window makeKeyAndVisible];
+    NSDictionary *userLoginDict = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS];
+    if(nil != userLoginDict){
+        [LoginUtil loginWithTokenSuccess:^{
+            DLog(@"Yan -> 初始化登录成功");
+        } failed:^(NSString *error) {
+            DLog(@"Yan -> 初始化登录失败 error = %@", error);
+        }];
+    }
     
-    [NSThread sleepForTimeInterval:1.0f];//设置启动页面时间
+    //[NSThread sleepForTimeInterval:1.0];//设置启动页面时间
+    
+    [_window makeKeyAndVisible];
     
     return YES;
 }

@@ -79,10 +79,10 @@
     //#if __IPHONE_OS_VERSION_MAX_ALLOWED < __IPHONE_8_0
     //#else
     //#endif
-    if (self.useWKWebView) {
-        _webView = [[YZWebView alloc] initWithFrame:rect];
-    }else{
+    if (self.useUIWebView) {
         _webView = [[YZWebView alloc] initWithUIWebView:rect];
+    }else{
+        _webView = [[YZWebView alloc] initWithFrame:rect];
     }
     [_webView loadRequest:self.req];
     _webView.delegate = self;
@@ -133,7 +133,6 @@
         // 启动/挂起恢复时进行登录操作
         [LoginUtil loginWithTokenSuccess:^{
             DLog(@"Yan -> 初始化登录成功！");
-            
             [self.webView loadUrl:[_url absoluteString]];
             // 写入cookie
         } failed:^(NSString *error) {
