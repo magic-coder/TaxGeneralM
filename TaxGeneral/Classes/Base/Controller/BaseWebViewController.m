@@ -9,11 +9,12 @@
  ************************************************************/
 
 #import "BaseWebViewController.h"
+#import <JavaScriptCore/JavaScriptCore.h>
 
 @interface BaseWebViewController () <UIWebViewDelegate, NSURLConnectionDataDelegate, UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) UIWebView *webView;
-
+@property (nonatomic, strong) JSContext *context;
 //判断是否是HTTPS的
 @property (nonatomic, assign) BOOL isAuthed;
 //返回按钮
@@ -82,6 +83,9 @@
     return YES;
 }
 - (void)webViewDidStartLoad:(UIWebView *)webView{
+    self.theBool = NO;
+    self.progressView.hidden = NO;
+    
     //0.01667 is roughly 1/60, so it will update at 60 FPS
     self.timer = [NSTimer scheduledTimerWithTimeInterval:0.03 target:self selector:@selector(timerCallback) userInfo:nil repeats:YES];
 }
@@ -96,6 +100,14 @@
         //同时设置返回按钮和关闭按钮为导航栏左边的按钮
         self.navigationItem.leftBarButtonItems = @[self.backItem, self.closeItem];
     }
+    
+    // 加载完成后注入js
+    NSString *injectionJSString = @"var script = document.createElement('meta');"
+    "script.name = 'viewport';"
+    "script.content=\"width=device-width, initial-scale=1.0,maximum-scale=1.0, minimum-scale=1.0, user-scalable=no\";"
+    "document.getElementsByTagName('head')[0].appendChild(script);"
+    "window.scrollBy(0, 0);";
+    [self.context evaluateScript:injectionJSString];
     
 }
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
@@ -124,6 +136,7 @@
         [LoginUtil loginWithTokenSuccess:^{
             [self.webView loadRequest:self.request];
         } failed:^(NSString *error) {
+            [YZProgressHUD hiddenHUDForView:self.webView];
             [YZAlertView showAlertWith:self title:@"登录失效" message:@"您当前登录信息已失效，请重新登录！" callbackBlock:^(NSInteger btnIndex) {
                 // 注销方法
                 [YZProgressHUD showHUDView:NAV_VIEW Mode:LOCKMODE Text:@"注销中..."];
@@ -159,8 +172,8 @@
 }
 #pragma mark - 添加进度条
 - (void)addProgressBar{
-    // 仿微信进度条
-    CGFloat progressBarHeight = 2.f;
+    // 顶部进度条
+    CGFloat progressBarHeight = 0.f;
     CGRect navigationBarBounds = self.navigationController.navigationBar.bounds;
     CGRect barFrame = CGRectMake(0, navigationBarBounds.size.height - progressBarHeight, navigationBarBounds.size.width, progressBarHeight);
     self.progressView = [[UIProgressView alloc] initWithFrame:barFrame];
@@ -170,6 +183,7 @@
     [self.navigationController.navigationBar addSubview:self.progressView];
     
     self.progressView.progress = 0.05f;
+    
     self.theBool = NO;
 }
 
@@ -240,7 +254,8 @@
 
 - (UIWebView *)webView{
     if(_webView == nil){
-        _webView = [[UIWebView alloc] initWithFrame:self.view.frame];
+        _webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, self.view.frameWidth, self.view.frameHeight-HEIGHT_STATUS-HEIGHT_NAVBAR)];
+        
         _webView.backgroundColor = [UIColor whiteColor];
         _webView.delegate = self;
     }

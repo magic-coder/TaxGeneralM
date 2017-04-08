@@ -22,6 +22,7 @@
 
 #import "SettingUtil.h"
 #import "MapListUtil.h"
+#import "MessageListUtil.h"
 
 #import "BPush.h"
 #import <BaiduMapAPI_Base/BMKBaseComponent.h>
@@ -51,9 +52,6 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    
-    // 加载完毕后显示顶部状态栏
-    [[UIApplication sharedApplication] setStatusBarHidden:NO];
     
     // 判断系统版本是否支持
 #if __IPHONE_OS_VERSION_MAX_ALLOWED < __IPHONE_8_0
@@ -192,18 +190,29 @@
     
     // 初始化地图数据结构，写入SandBox
     [[MapListUtil alloc] loadMapDataBlock:^(NSMutableArray *dataArray) {
-        [_window setRootViewController:_mainTabBarController];
         DLog(@"Yan -> 初始化地图Tree数据成功");
+        // 加载完毕后显示顶部状态栏
+        [[UIApplication sharedApplication] setStatusBarHidden:NO];
+        [_window setRootViewController:_mainTabBarController];
     } failed:^(NSString *error) {
         DLog(@"Yan -> 初始化地图Tree数据失败：error = %@", error);
+        // 加载完毕后显示顶部状态栏
+        [[UIApplication sharedApplication] setStatusBarHidden:NO];
+        [_window setRootViewController:_mainTabBarController];
+        [_window setRootViewController:_mainTabBarController];
     }];
     
     NSDictionary *userLoginDict = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS];
     if(nil != userLoginDict){
         [LoginUtil loginWithTokenSuccess:^{
-            DLog(@"Yan -> 初始化登录成功");
+            DLog(@"Yan -> login成功");
+            [[MessageListUtil alloc] loadMsgDataWithPageNo:1 pageSize:10 dataBlock:^(NSDictionary *dataDict) {
+                DLog(@"Yan -> 初始化Message成功");
+            } failed:^(NSString *error) {
+                DLog(@"Yan -> 初始化Message失败 error = %@", error);
+            }];
         } failed:^(NSString *error) {
-            DLog(@"Yan -> 初始化登录失败 error = %@", error);
+            DLog(@"Yan -> login失败 error = %@", error);
         }];
     }
     
