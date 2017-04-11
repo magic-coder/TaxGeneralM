@@ -20,6 +20,7 @@
 @interface NewsListViewController () <MainTabBarControllerDelegate, NewsLoopViewDelegate>
 
 @property (nonatomic, strong) NewsLoopView *loopView;
+@property (nonatomic, strong) UILabel *hintLabel;       // 刷新顶部提示浮动标
 @property (nonatomic, strong) NSMutableArray *data;     // 数据列表
 @property (nonatomic, strong) NSMutableArray *tempData; // 临时数据列表
 @property (nonatomic, assign) int pageNo;               // 页码值
@@ -97,8 +98,10 @@ static int const pageSize = 10;
 
 #pragma mark - 下拉刷新数据
 - (void)loadNewData{
-    
+    self.tableView.userInteractionEnabled = NO;// 不允许点击
     [_newsUtil initDataWithPageSize:pageSize dataBlock:^(NSDictionary *dataDict) {
+        
+        self.tableView.userInteractionEnabled = YES;// 允许点击
         
         _refreshCount = pageSize;
         _tempData = [NSMutableArray arrayWithArray:_data];
@@ -144,7 +147,9 @@ static int const pageSize = 10;
         self.tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMoreData)];
         
         [self.tableView.mj_footer resetNoMoreData];
+        
     } failed:^(NSString *error) {
+        self.tableView.userInteractionEnabled = YES;// 允许点击
         // 结束刷新
         [self.tableView.mj_header endRefreshing];
         
@@ -248,47 +253,61 @@ static int const pageSize = 10;
 - (void)showNewStatusesCount:(int)count{
     
     // 1.创建一个UILabel
-    UILabel *label = [[UILabel alloc] init];
+    //UILabel *label = [[UILabel alloc] init];
     
     // 2.显示文字
     if (count) {
-        label.text = [NSString stringWithFormat:@"更新了%d条税闻", count];
+        self.hintLabel.text = [NSString stringWithFormat:@"更新了%d条税闻", count];
     } else {
-        label.text = @"没有最新的税闻";
+        self.hintLabel.text = @"没有最新的税闻";
     }
     
     // 3.设置背景
-    label.backgroundColor = WBColor(242.0, 162.0, 46.0, 1.0f);
-    label.textAlignment = NSTextAlignmentCenter;
-    label.textColor = [UIColor whiteColor];
-    label.font = [UIFont systemFontOfSize:14.0f];
+    self.hintLabel.backgroundColor = WBColor(242.0, 162.0, 46.0, 1.0f);
+    self.hintLabel.textAlignment = NSTextAlignmentCenter;
+    self.hintLabel.textColor = [UIColor whiteColor];
+    self.hintLabel.font = [UIFont systemFontOfSize:14.0f];
     
     // 4.设置frame
-    label.frame = CGRectMake(0, HEIGHT_STATUS+HEIGHT_NAVBAR-30, WIDTH_SCREEN, 30);
+    self.hintLabel.frame = CGRectMake(0, HEIGHT_STATUS+HEIGHT_NAVBAR-30, WIDTH_SCREEN, 30);
     
     // 5.添加到导航控制器的view
     //    [self.navigationController.view addSubview:label];
-    [self.navigationController.view insertSubview:label belowSubview:self.navigationController.navigationBar];
+    [self.navigationController.view insertSubview:self.hintLabel belowSubview:self.navigationController.navigationBar];
     
     // 6.动画
     CGFloat duration = 0.75;
-    label.alpha = 0.0;
+    self.hintLabel.alpha = 0.0;
     [UIView animateWithDuration:duration animations:^{
         // 往下移动一个label的高度
-        label.transform = CGAffineTransformMakeTranslation(0, 30);
-        label.alpha = 1.0;
+        self.hintLabel.transform = CGAffineTransformMakeTranslation(0, 30);
+        self.hintLabel.alpha = 1.0;
     } completion:^(BOOL finished) { // 向下移动完毕
         // 延迟delay秒后，再执行动画
         CGFloat delay = 1.0;
         [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseInOut animations:^{
             // 恢复到原来的位置
-            label.transform = CGAffineTransformIdentity;
-            label.alpha = 0.0;
+            self.hintLabel.transform = CGAffineTransformIdentity;
+            self.hintLabel.alpha = 0.0;
         } completion:^(BOOL finished) {
             // 删除控件
-            [label removeFromSuperview];
+            [self.hintLabel removeFromSuperview];
         }];
     }];
+}
+
+- (UILabel *)hintLabel{
+    if(_hintLabel == nil){
+        _hintLabel = [[UILabel alloc] init];
+    }
+    return _hintLabel;
+}
+
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    
+    [self.hintLabel removeFromSuperview];
+    self.hintLabel = nil;
 }
 
 - (void)didReceiveMemoryWarning {

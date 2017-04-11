@@ -25,6 +25,15 @@
 
 @implementation MainTabBarController
 
++ (MainTabBarController *)shareInstance{
+    static MainTabBarController *mainTabBarController = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        mainTabBarController = [[MainTabBarController alloc] init];
+    });
+    return mainTabBarController;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.

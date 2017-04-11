@@ -87,7 +87,7 @@
     self.progressView.hidden = NO;
     
     //0.01667 is roughly 1/60, so it will update at 60 FPS
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.03 target:self selector:@selector(timerCallback) userInfo:nil repeats:YES];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.05 target:self selector:@selector(timerCallback) userInfo:nil repeats:YES];
 }
 #pragma mark 加载完执行方法（设置webView的title为导航栏的title）
 - (void)webViewDidFinishLoad:(UIWebView *)webView{
@@ -201,12 +201,14 @@
         [YZProgressHUD showHUDView:self.webView Mode:SHOWMODE Text:@"加载失败，请重新加载"];
         self.progressView.hidden = YES;
         [self.timer invalidate];
+        self.timer = nil;
         _timeLong = 0;
     }
     if (self.theBool) {
         if (self.progressView.progress >= 1) {
             self.progressView.hidden = YES;
             [self.timer invalidate];
+            self.timer = nil;
             _timeLong = 0;
         } else {
             self.progressView.progress += 0.02;
@@ -243,7 +245,7 @@
         //_request = [NSURLRequest requestWithURL:self.url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10.f];
         
         // 对request中携带cookie进行请求
-        _request = [NSMutableURLRequest requestWithURL:self.url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10.f];
+        _request = [NSMutableURLRequest requestWithURL:self.url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:20.f];
         NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
         NSDictionary *cookieHeader = [NSHTTPCookie requestHeaderFieldsWithCookies:cookies];
         [_request setHTTPShouldHandleCookies:YES];

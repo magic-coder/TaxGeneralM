@@ -12,6 +12,7 @@
 #import "BaseCollectionModel.h"
 
 #define FILE_NAME @"appData.plist"
+#define SUB_FILE_NAME @"appSubData.plist"
 
 @implementation AppUtil
 
@@ -56,25 +57,37 @@
             NSMutableArray *otherData = [[NSMutableArray alloc] init];
             NSMutableArray *allData = [[NSMutableArray alloc] init];
             
+            // 子类数据
+            NSMutableArray *subData = [[NSMutableArray alloc] init];
+            
             NSMutableArray *appData = [[responseDic objectForKey:@"businessData"] objectForKey:@"appList"];
             for(NSDictionary *dict in appData){
                 BOOL flag = [[dict objectForKey:@"isuserapp"] boolValue];
-                if(flag){  // 值为TRUE是我的应用
-                    [mineData addObject:dict];
+                NSInteger level = [[dict objectForKey:@"applevel"] integerValue];
+                if(level == 0){// 只获取第一个级别的
+                    if(flag){  // 值为TRUE是我的应用
+                        [mineData addObject:dict];
+                    }
+                    if(!flag){  // 值为FALSE是其他应用
+                        [otherData addObject:dict];
+                    }
+                    [allData addObject:dict];
+                }else{
+                    [subData addObject:dict];
                 }
-                if(!flag){  // 值为FALSE是其他应用
-                    [otherData addObject:dict];
-                }
-                [allData addObject:dict];
             }
             
             // 对我的应用进行排序
             [self sortWithArray:mineData key:@"userappsort" ascending:YES];
             
-            // 最终数据（写入SandBox的数据）
+            // 最终数据（写入SandBox的数据）[第一级主应用]
             NSMutableDictionary *dataDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:mineData, @"mineData", otherData, @"otherData", allData, @"allData", nil];
-            
             [self writeNewAppData:dataDict];
+            
+            // 最终数据（写入SandBox的数据）[子类应用]
+            NSMutableDictionary *subDataDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:subData, @"subAppData", nil];
+            [self writeNewAppSubData:subDataDict];
+            
             
             dataBlock([self handleData:dataDict WithType:type]);
         }else{
@@ -142,6 +155,14 @@
     BaseSandBoxUtil *sandBoxUtil = [[BaseSandBoxUtil alloc] init];
     
     return [sandBoxUtil writeData:appData fileName:FILE_NAME];
+}
+
+// 子类信息写入应用数据到本地SandBox中
+- (BOOL)writeNewAppSubData:(NSDictionary *)appData{
+    
+    BaseSandBoxUtil *sandBoxUtil = [[BaseSandBoxUtil alloc] init];
+    
+    return [sandBoxUtil writeData:appData fileName:SUB_FILE_NAME];
 }
 
 // 私有为NSMutableArray排序方法

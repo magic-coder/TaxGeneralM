@@ -35,10 +35,10 @@ static NSString * const reuseIdentifier = @"aboutTableViewCell";
     self.tableView.showsVerticalScrollIndicator = NO;// 隐藏纵向滚动条
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
     
-    _headerView = [[AboutHeaderView alloc] initWithFrame:CGRectMake(0, 0, WIDTH_SCREEN, 160)];
+    _headerView = [[AboutHeaderView alloc] initWithFrame:CGRectMake(0, 0, WIDTH_SCREEN, 150)];
     self.tableView.tableHeaderView = _headerView;
     
-    _footerView = [[AboutFooterView alloc] initWithFrame:CGRectMake(0, 0, WIDTH_SCREEN, HEIGHT_SCREEN-HEIGHT_STATUS-HEIGHT_NAVBAR-160-43*3-20)];
+    _footerView = [[AboutFooterView alloc] initWithFrame:CGRectMake(0, 0, WIDTH_SCREEN, HEIGHT_SCREEN-HEIGHT_STATUS-HEIGHT_NAVBAR-150-43*3-20)];
     self.tableView.tableFooterView = _footerView;
     
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:reuseIdentifier];

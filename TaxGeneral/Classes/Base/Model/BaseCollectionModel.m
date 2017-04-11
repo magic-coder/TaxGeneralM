@@ -17,6 +17,8 @@
 + (BaseCollectionModelItem *)createWithDict:(NSDictionary *)dict{
     BaseCollectionModelItem *item = [[BaseCollectionModelItem alloc] init];
     item.no = [dict objectForKey:@"appno"];
+    item.pno = [dict objectForKey:@"pappno"];
+    item.level = [dict objectForKey:@"applevel"];
     item.title = [dict objectForKey:@"appname"];
     item.webImg = [dict objectForKey:@"appimage"];// 服务器logo图标
     item.localImg = [NSString stringWithFormat:@"app_%@", item.no]; // 加载本地default图标(根据应用序列号生成)

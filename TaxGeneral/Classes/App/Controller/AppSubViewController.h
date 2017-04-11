@@ -12,4 +12,6 @@
 
 @interface AppSubViewController : UITableViewController
 
+- (instancetype)initWithPno:(NSString *)pno level:(NSString *)level;
+
 @end

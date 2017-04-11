@@ -50,6 +50,7 @@
 	YZYZActionSheet(自定义底部多选提示框)[Reference : LPActionSheet]
 	YZMenu(自定义悬浮气泡菜单)[Reference : YCXMenu]
 	YZWebViewController(自定义WebView视图)[Reference : CHWebViewController]
+	YZCircleProgressButton(自定义倒计时动态按钮)[Reference : WSDrawCircleProgress]
 
 # 自己扩展的类(Extend)
 	UIView+YZ

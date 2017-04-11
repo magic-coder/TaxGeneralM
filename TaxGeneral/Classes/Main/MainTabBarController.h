@@ -18,6 +18,8 @@
 
 @interface MainTabBarController : UITabBarController
 
+// 单例模式类方法、静态方法
++ (MainTabBarController *)shareInstance;
 @property (nonatomic, weak) id<MainTabBarControllerDelegate> customDelegate;
 
 @end

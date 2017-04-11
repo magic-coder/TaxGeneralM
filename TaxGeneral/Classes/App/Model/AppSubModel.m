@@ -15,9 +15,11 @@
 + (AppSubModel *)createWithDict:(NSDictionary *)dict{
     AppSubModel *model = [[AppSubModel alloc] init];
     model.no = [dict objectForKey:@"appno"];
+    model.pno = [dict objectForKey:@"pappno"];
+    model.level = [dict objectForKey:@"applevel"];
     model.title = [dict objectForKey:@"appname"];
     model.webImg = [dict objectForKey:@"appimage"];// 服务器logo图标
-    model.localImg = [NSString stringWithFormat:@"appSub_0%@", model.no]; // 加载本地default图标(根据应用序列号生成)
+    model.localImg = [NSString stringWithFormat:@"app_%@%@", model.pno, model.no]; // 加载本地default图标(根据应用序列号生成)
     model.url = [dict objectForKey:@"appurl"];
     return model;
 }

@@ -90,6 +90,7 @@
 
 #pragma mark - <UICollectionDelegate>点击代理方法
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    
     /*
     BaseCordovaViewController *cordovaVC = [[BaseCordovaViewController alloc] init];
     NSString *cordovaPage = nil;
@@ -100,18 +101,20 @@
     
     BaseCollectionViewCell *cell = (BaseCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
     UIViewController *viewController = nil;
-    NSString *url = SERVER_URL;
+    
+    DLog(@"%@", cell.item.no);
     
     if([cell.item.title isEqualToString:@"办税地图"]){
         viewController = [[MapListViewController alloc] init];
-    }else if([cell.item.title isEqualToString:@"图片新闻"]){
-        viewController = [[AppSubViewController alloc] init];
+        
+        viewController.title = cell.titleLabel.text; // 设置标题
+        [self.navigationController pushViewController:viewController animated:YES];
     }else{
-        url = cell.item.url;
-    }
-    
-    if(viewController != nil || url != nil){
-        if(viewController == nil){
+        NSString *url = cell.item.url;
+        if(url == nil || url.length <= 0){
+            int level = [cell.item.level intValue]+1;
+            viewController = [[AppSubViewController alloc] initWithPno:cell.item.no level:[NSString stringWithFormat:@"%d", level]];
+        }else{
             viewController = [[BaseWebViewController alloc] initWithURL:url];
         }
         

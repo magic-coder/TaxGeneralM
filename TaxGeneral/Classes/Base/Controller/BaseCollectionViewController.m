@@ -47,7 +47,7 @@ static NSString * const reusableView = @"reusableView";
     //self.view.backgroundColor = DEFAULT_BACKGROUND_COLOR;
     //self.collectionView.backgroundColor = DEFAULT_BACKGROUND_COLOR;
     
-    self.collectionView.alwaysBounceVertical = NO;// 总是可垂直滑动
+    self.collectionView.alwaysBounceVertical = YES;// 总是可垂直滑动
     //self.collectionView.showsVerticalScrollIndicator = NO; // 隐藏垂直滚动条
     
     // Register cell classes

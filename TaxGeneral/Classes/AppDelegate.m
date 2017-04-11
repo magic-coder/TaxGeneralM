@@ -9,13 +9,10 @@
  ************************************************************/
 
 #import "AppDelegate.h"
-#import "MainNavigationController.h"
 #import "MainTabBarController.h"
 #import "DeviceInfoModel.h"
 
 #import "ViewController.h"
-#import "TouchIDViewController.h"
-#import "WUGesturesUnlockViewController.h"
 #import "MessageListViewController.h"
 #import "MessageDetailViewController.h"
 #import "MapListViewController.h"
@@ -38,7 +35,6 @@
 @interface AppDelegate () <BMKGeneralDelegate, UIAlertViewDelegate, CLLocationManagerDelegate>
 
 @property (nonatomic, strong) ViewController *viewController;
-@property (nonatomic, strong) LoginViewController *loginViewController;
 @property (nonatomic, strong) MainTabBarController *mainTabBarController;
 
 @property (strong, nonatomic) BMKMapManager *mapManager;
@@ -53,15 +49,21 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
+    // 隐藏顶部状态栏设为NO
+    // [UIApplication sharedApplication].statusBarHidden = NO;
+    // 设置顶部状态栏字体为白色
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+    
+    // 设置主window视图
+    _window = [[UIWindow alloc] initWithFrame:FRAME_SCREEN];
+    _window.backgroundColor = [UIColor clearColor];
+    
     // 判断系统版本是否支持
 #if __IPHONE_OS_VERSION_MAX_ALLOWED < __IPHONE_8_0
     UIAlertView *alertView =[[UIAlertView alloc]initWithTitle:@"对不起，当前系统版本过低" message:@"请在iPhone的\"设置-通用-软件更新\"中升级您的操作系统至ios8.0以上再使用。" delegate:self cancelButtonTitle:@"退出应用" otherButtonTitles: nil];
     alertView.tag = 0;
     [alertView show];
 #endif
-    
-    [self deviceInfo];  // 获取设备基本信息
-    [[SettingUtil alloc] initSettingData];// 初始化默认值的setting数据(写入SandBox)
     
     // BaiduMap 要使用百度地图，请先启动BaiduMapManager
     _mapManager = [[BMKMapManager alloc] init];
@@ -109,114 +111,21 @@
     //角标清0
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     
-    // 设置顶部状态栏字体为白色
-    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
-    
-    _window = [[UIWindow alloc] initWithFrame:FRAME_SCREEN];
-    _window.backgroundColor = [UIColor clearColor];
-    
-    _viewController = [[ViewController alloc] init];
-    _loginViewController = [[LoginViewController alloc] init];
-    _mainTabBarController = [[MainTabBarController alloc] init];
-    
-    // 获取单例模式中的用户信息自动登录
-    NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS];
-    if(nil != userDict){
-        // 指纹验证解锁
-        NSDictionary *settingDict = [[SettingUtil alloc] loadSettingData];
-        if([[settingDict objectForKey:@"touchID"] boolValue]){
-            TouchIDViewController *touchIDVC = [[TouchIDViewController alloc] init];
-            [_window setRootViewController:touchIDVC];
-        }else{
-            NSString *gesturePwd = [[NSUserDefaults standardUserDefaults] objectForKey:@"gesturespassword"];
-            if(gesturePwd.length > 0){  // 手势验证解锁
-                WUGesturesUnlockViewController *gesturesUnlockVC= [[WUGesturesUnlockViewController alloc] initWithUnlockType:WUUnlockTypeLoginPwd];
-                [_window setRootViewController:gesturesUnlockVC];
-            }else{
-                [_window setRootViewController:_mainTabBarController];
-            }
-        }
-    }else{
-        [_window setRootViewController:_mainTabBarController];
-        //[_window setRootViewController:_loginViewController];
-    }
-    
-    // App图片添加3DTouch按压方法 ->Start<-
-    // type 该item 唯一标识符
-    // localizedTitle ：标题
-    // localizedSubtitle：副标题
-    // icon：icon图标 可以使用系统类型 也可以使用自定义的图片
-    // userInfo：用户信息字典 自定义参数，完成具体功能需求
-    // 定义 shortcutItem
-    //UIApplicationShortcutIcon *icon1 = [UIApplicationShortcutIcon iconWithType:UIApplicationShortcutIconTypeSearch];
-    if(nil != userDict){
-        UIApplicationShortcutIcon *icon1 = [UIApplicationShortcutIcon iconWithTemplateImageName:@"3DTouch_Notification"];
-        UIApplicationShortcutItem *item1 = [[UIApplicationShortcutItem alloc] initWithType:@"notification" localizedTitle:@"通知公告" localizedSubtitle:@"" icon:icon1 userInfo:nil];
-        
-        UIApplicationShortcutIcon *icon2 = [UIApplicationShortcutIcon iconWithTemplateImageName:@"3DTouch_Map"];
-        UIApplicationShortcutItem *item2 = [[UIApplicationShortcutItem alloc] initWithType:@"map" localizedTitle:@"办税地图" localizedSubtitle:@"" icon:icon2 userInfo:nil];
-        
-        UIApplicationShortcutIcon *icon3 = [UIApplicationShortcutIcon iconWithTemplateImageName:@"3DTouch_Contacts"];
-        UIApplicationShortcutItem *item3= [[UIApplicationShortcutItem alloc] initWithType:@"contacts" localizedTitle:@"通讯录" localizedSubtitle:@"" icon:icon3 userInfo:nil];
-        
-        // 将items 添加到app图标
-        application.shortcutItems = @[item1,item2,item3];
-    }else{
-        application.shortcutItems = nil;
-    }
-    // App图片添加3DTouch按压方法 ->End<-
-    
-    // 判断用户是否登录
-    /*
-    NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS];
-    if(nil != userDict){
-        [LoginUtil loginWithAppDict:userDict success:^{
-            // 登录成功，界面跳转到主页
-            [_window setRootViewController:_mainTabBarController];
-        } failed:^(NSString *error) {
-            // 登录失败跳转到登录页
-            [_window setRootViewController:_loginViewController];
-            [YZProgressHUD showHUDView:_loginViewController.view Mode:SHOWMODE Text:error];
-        }];
-        [_window setRootViewController:_viewController];
-    }else{
-        [_window setRootViewController:_loginViewController];
-    }
-    */
-    
-    [_window setRootViewController:_viewController];
-    
+    [self deviceInfo];  // 获取设备基本信息
+    [[SettingUtil alloc] initSettingData];// 初始化默认值的setting数据(写入SandBox)
     [self inspectPermission];// 获取权限（网络访问、定位）
     
     // 初始化地图数据结构，写入SandBox
     [[MapListUtil alloc] loadMapDataBlock:^(NSMutableArray *dataArray) {
         DLog(@"Yan -> 初始化地图Tree数据成功");
-        // 加载完毕后显示顶部状态栏
-        [[UIApplication sharedApplication] setStatusBarHidden:NO];
-        [_window setRootViewController:_mainTabBarController];
     } failed:^(NSString *error) {
         DLog(@"Yan -> 初始化地图Tree数据失败：error = %@", error);
-        // 加载完毕后显示顶部状态栏
-        [[UIApplication sharedApplication] setStatusBarHidden:NO];
-        [_window setRootViewController:_mainTabBarController];
-        [_window setRootViewController:_mainTabBarController];
     }];
     
-    NSDictionary *userLoginDict = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS];
-    if(nil != userLoginDict){
-        [LoginUtil loginWithTokenSuccess:^{
-            DLog(@"Yan -> login成功");
-            [[MessageListUtil alloc] loadMsgDataWithPageNo:1 pageSize:10 dataBlock:^(NSDictionary *dataDict) {
-                DLog(@"Yan -> 初始化Message成功");
-            } failed:^(NSString *error) {
-                DLog(@"Yan -> 初始化Message失败 error = %@", error);
-            }];
-        } failed:^(NSString *error) {
-            DLog(@"Yan -> login失败 error = %@", error);
-        }];
-    }
+    _viewController = [[ViewController alloc] init];
+    _mainTabBarController = [MainTabBarController shareInstance];
     
-    //[NSThread sleepForTimeInterval:1.0];//设置启动页面时间
+    [_window setRootViewController:_viewController];
     
     [_window makeKeyAndVisible];
     
@@ -232,22 +141,7 @@
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     
-    NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS];
-    if(nil != userDict){
-        UIApplicationShortcutIcon *icon1 = [UIApplicationShortcutIcon iconWithTemplateImageName:@"3DTouch_Notification"];
-        UIApplicationShortcutItem *item1 = [[UIApplicationShortcutItem alloc] initWithType:@"item1" localizedTitle:@"通知公告" localizedSubtitle:@"" icon:icon1 userInfo:nil];
-        
-        UIApplicationShortcutIcon *icon2 = [UIApplicationShortcutIcon iconWithTemplateImageName:@"3DTouch_Map"];
-        UIApplicationShortcutItem *item2 = [[UIApplicationShortcutItem alloc] initWithType:@"item2" localizedTitle:@"办税地图" localizedSubtitle:@"" icon:icon2 userInfo:nil];
-        
-        UIApplicationShortcutIcon *icon3 = [UIApplicationShortcutIcon iconWithTemplateImageName:@"3DTouch_Contacts"];
-        UIApplicationShortcutItem *item3= [[UIApplicationShortcutItem alloc] initWithType:@"item3" localizedTitle:@"通讯录" localizedSubtitle:@"" icon:icon3 userInfo:nil];
-        
-        // 将items 添加到app图标
-        application.shortcutItems = @[item1,item2,item3];
-    }else{
-        application.shortcutItems = nil;
-    }
+    [self register3DTouch];// 注册3DTouch方法
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
@@ -258,6 +152,8 @@
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     
     [self saveCookies];// 写入cookie
+    
+    [self register3DTouch];// 注册3DTouch方法
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
@@ -352,7 +248,8 @@
         //[_mainTabBarController.selectedViewController pushViewController:skipCtr animated:YES];
         if([userInfo[@"type"] integerValue] == 0){
             _mainTabBarController.selectedIndex = 0;
-            BaseWebViewController *webVC = [[BaseWebViewController alloc] initWithURL:userInfo[@"url"]];
+            YZWebViewController *webVC = [[YZWebViewController alloc] initWithURL:userInfo[@"url"]];
+            webVC.title = @"明细信息";
             [_mainTabBarController.selectedViewController pushViewController:webVC animated:YES];
         }
         if([userInfo[@"type"] integerValue] == 1){
@@ -487,6 +384,37 @@
              exit(0);
          }];
     }
+}
+
+#pragma mark - 3DTouch注册
+- (void)register3DTouch{
+    // App图片添加3DTouch按压方法 ->Start<-
+    // type 该item 唯一标识符
+    // localizedTitle ：标题
+    // localizedSubtitle：副标题
+    // icon：icon图标 可以使用系统类型 也可以使用自定义的图片
+    // userInfo：用户信息字典 自定义参数，完成具体功能需求
+    // 定义 shortcutItem
+    //UIApplicationShortcutIcon *icon1 = [UIApplicationShortcutIcon iconWithType:UIApplicationShortcutIconTypeSearch];
+    // 获取单例模式中的用户信息自动登录
+    NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS];
+    if(nil != userDict){
+        UIApplicationShortcutIcon *icon1 = [UIApplicationShortcutIcon iconWithTemplateImageName:@"3DTouch_Notification"];
+        UIApplicationShortcutItem *item1 = [[UIApplicationShortcutItem alloc] initWithType:@"notification" localizedTitle:@"通知公告" localizedSubtitle:@"" icon:icon1 userInfo:nil];
+        
+        UIApplicationShortcutIcon *icon2 = [UIApplicationShortcutIcon iconWithTemplateImageName:@"3DTouch_Map"];
+        UIApplicationShortcutItem *item2 = [[UIApplicationShortcutItem alloc] initWithType:@"map" localizedTitle:@"办税地图" localizedSubtitle:@"" icon:icon2 userInfo:nil];
+        
+        UIApplicationShortcutIcon *icon3 = [UIApplicationShortcutIcon iconWithTemplateImageName:@"3DTouch_Contacts"];
+        UIApplicationShortcutItem *item3= [[UIApplicationShortcutItem alloc] initWithType:@"contacts" localizedTitle:@"通讯录" localizedSubtitle:@"" icon:icon3 userInfo:nil];
+        
+        // 将items 添加到app图标
+        
+        [UIApplication sharedApplication].shortcutItems = @[item1,item2,item3];
+    }else{
+        [UIApplication sharedApplication].shortcutItems = nil;
+    }
+    // App图片添加3DTouch按压方法 ->End<-
 }
 
 #pragma mark - 获取当前展示的视图

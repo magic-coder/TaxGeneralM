@@ -10,6 +10,6 @@
 
 @interface AppSubUtil : NSObject
 
-+ (NSMutableArray *)getAppSubData;
+- (NSMutableArray *)loadSubDataWithPno:(NSString *)pno level:(NSString *)level;
 
 @end

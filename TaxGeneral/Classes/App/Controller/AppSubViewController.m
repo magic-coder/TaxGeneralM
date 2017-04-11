@@ -16,11 +16,22 @@
 
 @property (nonatomic, strong) NSMutableArray *data;
 
+@property (nonatomic, strong) NSString *pno;
+@property (nonatomic, strong) NSString *level;
+
 @end
 
 @implementation AppSubViewController
 
 static NSString * const reuseIdentifier = @"appSubCell";
+
+- (instancetype)initWithPno:(NSString *)pno level:(NSString *)level{
+    if(self = [super init]){
+        _pno = pno;
+        _level = level;
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -34,8 +45,8 @@ static NSString * const reuseIdentifier = @"appSubCell";
     [self.tableView registerClass:[AppSubViewCell class] forCellReuseIdentifier:reuseIdentifier];
     [self.tableView setSeparatorStyle: UITableViewCellSeparatorStyleNone];
     
-    _data = [AppSubUtil getAppSubData];
-    
+    //_data = [AppSubUtil getAppSubData];
+    _data = [[AppSubUtil alloc] loadSubDataWithPno:_pno level:_level];
 }
 
 #pragma mark - Table view data source
@@ -67,7 +78,22 @@ static NSString * const reuseIdentifier = @"appSubCell";
     
     // 获取当前点击的cell
     AppSubViewCell *cell = (AppSubViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-    [YZAlertView showBottomTipViewWith:self title:cell.model.no message:cell.model.title];
+    
+    UIViewController *viewController = nil;
+    
+    DLog(@"%@%@", cell.model.pno,cell.model.no);
+    
+    NSString *url = cell.model.url;
+    if(url == nil || url.length <= 0){
+        int level = [cell.model.level intValue]+1;
+        viewController = [[AppSubViewController alloc] initWithPno:cell.model.no level:[NSString stringWithFormat:@"%d", level]];
+    }else{
+        viewController = [[BaseWebViewController alloc] initWithURL:url];
+    }
+    
+    viewController.title = cell.model.title; // 设置标题
+    [self.navigationController pushViewController:viewController animated:YES];
+    
 }
 
 - (void)didReceiveMemoryWarning {

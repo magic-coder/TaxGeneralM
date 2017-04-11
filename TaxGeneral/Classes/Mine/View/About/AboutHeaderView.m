@@ -15,10 +15,10 @@
 - (instancetype)initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
         self.backgroundColor = DEFAULT_BACKGROUND_COLOR;
-        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(WIDTH_SCREEN/2-35, 20, 70, 70)];
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(WIDTH_SCREEN/2-30, 20, 60, 60)];
         imageView.image = [UIImage imageNamed:@"about_logo" scaleToSize:imageView.size];
         imageView.layer.masksToBounds = YES;// 隐藏边界
-        imageView.layer.cornerRadius = 15;// 将图层的边框设置为圆角
+        imageView.layer.cornerRadius = 12;// 将图层的边框设置为圆角
         [self addSubview:imageView];
         
         
@@ -30,12 +30,12 @@
         // 当前应用版本号码   int类型
         // NSString *appVersionNum = [infoDictionary objectForKey:@"CFBundleVersion"];
         
-        UILabel *nameLabel = [self labelWithFrame:CGRectMake(0, 100, WIDTH_SCREEN, 20)];
+        UILabel *nameLabel = [self labelWithFrame:CGRectMake(0, 90, WIDTH_SCREEN, 20)];
         nameLabel.font = [UIFont boldSystemFontOfSize:14.0f];
         nameLabel.text = appName;
         [self addSubview:nameLabel];
         
-        UILabel *versionLabel = [self labelWithFrame:CGRectMake(0, 120, WIDTH_SCREEN, 20)];
+        UILabel *versionLabel = [self labelWithFrame:CGRectMake(0, 110, WIDTH_SCREEN, 20)];
         versionLabel.text = [NSString stringWithFormat:@"iPhone客户端 v%@版", appVersion];
         versionLabel.font = [UIFont systemFontOfSize:12.0f];
         versionLabel.textColor = [UIColor grayColor];
