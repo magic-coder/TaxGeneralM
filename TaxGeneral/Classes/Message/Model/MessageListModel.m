@@ -42,7 +42,6 @@
     model.message = [dict objectForKey:@"pushcontent"];
     model.date = [[dict objectForKey:@"pushdate"] substringWithRange:NSMakeRange(0, 16)];
     model.unReadCount = [NSString stringWithFormat:@"%@", [dict objectForKey:@"unreadcount"]];;
-    model.totalPage = [[dict objectForKey:@"detailtotalpage"] intValue];
     
     return model;
 }

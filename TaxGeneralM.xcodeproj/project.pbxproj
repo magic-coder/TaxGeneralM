@@ -72,6 +72,7 @@
 		1880525F1D3CC0FC00C36F00 /* libCordova.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 188052581D3CC04100C36F00 /* libCordova.a */; };
 		188052641D3CC3D000C36F00 /* YZTestPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 188052631D3CC3D000C36F00 /* YZTestPlugin.m */; };
 		1884826C1D51EC0D00A6A3AC /* MineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1884826B1D51EC0D00A6A3AC /* MineViewController.m */; };
+		188692261E9DFBC30043FBFA /* BaseHandleUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 188692251E9DFBC30043FBFA /* BaseHandleUtil.m */; };
 		188C751B1E14C84D0056E40D /* AppViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 188C751A1E14C84D0056E40D /* AppViewController.m */; };
 		188C751E1E14C92E0056E40D /* AppUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 188C751D1E14C92E0056E40D /* AppUtil.m */; };
 		188C75211E14C9AF0056E40D /* AppTopView.m in Sources */ = {isa = PBXBuildFile; fileRef = 188C75201E14C9AF0056E40D /* AppTopView.m */; };
@@ -213,7 +214,6 @@
 		18F788CD1E5D5B6900EE35BE /* mapapi.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 18F788CC1E5D5B6900EE35BE /* mapapi.bundle */; };
 		18F788D11E5D5D4200EE35BE /* Common.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 18F788D01E5D5D4200EE35BE /* Common.xcassets */; };
 		18F788D31E5D5D6600EE35BE /* Msg.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 18F788D21E5D5D6600EE35BE /* Msg.xcassets */; };
-		18F8B89F1E6D4B5100904529 /* BaseDataUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F8B89E1E6D4B5100904529 /* BaseDataUtil.m */; };
 		18FF35231E5AD8DE000887E2 /* MapListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FF35221E5AD8DE000887E2 /* MapListModel.m */; };
 		18FF35261E5AEF60000887E2 /* MapListUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FF35251E5AEF60000887E2 /* MapListUtil.m */; };
 		18FF35291E5AF1A4000887E2 /* MapListViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FF35281E5AF1A4000887E2 /* MapListViewCell.m */; };
@@ -376,6 +376,8 @@
 		188052631D3CC3D000C36F00 /* YZTestPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YZTestPlugin.m; path = Plugins/YZTestPlugin.m; sourceTree = "<group>"; };
 		1884826A1D51EC0D00A6A3AC /* MineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MineViewController.h; path = Classes/Mine/Controller/MineViewController.h; sourceTree = "<group>"; };
 		1884826B1D51EC0D00A6A3AC /* MineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MineViewController.m; path = Classes/Mine/Controller/MineViewController.m; sourceTree = "<group>"; };
+		188692241E9DFBC30043FBFA /* BaseHandleUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseHandleUtil.h; path = Classes/Base/Util/BaseHandleUtil.h; sourceTree = "<group>"; };
+		188692251E9DFBC30043FBFA /* BaseHandleUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BaseHandleUtil.m; path = Classes/Base/Util/BaseHandleUtil.m; sourceTree = "<group>"; };
 		188C75191E14C84D0056E40D /* AppViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppViewController.h; path = Classes/App/Controller/AppViewController.h; sourceTree = "<group>"; };
 		188C751A1E14C84D0056E40D /* AppViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppViewController.m; path = Classes/App/Controller/AppViewController.m; sourceTree = "<group>"; };
 		188C751C1E14C92E0056E40D /* AppUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppUtil.h; path = Classes/App/Util/AppUtil.h; sourceTree = "<group>"; };
@@ -640,8 +642,6 @@
 		18F788CC1E5D5B6900EE35BE /* mapapi.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = mapapi.bundle; path = ../BaiduMapAPI/BaiduMapAPI_Map.framework/Resources/mapapi.bundle; sourceTree = "<group>"; };
 		18F788D01E5D5D4200EE35BE /* Common.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Common.xcassets; path = Resources/Images/Common.xcassets; sourceTree = "<group>"; };
 		18F788D21E5D5D6600EE35BE /* Msg.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Msg.xcassets; path = Resources/Images/Msg.xcassets; sourceTree = "<group>"; };
-		18F8B89D1E6D4B5100904529 /* BaseDataUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseDataUtil.h; path = Classes/Base/Util/BaseDataUtil.h; sourceTree = "<group>"; };
-		18F8B89E1E6D4B5100904529 /* BaseDataUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BaseDataUtil.m; path = Classes/Base/Util/BaseDataUtil.m; sourceTree = "<group>"; };
 		18FF35211E5AD8DE000887E2 /* MapListModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MapListModel.h; path = Classes/Map/Model/MapListModel.h; sourceTree = "<group>"; };
 		18FF35221E5AD8DE000887E2 /* MapListModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MapListModel.m; path = Classes/Map/Model/MapListModel.m; sourceTree = "<group>"; };
 		18FF35241E5AEF60000887E2 /* MapListUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MapListUtil.h; path = Classes/Map/Util/MapListUtil.h; sourceTree = "<group>"; };
@@ -720,8 +720,8 @@
 			children = (
 				18DCAF991E2715AF009F019D /* BaseSandBoxUtil.h */,
 				18DCAF9A1E2715AF009F019D /* BaseSandBoxUtil.m */,
-				18F8B89D1E6D4B5100904529 /* BaseDataUtil.h */,
-				18F8B89E1E6D4B5100904529 /* BaseDataUtil.m */,
+				188692241E9DFBC30043FBFA /* BaseHandleUtil.h */,
+				188692251E9DFBC30043FBFA /* BaseHandleUtil.m */,
 			);
 			name = Util;
 			sourceTree = "<group>";
@@ -2166,7 +2166,6 @@
 				18293D991D631A7F008A4A8C /* UIView+MJExtension.m in Sources */,
 				18AE22651D61B8F200C93890 /* MessageListViewCell.m in Sources */,
 				18293D861D631A7F008A4A8C /* MJRefreshAutoFooter.m in Sources */,
-				18F8B89F1E6D4B5100904529 /* BaseDataUtil.m in Sources */,
 				18293D931D631A7F008A4A8C /* MJRefreshStateHeader.m in Sources */,
 				18A966BF1D531E4900A8E539 /* UIDevice+YZ.m in Sources */,
 				18D5B25F1E6FD21E00F5F555 /* UIButton+WebCache.m in Sources */,
@@ -2196,6 +2195,7 @@
 				18C995011DEC0966006A040F /* WMPageController.m in Sources */,
 				18BC91721DF0039600AD6AA8 /* NewsListViewController.m in Sources */,
 				18293D981D631A7F008A4A8C /* UIScrollView+MJRefresh.m in Sources */,
+				188692261E9DFBC30043FBFA /* BaseHandleUtil.m in Sources */,
 				18A7F8951D5AC11C007D4E1B /* BaseCordovaViewController.m in Sources */,
 				18AA31A11D47384500862187 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */,
 				183C19CF1E69514100D7203F /* MJPropertyType.m in Sources */,

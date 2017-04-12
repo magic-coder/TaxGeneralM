@@ -17,6 +17,7 @@
 
 @property (nonatomic, strong) NSMutableArray *data;             // 消息数据内容列表
 @property (nonatomic, assign) int pageNo;                       // 页码值
+@property (nonatomic, assign) int totalPage;            // 最大页
 @property (nonatomic, strong) MessageDetailUtil *msgDetailUtil;
 
 @end
@@ -24,7 +25,7 @@
 @implementation MessageDetailViewController
 
 static NSString * const reuseIdentifier = @"messageDetailCell";
-static int const pageSize = 10;
+static int const pageSize = 5;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -43,12 +44,6 @@ static int const pageSize = 10;
     [self.tableView setSeparatorStyle: UITableViewCellSeparatorStyleNone];
     
     [self loadData];
-    
-    if(_totalPage > 1){
-        // 设置下拉刷新
-        self.tableView.mj_header = [YZRefreshHeader headerWithRefreshingTarget:self refreshingAction:@selector(loadMoreData)];
-    }
-    
 }
 
 #pragma mark - Table view data source数据源方法
@@ -132,17 +127,25 @@ static int const pageSize = 10;
 #pragma mark - 加载数据
 - (void)loadData{
     // 从服务器获取最新数据
-    _pageNo = _totalPage;
+    _pageNo = 1;
     NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
     [param setObject:[NSNumber numberWithInt:_pageNo] forKey:@"pageNo"];
     [param setObject:[NSNumber numberWithInt:pageSize] forKey:@"pageSize"];
     [param setObject:_sourceCode forKey:@"sourcecode"];
+    if(_pushUserCode == nil){
+        _pushUserCode = @"";
+    }
     [param setObject:_pushUserCode forKey:@"pushusercode"];
+    
     
     [_msgDetailUtil loadMsgDataWithParam:param dataBlock:^(NSDictionary *dataDict) {
         [self handleDataDict:dataDict];// 数据处理
         [self.tableView reloadData];
         [self reloadAfterMessage:NO];
+        if(_totalPage > 1){
+            // 设置下拉刷新
+            self.tableView.mj_header = [YZRefreshHeader headerWithRefreshingTarget:self refreshingAction:@selector(loadMoreData)];
+        }
     } failed:^(NSString *error) {
         [YZProgressHUD showHUDView:NAV_VIEW Mode:SHOWMODE Text:error];
     }];
@@ -150,7 +153,7 @@ static int const pageSize = 10;
 
 #pragma mark - 加载更多方法
 - (void)loadMoreData{
-    _pageNo--;
+    _pageNo++;
     NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
     [param setObject:[NSNumber numberWithInt:_pageNo] forKey:@"pageNo"];
     [param setObject:[NSNumber numberWithInt:pageSize] forKey:@"pageSize"];
@@ -160,7 +163,7 @@ static int const pageSize = 10;
     [_msgDetailUtil loadMsgDataWithParam:param dataBlock:^(NSDictionary *dataDict) {
         // 加载结束
         [self.tableView.mj_header endRefreshing];
-        if(_pageNo == 1){
+        if(_pageNo == _totalPage){
             self.tableView.mj_header = nil;
         }
         
@@ -172,7 +175,7 @@ static int const pageSize = 10;
         }
         [self.tableView reloadData];
     } failed:^(NSString *error) {
-        _pageNo++;
+        _pageNo--;
         // 加载结束
         [self.tableView.mj_header endRefreshing];
         [YZProgressHUD showHUDView:NAV_VIEW Mode:SHOWMODE Text:error];
@@ -183,10 +186,12 @@ static int const pageSize = 10;
 -(void)handleDataDict:(NSDictionary *)dict{
     _data = [[NSMutableArray alloc] init];
     
-    NSArray *results = [dict objectForKey:@"results"];
+    _totalPage = [[dict objectForKey:@"totalPage"] intValue];
     
-    for(NSDictionary *dict in results){
-        MessageDetailModel *model = [MessageDetailModel createWithDict:dict];
+    NSArray *results = [dict objectForKey:@"results"];
+    // 逆序小日期在前大日期在后
+    for(int i = (int)results.count -1; i >= 0; i--){
+        MessageDetailModel *model = [MessageDetailModel createWithDict:results[i]];
         [_data addObject:model];
     }
 }

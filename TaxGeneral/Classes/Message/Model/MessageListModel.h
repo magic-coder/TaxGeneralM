@@ -20,7 +20,6 @@
 @property (nonatomic, strong) NSString *message;        // 消息
 @property (nonatomic, strong) NSString *date;           // 时间
 @property (nonatomic, strong) NSString *unReadCount;    // 未读条数
-@property (nonatomic, assign) int totalPage;            // 最大页码
 
 /************************ 类方法 ************************/
 + (MessageListModel *)createWithDict:(NSDictionary *)dict;

@@ -26,7 +26,7 @@
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     [dict setObject:[NSNumber numberWithInt:pageSize] forKey:@"pageSize"];
     
-    NSString *jsonString = [BaseDataUtil dataToJsonString:dict];
+    NSString *jsonString = [BaseHandleUtil dataToJsonString:dict];
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:jsonString, @"msg", nil];
     
@@ -73,7 +73,7 @@
     [dict setObject:[NSNumber numberWithInt:pageNo] forKey:@"pageNo"];
     [dict setObject:[NSNumber numberWithInt:pageSize] forKey:@"pageSize"];
     
-    NSString *jsonString = [BaseDataUtil dataToJsonString:dict];
+    NSString *jsonString = [BaseHandleUtil dataToJsonString:dict];
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:jsonString, @"msg", nil];
     

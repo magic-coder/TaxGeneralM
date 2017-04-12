@@ -16,8 +16,8 @@
 #import "WUGesturesUnlockViewController.h"
 #import "YZCircleProgressButton.h"
 
-#import "MapListUtil.h"
 #import "SettingUtil.h"
+#import "MessageListUtil.h"
 
 @interface ViewController ()
 
@@ -26,6 +26,7 @@
 @property (nonatomic, strong) YZCircleProgressButton *yzCircleView;
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, assign) NSInteger timeLong;
+@property (nonatomic, assign) int unReadcount;
 
 @end
 
@@ -44,10 +45,6 @@
 }
 
 - (void)removeProgress{
-    
-    [[UIApplication sharedApplication] setStatusBarHidden:NO];
-    [_appDelegate.window setRootViewController:_mainTabBarController];
-    
     // 指纹验证解锁
     NSDictionary *settingDict = [[SettingUtil alloc] loadSettingData];
     if([[settingDict objectForKey:@"touchID"] boolValue]){
@@ -76,6 +73,24 @@
     NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS];
     if(nil != userDict){
         
+        [LoginUtil loginWithTokenSuccess:^{
+            DLog(@"Yan -> login成功");
+            [[MessageListUtil alloc] loadMsgDataWithPageNo:1 pageSize:100 dataBlock:^(NSDictionary *dataDict) {
+                NSArray *results = [dataDict objectForKey:@"results"];
+                for(NSDictionary *dict in results){
+                    _unReadcount = _unReadcount + [[dict objectForKey:@"unreadcount"] intValue];
+                }
+                
+                [BaseHandleUtil setBadge:_unReadcount];
+                
+            } failed:^(NSString *error) {
+                DLog(@"初始化消息列表信息失败error=%@", error);
+            }];
+            
+        } failed:^(NSString *error) {
+            DLog(@"Yan -> login失败 error = %@", error);
+        }];
+        
         // 添加等待圈
         _yzCircleView = [[YZCircleProgressButton alloc] initWithFrame:CGRectMake(self.view.frame.size.width - 55, 30, 40, 40)];
         _yzCircleView.lineWidth = 2;
@@ -89,12 +104,6 @@
         }];
         [self.view addSubview:_yzCircleView];
         
-        [LoginUtil loginWithTokenSuccess:^{
-            DLog(@"Yan -> login成功");
-        } failed:^(NSString *error) {
-            DLog(@"Yan -> login失败 error = %@", error);
-        }];
-        
     }else{
         // 加载完成后显示状态栏
         [[UIApplication sharedApplication] setStatusBarHidden:NO];
@@ -102,6 +111,11 @@
     }
 }
 
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    
+    [BaseHandleUtil setBadge:_unReadcount];
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

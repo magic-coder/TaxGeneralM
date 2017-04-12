@@ -24,7 +24,7 @@
     [dict setObject:@"4" forKey:@"phonetype"];
     [dict setObject:model.deviceIdentifier forKey:@"deviceid"];
     
-    NSString *jsonString = [BaseDataUtil dataToJsonString:dict];
+    NSString *jsonString = [BaseHandleUtil dataToJsonString:dict];
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:jsonString, @"msg", nil];
     NSString *url = @"account/login";
@@ -50,6 +50,8 @@
             // 登录成功将信息保存到用户单例模式中
             [[NSUserDefaults standardUserDefaults] setObject:dict forKey:LOGIN_SUCCESS];
             [[NSUserDefaults standardUserDefaults] synchronize]; // 强制写入
+            
+            [self saveCookies];// 写入cookie
                         
             success();
             
@@ -77,7 +79,7 @@
     [dict setObject:model.deviceIdentifier forKey:@"deviceid"];
     [dict setObject:[userDict objectForKey:@"token"] forKey:@"token"];
     
-    NSString *jsonString = [BaseDataUtil dataToJsonString:dict];
+    NSString *jsonString = [BaseHandleUtil dataToJsonString:dict];
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:jsonString, @"msg", nil];
     NSString *url = @"account/login";
@@ -103,6 +105,8 @@
             [[NSUserDefaults standardUserDefaults] setObject:dict forKey:LOGIN_SUCCESS];
             [[NSUserDefaults standardUserDefaults] synchronize]; // 强制写入
             
+            [self saveCookies];// 写入cookie
+            
             success();
         }else if([statusCode isEqualToString:@"510"]){
             failed(@"510");
@@ -112,6 +116,17 @@
     } failure:^(NSString *error) {
         failed(error);
     }];
+}
+
+#pragma mark - 保存写入cookie
++ (void)saveCookies{
+    // 初始化完毕存储Cookie(用于自动登录的会话共享)
+    NSURL *cookieHost = [NSURL URLWithString:SERVER_URL];
+    NSDictionary *propertiesDict = [NSDictionary dictionaryWithObjectsAndKeys:[cookieHost host], NSHTTPCookieDomain, [cookieHost path], NSHTTPCookiePath, @"COOKIE_NAME", NSHTTPCookieName, @"COOKIE_VALUE", NSHTTPCookieValue, nil];
+    NSHTTPCookie *cookie = [NSHTTPCookie cookieWithProperties:propertiesDict];
+    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+    // 设置cookie的接受政策
+    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookieAcceptPolicy:NSHTTPCookieAcceptPolicyAlways];
 }
 
 @end

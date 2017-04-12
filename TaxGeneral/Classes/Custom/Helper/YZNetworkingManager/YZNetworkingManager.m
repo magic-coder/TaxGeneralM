@@ -53,7 +53,7 @@
     //[manager.requestSerializer setValue:@"gizp" forHTTPHeaderField:@"Content-Encoding"];
     
     // 5.请求超时，时间设置
-    manager.requestSerializer.timeoutInterval = 10.0;
+    manager.requestSerializer.timeoutInterval = 20.0;
     
     // 6.设置url请求地址
     NSString *requestURL = [NSString stringWithFormat:@"%@%@", SERVER_URL, url];

@@ -25,6 +25,8 @@
     // 删除设置信息、并重置设置
     [[SettingUtil alloc] removeSettingData];
     [[SettingUtil alloc] initSettingData];
+    // 清除应用提醒角标
+    [BaseHandleUtil setBadge:0];
     
     // 清空Cookie
     NSHTTPCookieStorage * loginCookie = [NSHTTPCookieStorage sharedHTTPCookieStorage];
@@ -44,7 +46,7 @@
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     [dict setObject:@"app" forKey:@"loginType"];
     
-    NSString *jsonString = [BaseDataUtil dataToJsonString:dict];
+    NSString *jsonString = [BaseHandleUtil dataToJsonString:dict];
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:jsonString, @"msg", nil];
     NSString *url = @"account/loginout";

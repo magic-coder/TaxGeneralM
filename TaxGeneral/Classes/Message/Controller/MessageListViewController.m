@@ -33,7 +33,7 @@
 @implementation MessageListViewController
 
 static NSString * const reuseIdentifier = @"messageListCell";
-static int const pageSize = 10;
+static int const pageSize = 100;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -51,7 +51,15 @@ static int const pageSize = 10;
     
     // 判断是否登录，若没登录则返回登录页面
     if([self isLogin]){
-        [self autoLoadData];
+        //[self autoLoadData];
+        
+        NSDictionary *dataDict = [_msgListUtil loadMsgDataWithFile];
+        if(dataDict != nil){
+            [self handleDataDict:dataDict];// 数据处理
+        }else{
+            [self autoLoadData];
+        }
+        
     }else{
         [self goToLogin];
     }
@@ -179,8 +187,6 @@ static int const pageSize = 10;
     MessageListViewCell *cell = (MessageListViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     messageDetailVC.title = cell.messageListModel.name; // 设置详细视图标题
     
-    DLog(@"页码值：-> %d",cell.messageListModel.totalPage);
-    messageDetailVC.totalPage = cell.messageListModel.totalPage;
     messageDetailVC.sourceCode = cell.messageListModel.sourceCode;
     messageDetailVC.pushUserCode = cell.messageListModel.pushUserCode;
     
@@ -289,12 +295,7 @@ static int const pageSize = 10;
         }
         
         badge += [model.unReadCount intValue];
-        UITabBarItem * item = [self.tabBarController.tabBar.items objectAtIndex:2];
-        if(badge > 0){
-            item.badgeValue = [NSString stringWithFormat:@"%d", badge];
-        }else{
-            item.badgeValue = nil;
-        }
+        [BaseHandleUtil setBadge:badge];// 设置提醒角标
     }
     [_data addObject:sysData];
     [_data addObject:userData];

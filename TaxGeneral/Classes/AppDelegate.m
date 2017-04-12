@@ -108,8 +108,8 @@
     Byte dt[32] = {0xc6, 0x1e, 0x5a, 0x13, 0x2d, 0x04, 0x83, 0x82, 0x12, 0x4c, 0x26, 0xcd, 0x0c, 0x16, 0xf6, 0x7c, 0x74, 0x78, 0xb3, 0x5f, 0x6b, 0x37, 0x0a, 0x42, 0x4f, 0xe7, 0x97, 0xdc, 0x9f, 0x3a, 0x54, 0x10};
     [self application:application didRegisterForRemoteNotificationsWithDeviceToken:[NSData dataWithBytes:dt length:32]];
 #endif
-    //角标清0
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+    // 角标清0
+    //[[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     
     [self deviceInfo];  // 获取设备基本信息
     [[SettingUtil alloc] initSettingData];// 初始化默认值的setting数据(写入SandBox)
@@ -349,7 +349,7 @@
     NSDictionary *propertiesDict = [NSDictionary dictionaryWithObjectsAndKeys:[cookieHost host], NSHTTPCookieDomain, [cookieHost path], NSHTTPCookiePath, @"COOKIE_NAME", NSHTTPCookieName, @"COOKIE_VALUE", NSHTTPCookieValue, nil];
     NSHTTPCookie *cookie = [NSHTTPCookie cookieWithProperties:propertiesDict];
     [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
-    // 当应用程序挂起并从新进入时，设置cookie的接受政策
+    // 设置cookie的接受政策
     [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookieAcceptPolicy:NSHTTPCookieAcceptPolicyAlways];
 }
 

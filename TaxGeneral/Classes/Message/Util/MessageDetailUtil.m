@@ -15,7 +15,7 @@
 
 - (void)loadMsgDataWithParam:(NSDictionary *)param dataBlock:(void (^)(NSDictionary *))dataBlock failed:(void (^)(NSString *))failed{
     
-    NSString *jsonString = [BaseDataUtil dataToJsonString:param];
+    NSString *jsonString = [BaseHandleUtil dataToJsonString:param];
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:jsonString, @"msg", nil];
     NSString *url = @"message/getMsgDetail";
