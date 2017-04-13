@@ -80,6 +80,9 @@
             // 对我的应用进行排序
             [self sortWithArray:mineData key:@"userappsort" ascending:YES];
             
+            // 对子应用进行排序
+            [self sortWithArray:subData key:@"appsort" ascending:YES];
+            
             // 最终数据（写入SandBox的数据）[第一级主应用]
             NSMutableDictionary *dataDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:mineData, @"mineData", otherData, @"otherData", allData, @"allData", nil];
             [self writeNewAppData:dataDict];
@@ -149,8 +152,39 @@
     }
 }
 
+// 向服务器保存自定义app排序
+- (void)saveCustomData:(NSArray *)customData{
+    
+    NSMutableArray *paramsArray = [[NSMutableArray alloc] init];
+    
+    int appsort = 0;
+    for(NSDictionary *dict in customData){
+        appsort ++;
+        NSString *appno = [dict objectForKey:@"appno"];
+        
+        NSDictionary *paramDict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:appsort], @"appsort", appno, @"appno", nil];
+        
+        [paramsArray addObject:paramDict];
+    }
+    
+    NSString *jsonString = [BaseHandleUtil dataToJsonString:paramsArray];
+    
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:jsonString, @"msg", nil];
+    
+    NSString *url = @"app/saveCustomAppSort";
+    [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:parameters success:^(NSDictionary *responseDic) {
+        // 获取请求状态值
+        DLog(@"statusCode = %@", [responseDic objectForKey:@"statusCode"]);
+    } failure:^(NSString *error) {
+        DLog(@"同步消息失败，error=%@", error);
+    }];
+    
+}
+
 // 写入应用数据到本地SandBox中
 - (BOOL)writeNewAppData:(NSDictionary *)appData{
+    
+    [self saveCustomData:[appData objectForKey:@"mineData"]];
     
     BaseSandBoxUtil *sandBoxUtil = [[BaseSandBoxUtil alloc] init];
     

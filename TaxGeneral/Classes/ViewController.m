@@ -18,6 +18,7 @@
 
 #import "SettingUtil.h"
 #import "MessageListUtil.h"
+#import "AppUtil.h"
 
 @interface ViewController ()
 
@@ -75,6 +76,13 @@
         
         [LoginUtil loginWithTokenSuccess:^{
             DLog(@"Yan -> login成功");
+            // 加载app列表
+            [[AppUtil alloc] initDataWithType:AppItemsTypeNone dataBlock:^(NSMutableArray *dataArray) {
+            } failed:^(NSString *error) {
+                DLog(@"初始化应用列表失败error=%@", error);
+            }];
+            
+            // 加载消息列表
             [[MessageListUtil alloc] loadMsgDataWithPageNo:1 pageSize:100 dataBlock:^(NSDictionary *dataDict) {
                 NSArray *results = [dataDict objectForKey:@"results"];
                 for(NSDictionary *dict in results){

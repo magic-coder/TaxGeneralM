@@ -295,8 +295,11 @@ static int const pageSize = 100;
         }
         
         badge += [model.unReadCount intValue];
-        [BaseHandleUtil setBadge:badge];// 设置提醒角标
     }
+    
+    usleep(1);
+    [BaseHandleUtil setBadge:badge];// 设置提醒角标
+    
     [_data addObject:sysData];
     [_data addObject:userData];
     

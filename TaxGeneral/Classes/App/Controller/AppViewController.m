@@ -51,6 +51,7 @@
     [self.view addSubview:_topView];
     
     self.collectionView.frame = CGRectMake(0.f, 160.f-HEIGHT_STATUS, WIDTH_SCREEN, HEIGHT_SCREEN+HEIGHT_STATUS-160.f);
+    
 }
 
 #pragma mark - 视图即将显示方法
@@ -216,6 +217,29 @@
 -(BOOL)isLogin{
     NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS];
     if(nil != userDict){
+        [LoginUtil loginWithTokenSuccess:^{
+        } failed:^(NSString *error) {
+            [YZAlertView showAlertWith:self title:@"登录失效" message:@"您当前登录信息已失效，请重新登录！" callbackBlock:^(NSInteger btnIndex) {
+                // 注销方法
+                [YZProgressHUD showHUDView:NAV_VIEW Mode:LOCKMODE Text:@"注销中..."];
+                [AccountUtil accountLogout];
+                [YZProgressHUD hiddenHUDForView:NAV_VIEW];
+                
+                LoginViewController *loginVC = [[LoginViewController alloc] init];
+                loginVC.isLogin = YES;
+                
+                // 水波纹动画效果
+                CATransition *animation = [CATransition animation];
+                animation.duration = 1.0f;
+                animation.timingFunction = UIViewAnimationCurveEaseInOut;
+                animation.type = @"rippleEffect";
+                //animation.type = kCATransitionMoveIn;
+                animation.subtype = kCATransitionFromTop;
+                [self.view.window.layer addAnimation:animation forKey:nil];
+                
+                [self presentViewController:loginVC animated:YES completion:nil];
+            } cancelButtonTitle:@"重新登录" destructiveButtonTitle:nil otherButtonTitles: nil];
+        }];
         return YES;
     }else{
         return NO;

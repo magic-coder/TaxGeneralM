@@ -69,6 +69,27 @@
         AboutViewController *aboutViewController = [[AboutViewController alloc] init];
         viewController = aboutViewController;
     }
+    if ([item.title isEqualToString:@"测试"]) {
+        [YZActionSheet showActionSheetWithTitle:nil cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"WKWebView" otherButtonTitles:@[@"UIWebView"] handler:^(YZActionSheet *actionSheet, NSInteger index) {
+            if(index == -1){
+                // WKWebView
+                NSString *url = [NSString stringWithFormat:@"%@/test/file", SERVER_URL];
+                UIViewController *vc = nil;
+                vc = [[YZWebViewController alloc] initWithURL:url];
+                vc.title = @"WKWebView - Test";;
+                [self.navigationController pushViewController:vc animated:YES];
+            }
+            if(index == 1){
+                // UIWebView
+                NSString *url = [NSString stringWithFormat:@"%@/test/file", SERVER_URL];
+                UIViewController *vc = nil;
+                vc = [[BaseWebViewController alloc] initWithURL:url];
+                vc.title = @"UIWebView - Test";
+                [self.navigationController pushViewController:vc animated:YES];
+            }
+        }];
+    }
+    
     if(nil != viewController){
         viewController.title = item.title;
         [self.navigationController pushViewController:viewController animated:YES];

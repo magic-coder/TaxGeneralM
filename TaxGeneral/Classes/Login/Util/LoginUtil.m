@@ -51,8 +51,6 @@
             [[NSUserDefaults standardUserDefaults] setObject:dict forKey:LOGIN_SUCCESS];
             [[NSUserDefaults standardUserDefaults] synchronize]; // 强制写入
             
-            [self saveCookies];// 写入cookie
-                        
             success();
             
         }else{
@@ -63,6 +61,7 @@
     }];
 }
 
+// token 登录请求三次，若三次都失败则失败
 + (void)loginWithTokenSuccess:(void (^)())success failed:(void (^)(NSString *))failed{
     
     NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:DEVICE_INFO];
@@ -83,50 +82,112 @@
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:jsonString, @"msg", nil];
     NSString *url = @"account/login";
+    // 第一次执行
     [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:parameters success:^(NSDictionary *responseDic) {
-        
         // 获取请求状态值
         DLog(@"statusCode = %@", [responseDic objectForKey:@"statusCode"]);
         NSString *statusCode = [responseDic objectForKey:@"statusCode"];
         if([statusCode isEqualToString:@"00"]){
             DLog(@"请求报文成功，开始进行处理...");
-            NSDictionary *businessData = [responseDic objectForKey:@"businessData"];
-            [dict setObject:[businessData objectForKey:@"userName"] forKey:@"userName"];
-            [dict setObject:[businessData objectForKey:@"orgCode"] forKey:@"orgCode"];
-            [dict setObject:[businessData objectForKey:@"orgName"] forKey:@"orgName"];
-            // 获取系统当前时间(登录时间)
-            NSDate *sendDate = [NSDate date];
-            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-            [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-            NSString *loginDate = [dateFormatter stringFromDate:sendDate];
-            [dict setObject:loginDate forKey:@"loginDate"];
-            
-            // 登录成功将信息保存到用户单例模式中
-            [[NSUserDefaults standardUserDefaults] setObject:dict forKey:LOGIN_SUCCESS];
-            [[NSUserDefaults standardUserDefaults] synchronize]; // 强制写入
-            
-            [self saveCookies];// 写入cookie
-            
+            [self handleTokenLogin:responseDic successDict:dict];
             success();
-        }else if([statusCode isEqualToString:@"510"]){
-            failed(@"510");
         }else{
-            failed([responseDic objectForKey:@"msg"]);
+            // 第二次执行
+            [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:parameters success:^(NSDictionary *responseDic) {
+                NSString *statusCode = [responseDic objectForKey:@"statusCode"];
+                if([statusCode isEqualToString:@"00"]){
+                    [self handleTokenLogin:responseDic successDict:dict];
+                    success();
+                }else{
+                    // 第三次执行
+                    [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:parameters success:^(NSDictionary *responseDic) {
+                        NSString *statusCode = [responseDic objectForKey:@"statusCode"];
+                        if([statusCode isEqualToString:@"00"]){
+                            [self handleTokenLogin:responseDic successDict:dict];
+                            success();
+                        }else if([statusCode isEqualToString:@"510"]){
+                            failed(@"510");
+                        }else{
+                            failed([responseDic objectForKey:@"msg"]);
+                        }
+                    } failure:^(NSString *error) {
+                        failed(error);
+                    }];
+                }
+            } failure:^(NSString *error) {
+                // 第三次执行
+                [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:parameters success:^(NSDictionary *responseDic) {
+                    NSString *statusCode = [responseDic objectForKey:@"statusCode"];
+                    if([statusCode isEqualToString:@"00"]){
+                        [self handleTokenLogin:responseDic successDict:dict];
+                        success();
+                    }else if([statusCode isEqualToString:@"510"]){
+                        failed(@"510");
+                    }else{
+                        failed([responseDic objectForKey:@"msg"]);
+                    }
+                } failure:^(NSString *error) {
+                    failed(error);
+                }];
+            }];
         }
     } failure:^(NSString *error) {
-        failed(error);
+        // 第二次执行
+        [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:parameters success:^(NSDictionary *responseDic) {
+            NSString *statusCode = [responseDic objectForKey:@"statusCode"];
+            if([statusCode isEqualToString:@"00"]){
+                [self handleTokenLogin:responseDic successDict:dict];
+                success();
+            }else{
+                // 第三次执行
+                [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:parameters success:^(NSDictionary *responseDic) {
+                    NSString *statusCode = [responseDic objectForKey:@"statusCode"];
+                    if([statusCode isEqualToString:@"00"]){
+                        [self handleTokenLogin:responseDic successDict:dict];
+                        success();
+                    }else if([statusCode isEqualToString:@"510"]){
+                        failed(@"510");
+                    }else{
+                        failed([responseDic objectForKey:@"msg"]);
+                    }
+                } failure:^(NSString *error) {
+                    failed(error);
+                }];
+            }
+        } failure:^(NSString *error) {
+            // 第三次执行
+            [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:parameters success:^(NSDictionary *responseDic) {
+                NSString *statusCode = [responseDic objectForKey:@"statusCode"];
+                if([statusCode isEqualToString:@"00"]){
+                    [self handleTokenLogin:responseDic successDict:dict];
+                    success();
+                }else if([statusCode isEqualToString:@"510"]){
+                    failed(@"510");
+                }else{
+                    failed([responseDic objectForKey:@"msg"]);
+                }
+            } failure:^(NSString *error) {
+                failed(error);
+            }];
+        }];
     }];
 }
 
-#pragma mark - 保存写入cookie
-+ (void)saveCookies{
-    // 初始化完毕存储Cookie(用于自动登录的会话共享)
-    NSURL *cookieHost = [NSURL URLWithString:SERVER_URL];
-    NSDictionary *propertiesDict = [NSDictionary dictionaryWithObjectsAndKeys:[cookieHost host], NSHTTPCookieDomain, [cookieHost path], NSHTTPCookiePath, @"COOKIE_NAME", NSHTTPCookieName, @"COOKIE_VALUE", NSHTTPCookieValue, nil];
-    NSHTTPCookie *cookie = [NSHTTPCookie cookieWithProperties:propertiesDict];
-    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
-    // 设置cookie的接受政策
-    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookieAcceptPolicy:NSHTTPCookieAcceptPolicyAlways];
++ (void)handleTokenLogin:(NSDictionary *)responseDict successDict:(NSMutableDictionary *)dict{
+    NSDictionary *businessData = [responseDict objectForKey:@"businessData"];
+    [dict setObject:[businessData objectForKey:@"userName"] forKey:@"userName"];
+    [dict setObject:[businessData objectForKey:@"orgCode"] forKey:@"orgCode"];
+    [dict setObject:[businessData objectForKey:@"orgName"] forKey:@"orgName"];
+    // 获取系统当前时间(登录时间)
+    NSDate *sendDate = [NSDate date];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSString *loginDate = [dateFormatter stringFromDate:sendDate];
+    [dict setObject:loginDate forKey:@"loginDate"];
+    
+    // 登录成功将信息保存到用户单例模式中
+    [[NSUserDefaults standardUserDefaults] setObject:dict forKey:LOGIN_SUCCESS];
+    [[NSUserDefaults standardUserDefaults] synchronize]; // 强制写入
 }
 
 @end

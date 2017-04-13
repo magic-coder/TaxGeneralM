@@ -25,7 +25,7 @@
 +(MessageDetailModel *)createWithDict:(NSDictionary *)dict{
     MessageDetailModel *model = [[MessageDetailModel alloc] init];
     model.title = [dict objectForKey:@"pushtitle"];
-    model.date = [dict objectForKey:@"pushdate"];
+    model.date = [[dict objectForKey:@"pushdate"] substringWithRange:NSMakeRange(0, 19)];
     model.content = [dict objectForKey:@"pushcontent"];
     model.url = [dict objectForKey:@"detailurl"];
     

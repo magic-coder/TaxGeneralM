@@ -169,8 +169,8 @@ static int const pageSize = 5;
         
         NSArray *results = [dataDict objectForKey:@"results"];
         // 逆序小日期在前大日期在后
-        for(int i = (int)results.count - 1; i >= 0 ; i-- ){
-            MessageDetailModel *model = [MessageDetailModel createWithDict:results[i]];
+        for(NSDictionary *dict in results){
+            MessageDetailModel *model = [MessageDetailModel createWithDict:dict];
             [_data insertObject:model atIndex:0];
         }
         [self.tableView reloadData];

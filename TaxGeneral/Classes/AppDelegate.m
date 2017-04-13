@@ -30,6 +30,9 @@
 
 #import <AudioToolbox/AudioToolbox.h>
 #import <CoreLocation/CoreLocation.h>
+#import <AVFoundation/AVFoundation.h>
+#import <Photos/Photos.h>
+#import <EventKit/EventKit.h>
 #import "Reachability.h"
 
 @interface AppDelegate () <BMKGeneralDelegate, UIAlertViewDelegate, CLLocationManagerDelegate>
@@ -110,6 +113,7 @@
 #endif
     // 角标清0
     //[[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+
     
     [self deviceInfo];  // 获取设备基本信息
     [[SettingUtil alloc] initSettingData];// 初始化默认值的setting数据(写入SandBox)
@@ -135,25 +139,32 @@
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+    
+    [self register3DTouch];// 注册3DTouch方法
+    
+    NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS];
+    if( nil == userDict){
+        // 清除应用角标
+        [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+    }
+    
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-    
-    [self register3DTouch];// 注册3DTouch方法
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-}
-
-- (void)applicationDidBecomeActive:(UIApplication *)application {
-    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     
     [self saveCookies];// 写入cookie
     
     [self register3DTouch];// 注册3DTouch方法
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
@@ -340,6 +351,37 @@
     _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     [_locationManager requestWhenInUseAuthorization];
     [_locationManager startUpdatingLocation];
+    
+    /*
+    // 获取相机权限
+    [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {//相机权限
+        if (granted) {
+            NSLog(@"Authorized");
+        }else{
+            NSLog(@"Denied or Restricted");
+        }
+    }];
+    
+    // 获取相册权限
+    [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+        if (status == PHAuthorizationStatusAuthorized) {
+            NSLog(@"Authorized");
+        }else{
+            NSLog(@"Denied or Restricted");
+        }
+    }];
+    
+    // 日历权限
+    EKEventStore *store = [[EKEventStore alloc]init];
+    [store requestAccessToEntityType:EKEntityTypeEvent completion:^(BOOL granted, NSError * _Nullable error) {
+        if (granted) {
+            NSLog(@"Authorized");
+        }else{
+            NSLog(@"Denied or Restricted");
+        }
+    }];
+    */
+    
 }
 
 #pragma mark - 保存写入cookie
