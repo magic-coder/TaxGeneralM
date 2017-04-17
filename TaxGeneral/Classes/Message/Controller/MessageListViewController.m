@@ -25,7 +25,6 @@
 @property (nonatomic, strong) NSMutableArray *data;             // 消息列表数据
 @property (nonatomic, strong) UIImageView *topLogoImageView;    // 顶部回弹logo视图
 @property (nonatomic, assign) int pageNo;                       // 页码值
-@property (nonatomic, assign) int totalPage;                    // 最大页
 @property (nonatomic, strong) MessageListUtil *msgListUtil;
 
 @end
@@ -51,15 +50,7 @@ static int const pageSize = 100;
     
     // 判断是否登录，若没登录则返回登录页面
     if([self isLogin]){
-        //[self autoLoadData];
-        
-        NSDictionary *dataDict = [_msgListUtil loadMsgDataWithFile];
-        if(dataDict != nil){
-            [self handleDataDict:dataDict];// 数据处理
-        }else{
-            [self autoLoadData];
-        }
-        
+        [self autoLoadData];
     }else{
         [self goToLogin];
     }
@@ -69,15 +60,16 @@ static int const pageSize = 100;
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    BOOL isRefresh = [Variable shareInstance].msgRefresh;
+    //BOOL isRefresh = [Variable shareInstance].msgRefresh;
     
     // 判断是否登录，若没登录则返回登录页面
     if([self isLogin]){
         // 先判断角标
         UITabBarItem * item = [self.tabBarController.tabBar.items objectAtIndex:2];
-        if(item.badgeValue != nil || ![self.navigationItem.title isEqualToString:@"消息"] || isRefresh){
+        
+        if([item.badgeValue intValue] != [Variable shareInstance].unReadCount || ![self.navigationItem.title isEqualToString:@"消息"]){
             [self autoLoadData];
-            [Variable shareInstance].msgRefresh = NO;
+            //[Variable shareInstance].msgRefresh = NO;
             //item.badgeValue = nil;
         }else{
             NSDictionary *dataDict = [_msgListUtil loadMsgDataWithFile];
@@ -157,9 +149,31 @@ static int const pageSize = 100;
 #pragma mark 点击删除按钮执行的操作
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [[_data objectAtIndex:indexPath.section] removeObjectAtIndex:indexPath.row];
-        //[tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-        [tableView reloadData];
+        
+        MessageListViewCell *cell = (MessageListViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+        NSString *sourceCode = cell.messageListModel.sourceCode;
+        NSString *pushUserCode = cell.messageListModel.pushUserCode;
+        if(pushUserCode == nil){
+            pushUserCode = @"";
+        }
+        [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"删除中..."];
+        [_msgListUtil deleteMsgWithSourceCode:sourceCode pushUserCode:pushUserCode success:^{
+            [YZProgressHUD hiddenHUDForView:SELF_VIEW];
+            // 删除成功，重新加载数据
+            [_msgListUtil loadMsgDataWithPageNo:_pageNo pageSize:pageSize dataBlock:^(NSDictionary *dataDict) {
+            } failed:^(NSString *error) {
+            }];
+            // 移除本行
+            [[_data objectAtIndex:indexPath.section] removeObjectAtIndex:indexPath.row];
+            [tableView reloadData];
+            // 设置角标
+            [BaseHandleUtil setBadge:[Variable shareInstance].unReadCount - [cell.messageListModel.unReadCount intValue]];
+            
+        } failed:^(NSString *error) {
+            [YZProgressHUD hiddenHUDForView:SELF_VIEW];
+            [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:error];
+        }];
+        
     }
 }
 
@@ -180,11 +194,45 @@ static int const pageSize = 100;
     ChatViewController *chatViewController = [[ChatViewController alloc] init];
     [self.navigationController pushViewController:chatViewController animated:YES];
      */
+    
     MessageDetailViewController *messageDetailVC = [[MessageDetailViewController alloc] init];
     [self.navigationController pushViewController:messageDetailVC animated:YES];
     
     // 获取当前点击的cell
     MessageListViewCell *cell = (MessageListViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+    
+    if([cell.messageListModel.unReadCount intValue] > 0){
+        NSDictionary *dataDict = [_msgListUtil loadMsgDataWithFile];
+        
+        NSArray *results = [dataDict objectForKey:@"results"];
+        NSMutableArray *mutableResults = [[NSMutableArray alloc] init];
+        
+        for(NSDictionary *dict in results){
+            NSString *sourceCode = [dict objectForKey:@"sourcecode"];
+            NSString *pushUserCode = [dict objectForKey:@"pushusercode"];
+            if(pushUserCode == nil){
+                pushUserCode = @"";
+            }
+            if(cell.messageListModel.pushUserCode == nil){
+                cell.messageListModel.pushUserCode = @"";
+            }
+            
+            if([sourceCode isEqualToString:cell.messageListModel.sourceCode] && [pushUserCode isEqualToString:cell.messageListModel.pushUserCode]){
+                NSMutableDictionary *mutableDict = [NSMutableDictionary dictionaryWithDictionary:dict];
+                [mutableDict setObject:@"0" forKey:@"unreadcount"];
+                [mutableResults addObject:mutableDict];
+            }else{
+                [mutableResults addObject:dict];
+            }
+            
+        }
+        
+        NSDictionary *resDict = [NSDictionary dictionaryWithObjectsAndKeys: mutableResults, @"results", nil];
+        // 写入本地缓存（SandBox）
+        BaseSandBoxUtil *sandBoxUtil = [[BaseSandBoxUtil alloc] init];
+        [sandBoxUtil writeData:resDict fileName:@"msgData.plist"];
+    }
+    
     messageDetailVC.title = cell.messageListModel.name; // 设置详细视图标题
     
     messageDetailVC.sourceCode = cell.messageListModel.sourceCode;
@@ -251,9 +299,9 @@ static int const pageSize = 100;
             self.navigationItem.title = @"未登录";
             [YZAlertView showAlertWith:self title:@"登录失效" message:@"您当前登录信息已失效，请重新登录！" callbackBlock:^(NSInteger btnIndex) {
                 // 注销方法
-                [YZProgressHUD showHUDView:NAV_VIEW Mode:LOCKMODE Text:@"注销中..."];
+                [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"注销中..."];
                 [AccountUtil accountLogout];
-                [YZProgressHUD hiddenHUDForView:NAV_VIEW];
+                [YZProgressHUD hiddenHUDForView:SELF_VIEW];
                 
                 LoginViewController *loginVC = [[LoginViewController alloc] init];
                 loginVC.isLogin = YES;
@@ -272,7 +320,7 @@ static int const pageSize = 100;
         }else{
             self.navigationItem.titleView = nil;
             self.navigationItem.title = @"未连接";
-            [YZProgressHUD showHUDView:NAV_VIEW Mode:SHOWMODE Text:error];
+            [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:error];
         }
     }];
 }
@@ -281,7 +329,6 @@ static int const pageSize = 100;
 -(void)handleDataDict:(NSDictionary *)dict{
     _data = [[NSMutableArray alloc] init];
     
-    _totalPage = [[dict objectForKey:@"totalPage"] intValue];
     NSArray *results = [dict objectForKey:@"results"];
     NSMutableArray *sysData = [[NSMutableArray alloc] init];
     NSMutableArray *userData = [[NSMutableArray alloc] init];
@@ -296,8 +343,7 @@ static int const pageSize = 100;
         
         badge += [model.unReadCount intValue];
     }
-    
-    usleep(1);
+    [Variable shareInstance].unReadCount = badge;
     [BaseHandleUtil setBadge:badge];// 设置提醒角标
     
     [_data addObject:sysData];

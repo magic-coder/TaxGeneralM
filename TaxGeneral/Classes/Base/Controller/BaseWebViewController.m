@@ -139,9 +139,9 @@
             [YZProgressHUD hiddenHUDForView:self.webView];
             [YZAlertView showAlertWith:self title:@"登录失效" message:@"您当前登录信息已失效，请重新登录！" callbackBlock:^(NSInteger btnIndex) {
                 // 注销方法
-                [YZProgressHUD showHUDView:NAV_VIEW Mode:LOCKMODE Text:@"注销中..."];
+                [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"注销中..."];
                 [AccountUtil accountLogout];
-                [YZProgressHUD hiddenHUDForView:NAV_VIEW];
+                [YZProgressHUD hiddenHUDForView:SELF_VIEW];
                 
                 LoginViewController *loginVC = [[LoginViewController alloc] init];
                 loginVC.isLogin = YES;

@@ -25,6 +25,7 @@
 	BaseScrollView(通用的滚动视图)
 	BaseTextField(通用的输入框)
 	BaseSandBoxUtil(通用的沙盒操作类)
+	BaseHandleUtil(通用的处理方法)
 	
 # 用到的第三方类库(Classlib)
 	Masonry(自动布局调整)

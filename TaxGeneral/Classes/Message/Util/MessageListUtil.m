@@ -18,6 +18,28 @@
     BaseSandBoxUtil *sandBoxUtil = [[BaseSandBoxUtil alloc] init];
     return [sandBoxUtil loadDataWithFileName:FILE_NAME];
 }
+
+- (int)getMsgUnReadCountSuccess:(void (^)(int))success{
+    
+    NSString *url = @"message/getUnreadCount";
+    [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:nil success:^(NSDictionary *responseDic) {
+        // 获取请求状态值
+        DLog(@"statusCode = %@", [responseDic objectForKey:@"statusCode"]);
+        NSString *statusCode = [responseDic objectForKey:@"statusCode"];
+        if([statusCode isEqualToString:@"00"]){
+            NSDictionary *businessData = [responseDic objectForKey:@"businessData"];
+            int unReadCount = [[businessData objectForKey:@"unReadCount"] intValue];
+            success(unReadCount);
+        }else{
+            success(0);
+        }
+    } failure:^(NSString *error) {
+        success(0);
+    }];
+    
+    return 0;
+}
+
 /*
 - (void)loadMsgDataWithPageNo:(int)pageNo pageSize:(int)pageSize dataBlock:(void (^)(NSDictionary *))dataBlock failed:(void (^)(NSString *))failed{
     
@@ -94,20 +116,37 @@
     
 }
 
+- (void)deleteMsgWithSourceCode:(NSString *)sourceCode pushUserCode:(NSString *)pushUserCode success:(void (^)())success failed:(void (^)(NSString *))failed{
+    NSString *jsonString = [BaseHandleUtil dataToJsonString:@{@"sourcecode" : sourceCode, @"pushusercode" : pushUserCode}];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:jsonString, @"msg", nil];
+    NSString *url = @"message/delMsgBySource";
+    [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:parameters success:^(NSDictionary *responseDic) {
+        NSString *statusCode = [responseDic objectForKey:@"statusCode"];
+        DLog(@"Yan -> 请求处理结果状态值 : statusCode = %@", statusCode);
+        if([statusCode isEqualToString:@"00"]){
+            success();
+        }else{
+            failed([responseDic objectForKey:@"msg"]);
+        }
+    } failure:^(NSString *error) {
+        failed(error);
+    }];
+}
+
 #pragma mark - 对返回的数据进行处理
 - (NSDictionary *)handleDataDict:(NSDictionary *)dict{
     NSDictionary *businessData = [dict objectForKey:@"businessData"];
     
-    NSString *pageNo = [businessData objectForKey:@"pageNo"];
-    NSString *totalPage = [businessData objectForKey:@"totalPage"];
     NSArray *results = [businessData objectForKey:@"results"];
-    
-    NSDictionary *resDict = [NSDictionary dictionaryWithObjectsAndKeys:totalPage, @"totalPage", results, @"results", nil];
-    // 写入本地缓存（SandBox）
-    if([pageNo intValue] == 1){
-        BaseSandBoxUtil *sandBoxUtil = [[BaseSandBoxUtil alloc] init];
-        [sandBoxUtil writeData:resDict fileName:FILE_NAME];
+    if(results.count <= 0){
+        // 删除msg列表信息
+        [[BaseSandBoxUtil alloc] removeFileName:@"msgData.plist"];
     }
+    
+    NSDictionary *resDict = [NSDictionary dictionaryWithObjectsAndKeys: results, @"results", nil];
+    // 写入本地缓存（SandBox）
+    BaseSandBoxUtil *sandBoxUtil = [[BaseSandBoxUtil alloc] init];
+    [sandBoxUtil writeData:resDict fileName:FILE_NAME];
     
     return resDict;
 }

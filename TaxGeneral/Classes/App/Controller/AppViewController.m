@@ -25,7 +25,8 @@
 @interface AppViewController () <UINavigationControllerDelegate, AppTopViewDelegate>
 
 @property (nonatomic, strong) AppTopView *topView;
-@property (nonatomic, assign) BOOL adjustStatus;// 调整状态
+@property (nonatomic, strong) UIImageView *topLogoImageView;    // 顶部回弹logo视图
+@property (nonatomic, assign) BOOL adjustStatus;                // 调整状态
 @property (nonatomic, strong) AppUtil *appUtil;
 
 @end
@@ -65,19 +66,35 @@
         if(self.data != nil){
             [self.collectionView reloadData];
         }else{
-            [YZProgressHUD showHUDView:NAV_VIEW Mode:LOCKMODE Text:@"加载中..."];
+            [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"加载中..."];
             [_appUtil initDataWithType:AppItemsTypeNone dataBlock:^(NSMutableArray *dataArray) {
-                [YZProgressHUD hiddenHUDForView:NAV_VIEW];
+                [YZProgressHUD hiddenHUDForView:SELF_VIEW];
                 self.data = dataArray;
                 [self.collectionView reloadData];
             } failed:^(NSString *error) {
-                [YZProgressHUD hiddenHUDForView:NAV_VIEW];
-                [YZProgressHUD showHUDView:NAV_VIEW Mode:SHOWMODE Text:error];
+                [YZProgressHUD hiddenHUDForView:SELF_VIEW];
+                [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:error];
             }];
         }
     }else{
         [self goToLogin];
     }
+}
+
+#pragma mark - 视图已经显示
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    
+    //UIView *superView = self.tableView.subviews.firstObject;// tableView中使用
+    UIView *superView = self.collectionView.superview.subviews.firstObject;// collectionView中使用
+    [superView insertSubview:self.topLogoImageView atIndex:0];
+    
+    [self.topLogoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(140, 140));
+        make.centerX.mas_equalTo(_topLogoImageView.superview);
+        // 必须设置底部约束
+        make.bottom.mas_equalTo(_topLogoImageView.superview).offset(40);
+    }];
 }
 
 #pragma mark - 视图即将销毁方法
@@ -221,9 +238,9 @@
         } failed:^(NSString *error) {
             [YZAlertView showAlertWith:self title:@"登录失效" message:@"您当前登录信息已失效，请重新登录！" callbackBlock:^(NSInteger btnIndex) {
                 // 注销方法
-                [YZProgressHUD showHUDView:NAV_VIEW Mode:LOCKMODE Text:@"注销中..."];
+                [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"注销中..."];
                 [AccountUtil accountLogout];
-                [YZProgressHUD hiddenHUDForView:NAV_VIEW];
+                [YZProgressHUD hiddenHUDForView:SELF_VIEW];
                 
                 LoginViewController *loginVC = [[LoginViewController alloc] init];
                 loginVC.isLogin = YES;
@@ -268,6 +285,18 @@
     BOOL isShowPage = [viewController isKindOfClass:[self class]] || [viewController isKindOfClass:[MapViewController class]];
     
     [self.navigationController setNavigationBarHidden:isShowPage animated:YES];
+}
+
+#pragma mark - 懒加载方法
+#pragma mark 顶部logo视图
+- (UIImageView *)topLogoImageView {
+    if (!_topLogoImageView) {
+        _topLogoImageView = [[UIImageView alloc] init];
+        _topLogoImageView.image = [UIImage imageNamed:@"app_top_logo"];
+        _topLogoImageView.contentMode = UIViewContentModeScaleAspectFit;
+        _topLogoImageView.backgroundColor = DEFAULT_BACKGROUND_COLOR;
+    }
+    return _topLogoImageView;
 }
 
 - (void)didReceiveMemoryWarning {

@@ -12,18 +12,9 @@
 
 @implementation MessageDetailModel
 
-+(MessageDetailModel *)createWithTitle:(NSString *)title date:(NSString *)date content:(NSString *)content url:(NSString *)url{
-    MessageDetailModel *model = [[MessageDetailModel alloc] init];
-    model.title = title;
-    model.date = date;
-    model.content = content;
-    model.url = url;
-    
-    return model;
-}
-
 +(MessageDetailModel *)createWithDict:(NSDictionary *)dict{
     MessageDetailModel *model = [[MessageDetailModel alloc] init];
+    model.uuid = [dict objectForKey:@"pushdetailuuid"];
     model.title = [dict objectForKey:@"pushtitle"];
     model.date = [[dict objectForKey:@"pushdate"] substringWithRange:NSMakeRange(0, 19)];
     model.content = [dict objectForKey:@"pushcontent"];

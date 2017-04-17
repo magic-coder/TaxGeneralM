@@ -140,9 +140,9 @@
             
             [YZAlertView showAlertWith:self title:@"登录失效" message:@"您当前登录信息已失效，请重新登录！" callbackBlock:^(NSInteger btnIndex) {
                 // 注销方法
-                [YZProgressHUD showHUDView:NAV_VIEW Mode:LOCKMODE Text:@"注销中..."];
+                [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"注销中..."];
                 [AccountUtil accountLogout];
-                [YZProgressHUD hiddenHUDForView:NAV_VIEW];
+                [YZProgressHUD hiddenHUDForView:SELF_VIEW];
                 
                 LoginViewController *loginVC = [[LoginViewController alloc] init];
                 loginVC.isLogin = YES;
@@ -183,7 +183,7 @@
 }
 - (void)webView:(YZWebView *)webView withError:(NSError *)error{
     if(error.code < 0 && error.code != NSURLErrorCancelled && error.code != NSURLErrorServerCertificateUntrusted){
-        [YZProgressHUD showHUDView:NAV_VIEW Mode:SHOWMODE Text:@"网络连接异常！"];
+        [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:@"网络连接异常！"];
     }
     //DLog(@"Yan ->  页面加载失败 : %@", error.localizedDescription);
 }

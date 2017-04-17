@@ -27,7 +27,6 @@
 @property (nonatomic, strong) YZCircleProgressButton *yzCircleView;
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, assign) NSInteger timeLong;
-@property (nonatomic, assign) int unReadcount;
 
 @end
 
@@ -82,6 +81,15 @@
                 DLog(@"初始化应用列表失败error=%@", error);
             }];
             
+            // 获取未读条数
+            [[MessageListUtil alloc] getMsgUnReadCountSuccess:^(int unReadCount) {
+                // 将未读条数存储到全局变量中
+                [Variable shareInstance].unReadCount = unReadCount;
+                
+                [BaseHandleUtil setBadge:unReadCount];
+            }];
+            
+            /*
             // 加载消息列表
             [[MessageListUtil alloc] loadMsgDataWithPageNo:1 pageSize:100 dataBlock:^(NSDictionary *dataDict) {
                 NSArray *results = [dataDict objectForKey:@"results"];
@@ -94,7 +102,7 @@
             } failed:^(NSString *error) {
                 DLog(@"初始化消息列表信息失败error=%@", error);
             }];
-            
+            */
         } failed:^(NSString *error) {
             DLog(@"Yan -> login失败 error = %@", error);
         }];
@@ -122,7 +130,7 @@
 - (void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
     
-    [BaseHandleUtil setBadge:_unReadcount];
+    [BaseHandleUtil setBadge:[Variable shareInstance].unReadCount];
 }
 
 - (void)didReceiveMemoryWarning {

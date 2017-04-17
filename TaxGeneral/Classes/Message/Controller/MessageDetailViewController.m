@@ -10,6 +10,7 @@
 
 #import "MessageDetailViewController.h"
 #import "MessageDetailViewCell.h"
+#import "MessageListUtil.h"
 #import "MessageDetailUtil.h"
 #import "YZRefreshHeader.h"
 
@@ -29,9 +30,7 @@ static int const pageSize = 5;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    [Variable shareInstance].msgRefresh = YES;
-    
+        
     _data = [[NSMutableArray alloc] init];
     _msgDetailUtil = [[MessageDetailUtil alloc] init];
     
@@ -117,8 +116,22 @@ static int const pageSize = 5;
         
         [YZActionSheet showActionSheetWithTitle:@"是否删除该条消息？" cancelButtonTitle:@"取消" destructiveButtonTitle:@"确定" otherButtonTitles:nil handler:^(YZActionSheet *actionSheet, NSInteger index) {
             if(index == -1){
-                [_data removeObjectAtIndex:cell.indexPath.section];
-                [self.tableView reloadData];
+                [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"删除中..."];
+                [_msgDetailUtil deleteMsgWithUUID:cell.messageDetailModel.uuid success:^{
+                    // 删除成功，重新获取数据
+                    [[MessageListUtil alloc] loadMsgDataWithPageNo:1 pageSize:100 dataBlock:^(NSDictionary *dataDict) {
+                        [YZProgressHUD hiddenHUDForView:SELF_VIEW];
+                        // 移除本行
+                        [_data removeObjectAtIndex:cell.indexPath.section];
+                        [self.tableView reloadData];
+                    } failed:^(NSString *error) {
+                        [YZProgressHUD hiddenHUDForView:SELF_VIEW];
+                        [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:error];
+                    }];
+                } failed:^(NSString *error) {
+                    [YZProgressHUD hiddenHUDForView:SELF_VIEW];
+                    [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:error];
+                }];
             }
         }];
     }
@@ -147,7 +160,31 @@ static int const pageSize = 5;
             self.tableView.mj_header = [YZRefreshHeader headerWithRefreshingTarget:self refreshingAction:@selector(loadMoreData)];
         }
     } failed:^(NSString *error) {
-        [YZProgressHUD showHUDView:NAV_VIEW Mode:SHOWMODE Text:error];
+        if([error isEqualToString:@"510"]){
+            [YZAlertView showAlertWith:self title:@"登录失效" message:@"您当前登录信息已失效，请重新登录！" callbackBlock:^(NSInteger btnIndex) {
+                // 注销方法
+                [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"注销中..."];
+                [AccountUtil accountLogout];
+                [YZProgressHUD hiddenHUDForView:SELF_VIEW];
+                
+                LoginViewController *loginVC = [[LoginViewController alloc] init];
+                loginVC.isLogin = YES;
+                
+                // 水波纹动画效果
+                CATransition *animation = [CATransition animation];
+                animation.duration = 1.0f;
+                animation.timingFunction = UIViewAnimationCurveEaseInOut;
+                animation.type = @"rippleEffect";
+                //animation.type = kCATransitionMoveIn;
+                animation.subtype = kCATransitionFromTop;
+                [self.view.window.layer addAnimation:animation forKey:nil];
+                
+                [self presentViewController:loginVC animated:YES completion:nil];
+            } cancelButtonTitle:@"重新登录" destructiveButtonTitle:nil otherButtonTitles: nil];
+        }else{
+            [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:error];
+        }
+        
     }];
 }
 
@@ -178,7 +215,7 @@ static int const pageSize = 5;
         _pageNo--;
         // 加载结束
         [self.tableView.mj_header endRefreshing];
-        [YZProgressHUD showHUDView:NAV_VIEW Mode:SHOWMODE Text:error];
+        [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:error];
     }];
 }
 

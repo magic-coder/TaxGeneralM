@@ -35,14 +35,14 @@
     self.collectionStyle = CollectionStyleEdit;
     self.data = [self.appUtil loadDataWithType:AppItemsTypeEdit];
     if(self.data == nil){
-        [YZProgressHUD showHUDView:NAV_VIEW Mode:LOCKMODE Text:@"加载中..."];
+        [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"加载中..."];
         [self.appUtil initDataWithType:AppItemsTypeEdit dataBlock:^(NSMutableArray *dataArray) {
-            [YZProgressHUD hiddenHUDForView:NAV_VIEW];
+            [YZProgressHUD hiddenHUDForView:SELF_VIEW];
             self.data = dataArray;
             [self.collectionView reloadData];
         } failed:^(NSString *error) {
-            [YZProgressHUD hiddenHUDForView:NAV_VIEW];
-            [YZProgressHUD showHUDView:NAV_VIEW Mode:SHOWMODE Text:error];
+            [YZProgressHUD hiddenHUDForView:SELF_VIEW];
+            [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:error];
         }];
     }
     

@@ -15,6 +15,10 @@
 
 - (NSDictionary *)loadMsgDataWithFile;
 
+- (int)getMsgUnReadCountSuccess:(void(^)(int unReadCount))success;
+
 - (void)loadMsgDataWithPageNo:(int)pageNo pageSize:(int)pageSize dataBlock:(void(^)(NSDictionary *dataDict))dataBlock failed:(void(^)(NSString *error))failed;
+
+- (void)deleteMsgWithSourceCode:(NSString *)sourceCode pushUserCode:(NSString *)pushUserCode success:(void(^)())success failed:(void(^)(NSString *error))failed;
 
 @end

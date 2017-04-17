@@ -245,8 +245,10 @@
             item.badgeValue = [NSString stringWithFormat:@"%d",1];
         }
         if([userInfo[@"type"] integerValue] == 1){
-            UITabBarItem * item = [_mainTabBarController.tabBar.items objectAtIndex:2];
-            item.badgeValue = [NSString stringWithFormat:@"%d",1];
+            //UITabBarItem * item = [_mainTabBarController.tabBar.items objectAtIndex:2];
+            //item.badgeValue = [NSString stringWithFormat:@"%d",1];
+            int badge = [Variable shareInstance].unReadCount + 1;
+            [BaseHandleUtil setBadge:badge];
             if(_mainTabBarController.selectedIndex == 2){
                 MessageListViewController *messageListVC = (MessageListViewController *)[self getCurrentVC];
                 [messageListVC autoLoadData];

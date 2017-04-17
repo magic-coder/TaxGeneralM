@@ -127,7 +127,7 @@
     // 写入本地SandBox设置文件中
     BOOL res = [[SettingUtil alloc] writeSettingData:settingDict];
     if(!res){
-        [YZProgressHUD showHUDView:NAV_VIEW Mode:SHOWMODE Text:@"设置异常！"];
+        [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:@"设置异常！"];
     }
     
 }

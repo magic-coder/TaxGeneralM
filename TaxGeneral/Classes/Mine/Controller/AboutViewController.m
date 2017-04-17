@@ -80,7 +80,7 @@ static NSString * const reuseIdentifier = @"aboutTableViewCell";
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     if(indexPath.row == 1){
-        [YZProgressHUD showHUDView:NAV_VIEW Mode:SHOWMODE Text:@"当前版本已是最新版本"];
+        [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:@"当前版本已是最新版本"];
     }
     
 }

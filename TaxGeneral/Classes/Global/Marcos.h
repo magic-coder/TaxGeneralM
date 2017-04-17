@@ -60,6 +60,6 @@
 #define DEVICE_INFO     @"deviceInfo"
 
 #pragma mark - Common View
-#define NAV_VIEW self.navigationController.view
+#define SELF_VIEW self.view
 
 #endif /* Marcos_h */
