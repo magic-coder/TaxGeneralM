@@ -285,6 +285,8 @@
     [BPush bindChannelWithCompleteHandler:^(id result, NSError *error) {
         DLog(@"Yan -> 输出：%@", [NSString stringWithFormat:@"Method: %@\n%@",BPushRequestMethodBind,result]);
         // 需要在绑定成功后进行 settag listtag deletetag unbind 操作否则会失败
+        // 注册BPush成功后，绑定推送设备
+        [self registerPushID:result];
         
         // 网络错误
         if (error) {
@@ -411,6 +413,26 @@
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
 }
+
+#pragma mark - 获取BPush推送注册信息,写入BSUserDefaults中
+- (void)registerPushID:(NSDictionary *)result{
+    NSString *errorCode = [result objectForKey:@"error_code"];
+    NSString *appId = [result objectForKey:@"app_id"];
+    NSString *userId = [result objectForKey:@"user_id"];
+    NSString *channelId = [result objectForKey:@"channel_id"];
+    NSString *phoneProduct = @"Apple";
+    NSNumber *deviceType = [NSNumber numberWithInt:4];
+    
+    NSDictionary *pushDict = [NSDictionary dictionaryWithObjectsAndKeys:errorCode, @"errorCode", appId, @"appId", userId, @"userId", channelId, @"channelId", phoneProduct, @"phoneProduct", deviceType, @"deviceType", nil];
+    
+    NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:PUSH_INFO];
+    if(nil == data){
+        DLog(@"Yan -> 开始写入BPush推送基本信息");
+        [[NSUserDefaults standardUserDefaults] setObject:pushDict forKey:PUSH_INFO];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+}
+
 
 #pragma makr - alert点击方法
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{

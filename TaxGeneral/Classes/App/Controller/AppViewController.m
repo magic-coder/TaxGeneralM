@@ -90,10 +90,10 @@
     [superView insertSubview:self.topLogoImageView atIndex:0];
     
     [self.topLogoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(140, 140));
+        make.size.mas_equalTo(CGSizeMake(180, 60));
         make.centerX.mas_equalTo(_topLogoImageView.superview);
         // 必须设置底部约束
-        make.bottom.mas_equalTo(_topLogoImageView.superview).offset(40);
+        make.bottom.mas_equalTo(_topLogoImageView.superview).offset(-20);
     }];
 }
 

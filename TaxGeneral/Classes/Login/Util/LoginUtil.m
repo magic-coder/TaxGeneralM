@@ -51,6 +51,19 @@
             [[NSUserDefaults standardUserDefaults] setObject:dict forKey:LOGIN_SUCCESS];
             [[NSUserDefaults standardUserDefaults] synchronize]; // 强制写入
             
+            // 绑定推送设备
+            NSDictionary *pushDict = [[NSUserDefaults standardUserDefaults] objectForKey:PUSH_INFO];
+            if(nil != pushDict){
+                NSString *jsonString = [BaseHandleUtil dataToJsonString:pushDict];
+                NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:jsonString, @"msg", nil];
+                NSString *url = @"push/registerPush";
+                [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:parameters success:^(NSDictionary *responseDic) {
+                    DLog(@"Yan -> 绑定推送设备信息成功：responseDic = %@", responseDic);
+                } failure:^(NSString *error) {
+                    DLog(@"Yan -> 绑定推送设备信息失败：error = %@", error);
+                }];
+            }
+            
             success();
             
         }else{
