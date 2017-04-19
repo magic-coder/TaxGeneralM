@@ -58,7 +58,8 @@
 #pragma mark - Commons Key
 #define LOGIN_SUCCESS   @"loginSuccess"
 #define DEVICE_INFO     @"deviceInfo"
-#define PUSH_INFO     @"pushInfo"
+#define PUSH_INFO       @"pushInfo"
+#define LOAD_FINISH     @"loadFinish"
 
 #pragma mark - Common View
 #define SELF_VIEW self.view

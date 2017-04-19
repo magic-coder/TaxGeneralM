@@ -17,6 +17,12 @@
 
 #import "MainTabBarController.h"
 
+#import "MessageListUtil.h"
+#import "TouchIDViewController.h"
+#import "WUGesturesUnlockViewController.h"
+
+#import "SettingUtil.h"
+
 @interface NewsListViewController () <MainTabBarControllerDelegate, NewsLoopViewDelegate>
 
 @property (nonatomic, strong) NewsLoopView *loopView;
@@ -44,6 +50,30 @@ static int const pageSize = 10;
     MainTabBarController *mainTabBarController = (MainTabBarController *)self.tabBarController;
     mainTabBarController.customDelegate = self;
     
+    // 判断用户是否开启了指纹、手势密码，并进行相应跳转
+    // 获取单例模式中的用户信息自动登录
+    NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS];
+    if(nil != userDict){
+        
+        // 获取首次加载标志
+        NSString *isLoad = [[NSUserDefaults standardUserDefaults] stringForKey:LOAD_FINISH];
+        if(isLoad){
+            NSDictionary *settingDict = [[SettingUtil alloc] loadSettingData];
+            if([[settingDict objectForKey:@"touchID"] boolValue]){  // 指纹解锁
+                [[NSUserDefaults standardUserDefaults] removeObjectForKey:LOAD_FINISH];// 删除首次加载信息
+                TouchIDViewController *touchIDVC = [[TouchIDViewController alloc] init];
+                [mainTabBarController presentViewController:touchIDVC animated:NO completion:nil];
+            }else{
+                NSString *gesturePwd = [[NSUserDefaults standardUserDefaults] objectForKey:@"gesturespassword"];
+                if(gesturePwd.length > 0){  // 手势验证解锁
+                    [[NSUserDefaults standardUserDefaults] removeObjectForKey:LOAD_FINISH];// 删除首次加载信息
+                    WUGesturesUnlockViewController *gesturesUnlockVC = [[WUGesturesUnlockViewController alloc] initWithUnlockType:WUUnlockTypeLoginPwd];
+                    [mainTabBarController presentViewController:gesturesUnlockVC animated:NO completion:nil];
+                }
+            }
+        }
+    }
+    
     self.tableView.rowHeight = 80;
     
     self.view.backgroundColor = DEFAULT_BACKGROUND_COLOR;
@@ -69,6 +99,9 @@ static int const pageSize = 10;
     _data = [[NSMutableArray alloc] init];
     
     _totalPage = [[dataDict objectForKey:@"totalPage"] intValue];
+    if(_totalPage <= 0){
+        return;
+    }
     
     NSDictionary *loopDict = [dataDict objectForKey:@"loopResult"];
     NSArray *titles = [loopDict objectForKey:@"titles"];
@@ -109,6 +142,11 @@ static int const pageSize = 10;
         
         _pageNo = 1;
         _totalPage = [[dataDict objectForKey:@"totalPage"] intValue];
+        if(_totalPage <= 0){
+            // 结束刷新
+            [self.tableView.mj_header endRefreshing];
+            return;
+        }
         
         NSDictionary *loopDict = [dataDict objectForKey:@"loopResult"];
         NSArray *titles = [loopDict objectForKey:@"titles"];

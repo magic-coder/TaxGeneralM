@@ -38,6 +38,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    DLog(@"进入初始化mainTabBar");
+    
     self.delegate = self;
     
     NSArray *itemArray = @[

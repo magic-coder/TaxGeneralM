@@ -89,20 +89,6 @@
                 [BaseHandleUtil setBadge:unReadCount];
             }];
             
-            /*
-            // 加载消息列表
-            [[MessageListUtil alloc] loadMsgDataWithPageNo:1 pageSize:100 dataBlock:^(NSDictionary *dataDict) {
-                NSArray *results = [dataDict objectForKey:@"results"];
-                for(NSDictionary *dict in results){
-                    _unReadcount = _unReadcount + [[dict objectForKey:@"unreadcount"] intValue];
-                }
-                
-                [BaseHandleUtil setBadge:_unReadcount];
-                
-            } failed:^(NSString *error) {
-                DLog(@"初始化消息列表信息失败error=%@", error);
-            }];
-            */
         } failed:^(NSString *error) {
             DLog(@"Yan -> login失败 error = %@", error);
         }];

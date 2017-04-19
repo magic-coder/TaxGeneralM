@@ -12,13 +12,11 @@
 #import "MainTabBarController.h"
 #import "DeviceInfoModel.h"
 
-#import "ViewController.h"
 #import "MessageListViewController.h"
-#import "MessageDetailViewController.h"
-#import "MapListViewController.h"
 
 #import "SettingUtil.h"
 #import "MapListUtil.h"
+#import "AppUtil.h"
 #import "MessageListUtil.h"
 
 #import "BPush.h"
@@ -37,7 +35,7 @@
 
 @interface AppDelegate () <BMKGeneralDelegate, UIAlertViewDelegate, CLLocationManagerDelegate>
 
-@property (nonatomic, strong) ViewController *viewController;
+@property (nonatomic, strong) UIImageView *splashView;  // 欢迎页动画效果
 @property (nonatomic, strong) MainTabBarController *mainTabBarController;
 
 @property (strong, nonatomic) BMKMapManager *mapManager;
@@ -53,7 +51,7 @@
     // Override point for customization after application launch.
     
     // 隐藏顶部状态栏设为NO
-    // [UIApplication sharedApplication].statusBarHidden = NO;
+    [UIApplication sharedApplication].statusBarHidden = NO;
     // 设置顶部状态栏字体为白色
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     
@@ -114,7 +112,6 @@
     // 角标清0
     //[[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
 
-    
     [self deviceInfo];  // 获取设备基本信息
     [[SettingUtil alloc] initSettingData];// 初始化默认值的setting数据(写入SandBox)
     [self inspectPermission];// 获取权限（网络访问、定位）
@@ -126,12 +123,19 @@
         DLog(@"Yan -> 初始化地图Tree数据失败：error = %@", error);
     }];
     
-    _viewController = [[ViewController alloc] init];
-    _mainTabBarController = [MainTabBarController shareInstance];
+    //_viewController = [[ViewController alloc] init];
+    //_mainTabBarController = [MainTabBarController shareInstance];
+    //[_window setRootViewController:_viewController];
     
-    [_window setRootViewController:_viewController];
+    _mainTabBarController = [MainTabBarController shareInstance];
+    [_window setRootViewController:_mainTabBarController];
+    // 若用户登录则进行初始化登录数据
+    [self loginInitialize];
     
     [_window makeKeyAndVisible];
+    
+    // 添加欢迎页动画效果
+    [self welcomeView];
     
     return YES;
 }
@@ -140,7 +144,7 @@
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     
-    [self register3DTouch];// 注册3DTouch方法
+    //[self register3DTouch];// 注册3DTouch方法
     
     NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS];
     if( nil == userDict){
@@ -160,7 +164,7 @@
     
     [self saveCookies];// 写入cookie
     
-    [self register3DTouch];// 注册3DTouch方法
+    //[self register3DTouch];// 注册3DTouch方法
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
@@ -170,31 +174,6 @@
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
-
-#pragma mark - 3D Touch代理方法
- -(void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL))completionHandler{
-     
-     _mainTabBarController.selectedIndex = 1;
-     [_window setRootViewController:_mainTabBarController];
-     UIViewController *touchVC = nil;
-     if ([shortcutItem.type isEqualToString:@"item1"]){
-         touchVC = [[BaseWebViewController alloc] initWithURL:[NSString stringWithFormat:@"%@public/notice/index", SERVER_URL]];
-         touchVC.title = @"通知公告";
-     }
-     if ([shortcutItem.type isEqualToString:@"item2"]){
-         touchVC = [[MapListViewController alloc] init];
-         touchVC.title = @"办税地图";
-     }
-     if ([shortcutItem.type isEqualToString:@"item3"]){
-         touchVC = [[BaseWebViewController alloc] initWithURL:[NSString stringWithFormat:@"%@litter/initLitter", SERVER_URL]];
-         touchVC.title = @"通讯录";
-     }
-     
-     if(touchVC != nil){
-         [_mainTabBarController.selectedViewController pushViewController:touchVC animated:YES];
-     }
-     
- }
 
 #pragma mark - Baidu Map SDK
 /*
@@ -328,6 +307,25 @@
     [BPush showLocalNotificationAtFront:notification identifierKey:nil];
 }
 
+#pragma mark - 获取BPush推送注册信息,写入BSUserDefaults中
+- (void)registerPushID:(NSDictionary *)result{
+    NSString *errorCode = [result objectForKey:@"error_code"];
+    NSString *appId = [result objectForKey:@"app_id"];
+    NSString *userId = [result objectForKey:@"user_id"];
+    NSString *channelId = [result objectForKey:@"channel_id"];
+    NSString *phoneProduct = @"Apple";
+    NSNumber *deviceType = [NSNumber numberWithInt:4];
+    
+    NSDictionary *pushDict = [NSDictionary dictionaryWithObjectsAndKeys:errorCode, @"errorCode", appId, @"appId", userId, @"userId", channelId, @"channelId", phoneProduct, @"phoneProduct", deviceType, @"deviceType", nil];
+    
+    NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:PUSH_INFO];
+    if(nil == data){
+        DLog(@"Yan -> 开始写入BPush推送基本信息");
+        [[NSUserDefaults standardUserDefaults] setObject:pushDict forKey:PUSH_INFO];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+}
+
 #pragma mark - 权限检查（网络权限、定位权限）
 - (void)inspectPermission{
     
@@ -357,46 +355,35 @@
     [_locationManager startUpdatingLocation];
     
     /*
-    // 获取相机权限
-    [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {//相机权限
-        if (granted) {
-            NSLog(@"Authorized");
-        }else{
-            NSLog(@"Denied or Restricted");
-        }
-    }];
+     // 获取相机权限
+     [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {//相机权限
+     if (granted) {
+     NSLog(@"Authorized");
+     }else{
+     NSLog(@"Denied or Restricted");
+     }
+     }];
+     
+     // 获取相册权限
+     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+     if (status == PHAuthorizationStatusAuthorized) {
+     NSLog(@"Authorized");
+     }else{
+     NSLog(@"Denied or Restricted");
+     }
+     }];
+     
+     // 日历权限
+     EKEventStore *store = [[EKEventStore alloc]init];
+     [store requestAccessToEntityType:EKEntityTypeEvent completion:^(BOOL granted, NSError * _Nullable error) {
+     if (granted) {
+     NSLog(@"Authorized");
+     }else{
+     NSLog(@"Denied or Restricted");
+     }
+     }];
+     */
     
-    // 获取相册权限
-    [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
-        if (status == PHAuthorizationStatusAuthorized) {
-            NSLog(@"Authorized");
-        }else{
-            NSLog(@"Denied or Restricted");
-        }
-    }];
-    
-    // 日历权限
-    EKEventStore *store = [[EKEventStore alloc]init];
-    [store requestAccessToEntityType:EKEntityTypeEvent completion:^(BOOL granted, NSError * _Nullable error) {
-        if (granted) {
-            NSLog(@"Authorized");
-        }else{
-            NSLog(@"Denied or Restricted");
-        }
-    }];
-    */
-    
-}
-
-#pragma mark - 保存写入cookie
-- (void)saveCookies{
-    // 初始化完毕存储Cookie(用于自动登录的会话共享)
-    NSURL *cookieHost = [NSURL URLWithString:SERVER_URL];
-    NSDictionary *propertiesDict = [NSDictionary dictionaryWithObjectsAndKeys:[cookieHost host], NSHTTPCookieDomain, [cookieHost path], NSHTTPCookiePath, @"COOKIE_NAME", NSHTTPCookieName, @"COOKIE_VALUE", NSHTTPCookieValue, nil];
-    NSHTTPCookie *cookie = [NSHTTPCookie cookieWithProperties:propertiesDict];
-    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
-    // 设置cookie的接受政策
-    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookieAcceptPolicy:NSHTTPCookieAcceptPolicyAlways];
 }
 
 #pragma mark - 获取设备的基本信息并存入NSUserDefaults中
@@ -414,25 +401,16 @@
     }
 }
 
-#pragma mark - 获取BPush推送注册信息,写入BSUserDefaults中
-- (void)registerPushID:(NSDictionary *)result{
-    NSString *errorCode = [result objectForKey:@"error_code"];
-    NSString *appId = [result objectForKey:@"app_id"];
-    NSString *userId = [result objectForKey:@"user_id"];
-    NSString *channelId = [result objectForKey:@"channel_id"];
-    NSString *phoneProduct = @"Apple";
-    NSNumber *deviceType = [NSNumber numberWithInt:4];
-    
-    NSDictionary *pushDict = [NSDictionary dictionaryWithObjectsAndKeys:errorCode, @"errorCode", appId, @"appId", userId, @"userId", channelId, @"channelId", phoneProduct, @"phoneProduct", deviceType, @"deviceType", nil];
-    
-    NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:PUSH_INFO];
-    if(nil == data){
-        DLog(@"Yan -> 开始写入BPush推送基本信息");
-        [[NSUserDefaults standardUserDefaults] setObject:pushDict forKey:PUSH_INFO];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
+#pragma mark - 保存写入cookie
+- (void)saveCookies{
+    // 初始化完毕存储Cookie(用于自动登录的会话共享)
+    NSURL *cookieHost = [NSURL URLWithString:SERVER_URL];
+    NSDictionary *propertiesDict = [NSDictionary dictionaryWithObjectsAndKeys:[cookieHost host], NSHTTPCookieDomain, [cookieHost path], NSHTTPCookiePath, @"COOKIE_NAME", NSHTTPCookieName, @"COOKIE_VALUE", NSHTTPCookieValue, nil];
+    NSHTTPCookie *cookie = [NSHTTPCookie cookieWithProperties:propertiesDict];
+    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+    // 设置cookie的接受政策
+    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookieAcceptPolicy:NSHTTPCookieAcceptPolicyAlways];
 }
-
 
 #pragma makr - alert点击方法
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
@@ -452,7 +430,8 @@
     }
 }
 
-#pragma mark - 3DTouch注册
+#pragma mark - 3DTouch方法注册
+/*
 - (void)register3DTouch{
     // App图片添加3DTouch按压方法 ->Start<-
     // type 该item 唯一标识符
@@ -481,6 +460,145 @@
         [UIApplication sharedApplication].shortcutItems = nil;
     }
     // App图片添加3DTouch按压方法 ->End<-
+}
+*/
+
+#pragma mark - 3D Touch代理方法
+/*
+ -(void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL))completionHandler{
+ 
+ _mainTabBarController.selectedIndex = 1;
+ [_window setRootViewController:_mainTabBarController];
+ UIViewController *touchVC = nil;
+ if ([shortcutItem.type isEqualToString:@"item1"]){
+ touchVC = [[BaseWebViewController alloc] initWithURL:[NSString stringWithFormat:@"%@public/notice/index", SERVER_URL]];
+ touchVC.title = @"通知公告";
+ }
+ if ([shortcutItem.type isEqualToString:@"item2"]){
+ touchVC = [[MapListViewController alloc] init];
+ touchVC.title = @"办税地图";
+ }
+ if ([shortcutItem.type isEqualToString:@"item3"]){
+ touchVC = [[BaseWebViewController alloc] initWithURL:[NSString stringWithFormat:@"%@litter/initLitter", SERVER_URL]];
+ touchVC.title = @"通讯录";
+ }
+ 
+ if(touchVC != nil){
+ [_mainTabBarController.selectedViewController pushViewController:touchVC animated:YES];
+ }
+ 
+ }
+ */
+
+#pragma mark - 登录用户初始化数据
+- (void)loginInitialize{
+    // 加载完毕写入加载标志
+    [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:LOAD_FINISH];
+    [[NSUserDefaults standardUserDefaults] synchronize]; // 强制写入
+    
+    // 获取单例模式中的用户信息自动登录
+    NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS];
+    if(nil != userDict){
+        
+        // 登录用户加载数据
+        [LoginUtil loginWithTokenSuccess:^{
+            DLog(@"Yan -> login成功");
+            // 加载app列表
+            [[AppUtil alloc] initDataWithType:AppItemsTypeNone dataBlock:^(NSMutableArray *dataArray) {
+            } failed:^(NSString *error) {
+                DLog(@"初始化应用列表失败error=%@", error);
+            }];
+            
+            // 获取未读条数
+            [[MessageListUtil alloc] getMsgUnReadCountSuccess:^(int unReadCount) {
+                // 将未读条数存储到全局变量中
+                [Variable shareInstance].unReadCount = unReadCount;
+                [BaseHandleUtil setBadge:unReadCount];
+            }];
+            
+        } failed:^(NSString *error) {
+            DLog(@"Yan -> login失败 error = %@", error);
+        }];
+        
+        // 判断用户是否开启了指纹、手势密码，并进行相应跳转
+        // 指纹验证解锁
+        /*
+        NSDictionary *settingDict = [[SettingUtil alloc] loadSettingData];
+        if([[settingDict objectForKey:@"touchID"] boolValue]){
+            TouchIDViewController *touchIDVC = [[TouchIDViewController alloc] init];
+            [_window setRootViewController:touchIDVC];
+        }else{
+            NSString *gesturePwd = [[NSUserDefaults standardUserDefaults] objectForKey:@"gesturespassword"];
+            if(gesturePwd.length > 0){  // 手势验证解锁
+                WUGesturesUnlockViewController *gesturesUnlockVC= [[WUGesturesUnlockViewController alloc] initWithUnlockType:WUUnlockTypeLoginPwd];
+                [_window setRootViewController:gesturesUnlockVC];
+            }else{
+                [_window setRootViewController:_mainTabBarController];
+            }
+        }
+        */
+        
+    }
+}
+
+#pragma mark - 添加欢迎动画效果页
+- (void)welcomeView{
+    _splashView = [[UIImageView alloc] initWithFrame:FRAME_SCREEN];
+    [_splashView setImage:[UIImage imageNamed:@"launch"]];
+    [_window addSubview:_splashView];
+    [_window bringSubviewToFront:_splashView];
+    
+    [self performSelector:@selector(launch_1) withObject:nil afterDelay:0.5f];
+    [self performSelector:@selector(launch_2) withObject:nil afterDelay:1.0f];
+    [self performSelector:@selector(launch_3) withObject:nil afterDelay:1.5f];
+    [self performSelector:@selector(launch_last) withObject:nil afterDelay:2.0f];
+}
+
+#pragma mark - 欢迎页动态方法
+- (void)launch_1{
+    UIImageView *round_1 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 430, WIDTH_SCREEN, 57)];
+    round_1.image = [UIImage imageNamed:@"launch_1"];
+    [_splashView addSubview:round_1];
+    [self setAnimation:round_1];
+}
+
+- (void)launch_2{
+    UIImageView *round_2 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 320, WIDTH_SCREEN, 72)];
+    round_2.image = [UIImage imageNamed:@"launch_2"];
+    [_splashView addSubview:round_2];
+    [self setAnimation:round_2];
+}
+
+- (void)launch_3{
+    UIImageView *round_3 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 280, WIDTH_SCREEN, 67)];
+    round_3.image = [UIImage imageNamed:@"launch_3"];
+    [_splashView addSubview:round_3];
+    [self setAnimation:round_3];
+}
+
+- (void)launch_last{
+    UIImageView *lastView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 150, WIDTH_SCREEN, 46)];
+    lastView.image = [UIImage imageNamed:@"launch_4"];
+    [_splashView addSubview:lastView];
+    
+    lastView.alpha = 0.0;
+    [UIView animateWithDuration:1.0f delay:0.0f options:UIViewAnimationOptionCurveLinear animations:^{
+        lastView.alpha = 1.0;
+    } completion:^(BOOL finished) {
+        // 完成后执行code
+        [NSThread sleepForTimeInterval:1.0f];
+        [_splashView removeFromSuperview];
+    }];
+}
+
+- (void)setAnimation:(UIImageView *)view{
+    [UIView animateWithDuration:0.6f delay:0.0f options:UIViewAnimationOptionCurveLinear animations:^{
+        // 执行的动画code
+        [view setFrame:CGRectMake(view.originX, view.originY, view.frameWidth, view.frameHeight)];
+    } completion:^(BOOL finished) {
+        // 完成后执行code
+        //[view removeFromSuperview];
+    }];
 }
 
 #pragma mark - 获取当前展示的视图
