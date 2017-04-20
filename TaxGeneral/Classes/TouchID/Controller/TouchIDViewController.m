@@ -60,8 +60,7 @@
             } cancelButtonTitle:@"确定" destructiveButtonTitle:nil otherButtonTitles:nil];
             
         } else if (state == YZTouchIDStateSuccess) {    //TouchID验证成功
-            MainTabBarController *mainTabBarController = [[MainTabBarController alloc] init];
-            [self presentViewController:mainTabBarController animated:YES completion:nil];
+            [self dismissViewControllerAnimated:YES completion:nil];
         }
         
     }];

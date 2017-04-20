@@ -51,7 +51,7 @@
     // Override point for customization after application launch.
     
     // 隐藏顶部状态栏设为NO
-    [UIApplication sharedApplication].statusBarHidden = NO;
+    //[UIApplication sharedApplication].statusBarHidden = NO;
     // 设置顶部状态栏字体为白色
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     
@@ -219,34 +219,28 @@
             AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);// 调用震动代码
         }
         
-        if([userInfo[@"type"] integerValue] == 0){
-            UITabBarItem * item = [_mainTabBarController.tabBar.items objectAtIndex:0];
-            item.badgeValue = [NSString stringWithFormat:@"%d",1];
+        int badge = [Variable shareInstance].unReadCount + 1;
+        [BaseHandleUtil setBadge:badge];
+        if(_mainTabBarController.selectedIndex == 2){
+            MessageListViewController *messageListVC = (MessageListViewController *)[self getCurrentVC];
+            [messageListVC autoLoadData];
         }
-        if([userInfo[@"type"] integerValue] == 1){
-            //UITabBarItem * item = [_mainTabBarController.tabBar.items objectAtIndex:2];
-            //item.badgeValue = [NSString stringWithFormat:@"%d",1];
-            int badge = [Variable shareInstance].unReadCount + 1;
-            [BaseHandleUtil setBadge:badge];
-            if(_mainTabBarController.selectedIndex == 2){
-                MessageListViewController *messageListVC = (MessageListViewController *)[self getCurrentVC];
-                [messageListVC autoLoadData];
-            }
-        }
+        
     }
-    else//杀死状态下，直接跳转到跳转页面。
-    {
-        //AppleViewController *skipCtr = [[AppleViewController alloc] initWithURL:@"http://www.qq.com"];
-        //[_mainTabBarController.selectedViewController pushViewController:skipCtr animated:YES];
-        if([userInfo[@"type"] integerValue] == 0){
-            _mainTabBarController.selectedIndex = 0;
-            YZWebViewController *webVC = [[YZWebViewController alloc] initWithURL:userInfo[@"url"]];
-            webVC.title = @"明细信息";
+    else {//杀死状态下，直接跳转到跳转页面。
+        
+        _mainTabBarController.selectedIndex = 2;
+        if([userInfo[@"url"] length] > 0){
+            BaseWebViewController *webVC = [[BaseWebViewController alloc] initWithURL:userInfo[@"url"]];
+            if([userInfo[@"sourceCode"] isEqualToString:@"01"]){
+                webVC.title = @"用户推送";
+            }
+            if([userInfo[@"sourceCode"] isEqualToString:@"02"]){
+                webVC.title = @"会议通知";
+            }
             [_mainTabBarController.selectedViewController pushViewController:webVC animated:YES];
         }
-        if([userInfo[@"type"] integerValue] == 1){
-            _mainTabBarController.selectedIndex = 2;
-        }
+        
     }
     
     DLog(@"Yan -> 输出：%@",userInfo);
@@ -520,24 +514,6 @@
             DLog(@"Yan -> login失败 error = %@", error);
         }];
         
-        // 判断用户是否开启了指纹、手势密码，并进行相应跳转
-        // 指纹验证解锁
-        /*
-        NSDictionary *settingDict = [[SettingUtil alloc] loadSettingData];
-        if([[settingDict objectForKey:@"touchID"] boolValue]){
-            TouchIDViewController *touchIDVC = [[TouchIDViewController alloc] init];
-            [_window setRootViewController:touchIDVC];
-        }else{
-            NSString *gesturePwd = [[NSUserDefaults standardUserDefaults] objectForKey:@"gesturespassword"];
-            if(gesturePwd.length > 0){  // 手势验证解锁
-                WUGesturesUnlockViewController *gesturesUnlockVC= [[WUGesturesUnlockViewController alloc] initWithUnlockType:WUUnlockTypeLoginPwd];
-                [_window setRootViewController:gesturesUnlockVC];
-            }else{
-                [_window setRootViewController:_mainTabBarController];
-            }
-        }
-        */
-        
     }
 }
 
@@ -549,50 +525,49 @@
     [_window bringSubviewToFront:_splashView];
     
     [self performSelector:@selector(launch_1) withObject:nil afterDelay:0.5f];
-    [self performSelector:@selector(launch_2) withObject:nil afterDelay:1.0f];
-    [self performSelector:@selector(launch_3) withObject:nil afterDelay:1.5f];
-    [self performSelector:@selector(launch_last) withObject:nil afterDelay:2.0f];
+    [self performSelector:@selector(launch_2) withObject:nil afterDelay:1.5f];
+    [self performSelector:@selector(launch_3) withObject:nil afterDelay:2.5f];
+    [self performSelector:@selector(launch_last) withObject:nil afterDelay:3.5f];
 }
 
 #pragma mark - 欢迎页动态方法
 - (void)launch_1{
-    UIImageView *round_1 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 430, WIDTH_SCREEN, 57)];
+    UIImageView *round_1 = [[UIImageView alloc]initWithFrame:CGRectMake(0, (int)HEIGHT_SCREEN*0.48, WIDTH_SCREEN, (int)239*(WIDTH_SCREEN/1242))];
     round_1.image = [UIImage imageNamed:@"launch_1"];
     [_splashView addSubview:round_1];
     [self setAnimation:round_1];
 }
-
 - (void)launch_2{
-    UIImageView *round_2 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 320, WIDTH_SCREEN, 72)];
+    UIImageView *round_2 = [[UIImageView alloc]initWithFrame:CGRectMake(0, (int)HEIGHT_SCREEN*0.64, WIDTH_SCREEN, (int)190*(WIDTH_SCREEN/1242))];
     round_2.image = [UIImage imageNamed:@"launch_2"];
     [_splashView addSubview:round_2];
     [self setAnimation:round_2];
 }
-
 - (void)launch_3{
-    UIImageView *round_3 = [[UIImageView alloc]initWithFrame:CGRectMake(0, 280, WIDTH_SCREEN, 67)];
+    UIImageView *round_3 = [[UIImageView alloc]initWithFrame:CGRectMake(0, (int)HEIGHT_SCREEN*0.42, WIDTH_SCREEN, (int)224*(WIDTH_SCREEN/1242))];
     round_3.image = [UIImage imageNamed:@"launch_3"];
     [_splashView addSubview:round_3];
     [self setAnimation:round_3];
 }
-
 - (void)launch_last{
-    UIImageView *lastView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 150, WIDTH_SCREEN, 46)];
+    UIImageView *lastView = [[UIImageView alloc]initWithFrame:CGRectMake(0, (int)HEIGHT_SCREEN*0.22, WIDTH_SCREEN, (int)154*(WIDTH_SCREEN/1242))];
     lastView.image = [UIImage imageNamed:@"launch_4"];
     [_splashView addSubview:lastView];
     
-    lastView.alpha = 0.0;
-    [UIView animateWithDuration:1.0f delay:0.0f options:UIViewAnimationOptionCurveLinear animations:^{
+    lastView.alpha = .0f;
+    [UIView animateWithDuration:1.0f delay:.0f options:UIViewAnimationOptionCurveLinear animations:^{
         lastView.alpha = 1.0;
     } completion:^(BOOL finished) {
         // 完成后执行code
         [NSThread sleepForTimeInterval:1.0f];
+        [UIApplication sharedApplication].statusBarHidden = NO;
         [_splashView removeFromSuperview];
     }];
 }
-
 - (void)setAnimation:(UIImageView *)view{
-    [UIView animateWithDuration:0.6f delay:0.0f options:UIViewAnimationOptionCurveLinear animations:^{
+    view.alpha = .0f;
+    [UIView animateWithDuration:.7f delay:.0f options:UIViewAnimationOptionCurveLinear animations:^{
+        view.alpha = 1.0f;
         // 执行的动画code
         [view setFrame:CGRectMake(view.originX, view.originY, view.frameWidth, view.frameHeight)];
     } completion:^(BOOL finished) {

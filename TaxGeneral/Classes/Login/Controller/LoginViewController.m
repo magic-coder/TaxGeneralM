@@ -62,29 +62,34 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
     effectview.frame = CGRectMake(0, 0, _imageView.frame.size.width, _imageView.frame.size.height);
     [_imageView addSubview:effectview];
     
+    // 顶部税徽标志
+    UIImageView *titleView = [[UIImageView alloc] initWithFrame:CGRectMake(WIDTH_SCREEN/2-90, 26, 180, 137)];
+    titleView.image = [UIImage imageNamed:@"login_emblem"];
+    [effectview addSubview:titleView];
+    
     //猫头
     UIImageView* imgLogin = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 211 / 2, 150-99, 211, 108)];
-    imgLogin.image = [UIImage imageNamed:@"login_head"];
+    imgLogin.image = [UIImage imageNamed:@"login_head_bak"];
     imgLogin.layer.masksToBounds = YES;
     [self.view addSubview:imgLogin];
     
     //捂眼的左右爪
     _imgLeftHand = [[UIImageView alloc] initWithFrame:CGRectMake(1, 90, 40, 65)];
-    _imgLeftHand.image = [UIImage imageNamed:@"login_arm_left"];
+    _imgLeftHand.image = [UIImage imageNamed:@"login_arm_left_bak"];
     [imgLogin addSubview:_imgLeftHand];
     
     _imgRightHand = [[UIImageView alloc] initWithFrame:CGRectMake(imgLogin.frame.size.width / 2 + 60, 90, 40, 65)];
-    _imgRightHand.image = [UIImage imageNamed:@"login_arm_right"];
+    _imgRightHand.image = [UIImage imageNamed:@"login_arm_right_bak"];
     [imgLogin addSubview:_imgRightHand];
     
     //展开的左右爪
     _imgLeftHandGone = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 100, 150-22, 40, 40)];
-    _imgLeftHandGone.image = [UIImage imageNamed:@"login_hand"];
+    _imgLeftHandGone.image = [UIImage imageNamed:@"login_hand_bak"];
     [self.view addSubview:_imgLeftHandGone];
     
     
     _imgRightHandGone = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 + 62,  150-22, 40, 40)];
-    _imgRightHandGone.image = [UIImage imageNamed:@"login_hand"];
+    _imgRightHandGone.image = [UIImage imageNamed:@"login_hand_bak"];
     [self.view addSubview:_imgRightHandGone];
     
     
@@ -275,12 +280,10 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
     [self.view.window.layer addAnimation:animation forKey:nil];
     
     if(self.isLogin){
-        MainTabBarController *mainTabBarController = [[MainTabBarController alloc] init];
+        MainTabBarController *mainTabBarController = [MainTabBarController shareInstance];
         mainTabBarController.selectedIndex = [Variable shareInstance].lastSelectedIds;
-        [self presentViewController:mainTabBarController animated:YES completion:nil];
-    }else{
-        [self dismissViewControllerAnimated:YES completion:nil];
     }
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)didReceiveMemoryWarning {

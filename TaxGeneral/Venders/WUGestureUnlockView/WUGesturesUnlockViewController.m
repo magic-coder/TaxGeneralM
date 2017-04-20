@@ -177,8 +177,7 @@
             [self.navigationController pushViewController:gestureVC animated:YES];
         }
         if(self.unlockType == WUUnlockTypeLoginPwd){
-            MainTabBarController *mainTabBarController = [[MainTabBarController alloc] init];
-            [self presentViewController:mainTabBarController animated:YES completion:nil];
+            [self dismissViewControllerAnimated:YES completion:nil];
         }
     }else {
         if (errorCount - 1 == 0) {//你已经输错五次了！ 退出登陆！
@@ -201,7 +200,7 @@
                 animation.subtype = kCATransitionFromTop;
                 [self.view.window.layer addAnimation:animation forKey:nil];
                 
-                [self presentViewController:loginVC animated:YES completion:nil];
+                [self dismissViewControllerAnimated:YES completion:nil];
                 
             } cancelButtonTitle:@"重新登录" destructiveButtonTitle:nil otherButtonTitles: nil];
             return;

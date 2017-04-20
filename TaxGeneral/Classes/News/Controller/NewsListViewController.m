@@ -92,6 +92,7 @@ static int const pageSize = 10;
     }else{
         [self.tableView.mj_header beginRefreshing];// 进行查询数据
     }
+    
 }
 
 #pragma mark - 处理数据
