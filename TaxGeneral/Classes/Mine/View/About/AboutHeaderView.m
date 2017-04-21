@@ -16,7 +16,8 @@
     if(self = [super initWithFrame:frame]){
         self.backgroundColor = DEFAULT_BACKGROUND_COLOR;
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(WIDTH_SCREEN/2-30, 20, 60, 60)];
-        imageView.image = [UIImage imageNamed:@"about_logo" scaleToSize:imageView.size];
+        imageView.image = [UIImage imageNamed:@"logo_red"];
+        //imageView.image = [UIImage imageNamed:@"about_logo" scaleToSize:imageView.size];
         imageView.layer.masksToBounds = YES;// 隐藏边界
         imageView.layer.cornerRadius = 12;// 将图层的边框设置为圆角
         [self addSubview:imageView];

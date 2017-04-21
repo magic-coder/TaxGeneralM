@@ -25,17 +25,29 @@
     
     self.view.backgroundColor = [UIColor whiteColor];
     
+    UIImageView *logoImageView = [[UIImageView alloc] initWithFrame:CGRectMake((self.view.frameWidth / 2) - 40, 60, 80, 80)];
+    logoImageView.image = [UIImage imageNamed:@"logo_blue"];
+    logoImageView.layer.masksToBounds = YES;// 隐藏边界
+    logoImageView.layer.cornerRadius = 12;// 将图层的边框设置为圆角
+    [self.view addSubview:logoImageView];
+    
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 150, WIDTH_SCREEN, 40)];
+    titleLabel.text = @"互联网+税务";
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
+    [self.view addSubview:titleLabel];
+    
     UIButton *touchIDButton = [[UIButton alloc] init];
     [touchIDButton setBackgroundImage:[UIImage imageNamed:@"finger_print_locked"] forState:UIControlStateNormal];
     [touchIDButton addTarget:self action:@selector(touchVerification) forControlEvents:UIControlEventTouchDown];
-    touchIDButton.frame = CGRectMake((self.view.frame.size.width / 2) - 40, (self.view.frame.size.height / 2) - 60, 80, 80);
+    touchIDButton.frame = CGRectMake((self.view.frameWidth / 2) - 35, (self.view.frameHeight / 2) + 60, 70, 70);
     [self.view addSubview:touchIDButton];
     
     UILabel *touchIDLabel = [[UILabel alloc] init];
-    touchIDLabel.frame = CGRectMake((self.view.frame.size.width / 2) - 60, (self.view.frame.size.height / 2)+30, 120, 30);
+    touchIDLabel.frame = CGRectMake(0, (self.view.frameHeight / 2) + 140, WIDTH_SCREEN, 30);
     touchIDLabel.textAlignment = NSTextAlignmentCenter;
     touchIDLabel.text = @"点击唤醒指纹验证";
-    touchIDLabel.font = [UIFont systemFontOfSize:13.0f];
+    touchIDLabel.font = [UIFont systemFontOfSize:15.0f];
     touchIDLabel.textColor = DEFAULT_BLUE_COLOR;
     [self.view addSubview:touchIDLabel];
     

@@ -13,6 +13,7 @@
 #import "DeviceInfoModel.h"
 
 #import "MessageListViewController.h"
+#import "NewsListViewController.h"
 
 #import "SettingUtil.h"
 #import "MapListUtil.h"
@@ -198,7 +199,7 @@
 // 此方法是 用户点击了通知，应用在前台 或者开启后台并且应用在后台 时调起
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler{
     completionHandler(UIBackgroundFetchResultNewData);
-    // 应用在前台 或者后台开启状态下，不跳转页面，让用户选择。
+    // 应用在前台，不跳转页面，让用户选择。
     if (application.applicationState == UIApplicationStateActive || application.applicationState == UIApplicationStateBackground) {
         DLog(@"acitve or background");
         /*
@@ -227,7 +228,10 @@
         }
         
     }
-    else {//杀死状态下，直接跳转到跳转页面。
+    else {  // 杀死状态下 或者后台开启状态下，直接跳转到跳转页面。
+        
+        int badge = [Variable shareInstance].unReadCount + 1;
+        [BaseHandleUtil setBadge:badge];
         
         _mainTabBarController.selectedIndex = 2;
         if([userInfo[@"url"] length] > 0){
@@ -239,6 +243,9 @@
                 webVC.title = @"会议通知";
             }
             [_mainTabBarController.selectedViewController pushViewController:webVC animated:YES];
+        }else{
+            MessageListViewController *messageListVC = (MessageListViewController *)[BaseHandleUtil getCurrentVC];
+            [messageListVC autoLoadData];
         }
         
     }
