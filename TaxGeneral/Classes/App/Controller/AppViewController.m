@@ -47,7 +47,7 @@
     
     self.collectionStyle = CollectionStyleNone;
     
-    _topView = [[AppTopView alloc] initWithFrame:CGRectMake(0.f, 0.f, WIDTH_SCREEN, 160.f)];
+    _topView = [[AppTopView alloc] initWithFrame:CGRectMake(0.f, 0.f, WIDTH_SCREEN, (int)HEIGHT_SCREEN*0.24f)];
     _topView.delegate = self;
     [self.view addSubview:_topView];
     
@@ -193,7 +193,13 @@
     
     // 点击保存将数据写入SandBox覆盖以前数据
     BaseCollectionModelGroup *mineGroup = [self.data objectAtIndex:0];
-    BaseCollectionModelGroup *otherGroup = [self.data objectAtIndex:1];
+    BaseCollectionModelGroup *otherGroup = nil;
+    if(self.data.count > 1){
+        otherGroup = [self.data objectAtIndex:1];
+    }else{
+        otherGroup = [[BaseCollectionModelGroup alloc] init];
+        otherGroup.items = [[NSMutableArray alloc] init];
+    }
     BaseCollectionModelGroup *allGroup = [[_appUtil loadDataWithType:AppItemsTypeEdit] objectAtIndex:1];
     
     NSMutableArray *mineData = [[NSMutableArray alloc] init];

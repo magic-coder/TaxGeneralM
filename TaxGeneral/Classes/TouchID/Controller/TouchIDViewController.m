@@ -60,6 +60,15 @@
             } cancelButtonTitle:@"确定" destructiveButtonTitle:nil otherButtonTitles:nil];
             
         } else if (state == YZTouchIDStateSuccess) {    //TouchID验证成功
+
+            CATransition *animation = [CATransition animation];
+            animation.duration = 1.0f;
+            animation.timingFunction = UIViewAnimationCurveEaseInOut;
+            animation.type = @"rippleEffect";
+            //animation.type = kCATransitionMoveIn;
+            animation.subtype = kCATransitionFromBottom;
+            [self.view.window.layer addAnimation:animation forKey:nil];
+            
             [self dismissViewControllerAnimated:YES completion:nil];
         }
         

@@ -109,7 +109,7 @@ static int const pageSize = 10;
     NSArray *images = [loopDict objectForKey:@"images"];
     NSArray *urls = [loopDict objectForKey:@"urls"];
     if(_loopView == nil){
-        _loopView = [[NewsLoopView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.width/1.8) titles:titles images:images urls:urls autoPlay:YES delay:10.0];
+        _loopView = [[NewsLoopView alloc] initWithFrame:CGRectMake(0, 0, self.view.frameWidth, self.view.frameWidth/1.8) titles:titles images:images urls:urls autoPlay:YES delay:10.0];
     }else{
         _loopView.titles = titles;
         _loopView.images = images;
@@ -132,10 +132,10 @@ static int const pageSize = 10;
 
 #pragma mark - 下拉刷新数据
 - (void)loadNewData{
-    self.tableView.userInteractionEnabled = NO;// 不允许点击
+    //self.tableView.userInteractionEnabled = NO;// 不允许点击
     [_newsUtil initDataWithPageSize:pageSize dataBlock:^(NSDictionary *dataDict) {
         
-        self.tableView.userInteractionEnabled = YES;// 允许点击
+        //self.tableView.userInteractionEnabled = YES;// 允许点击
         
         _refreshCount = pageSize;
         _tempData = [NSMutableArray arrayWithArray:_data];
@@ -175,7 +175,9 @@ static int const pageSize = 10;
             }
         }
         
-        [self showNewStatusesCount:_refreshCount];
+        if([[BaseHandleUtil getCurrentVC] isKindOfClass:self.class]){
+            [self showNewStatusesCount:_refreshCount];
+        }
         
         [self.tableView reloadData];
         
@@ -290,6 +292,8 @@ static int const pageSize = 10;
 
 #pragma mark - 展示更新条数（浮动提示层）
 - (void)showNewStatusesCount:(int)count{
+    
+    [self.hintLabel removeFromSuperview];
     
     // 1.创建一个UILabel
     //UILabel *label = [[UILabel alloc] init];

@@ -177,6 +177,15 @@
             [self.navigationController pushViewController:gestureVC animated:YES];
         }
         if(self.unlockType == WUUnlockTypeLoginPwd){
+            
+            CATransition *animation = [CATransition animation];
+            animation.duration = 1.0f;
+            animation.timingFunction = UIViewAnimationCurveEaseInOut;
+            animation.type = @"rippleEffect";
+            //animation.type = kCATransitionMoveIn;
+            animation.subtype = kCATransitionFromBottom;
+            [self.view.window.layer addAnimation:animation forKey:nil];
+            
             [self dismissViewControllerAnimated:YES completion:nil];
         }
     }else {

@@ -12,8 +12,12 @@
 
 @interface BaseHandleUtil : NSObject
 
-+ (NSString *)dataToJsonString:(id)object;  // 数据转换jsonString
++ (NSString *)dataToJsonString:(id)object;      // 数据转换jsonString
 
-+ (void)setBadge:(int)badge;          // 设置应用、消息角标
++ (void)setBadge:(int)badge;                    // 设置应用、消息角标
+
++ (UIViewController *)getCurrentVC;             // 获取当前展示的视图
+
++ (int)getRandomNumber:(int)from to:(int)to;    // 获取一个随机整数，范围在[from,to），包括from，包括to
 
 @end
