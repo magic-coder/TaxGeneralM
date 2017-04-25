@@ -13,8 +13,9 @@
 @class MessageDetailViewCell;
 
 typedef NS_ENUM(NSInteger, MsgDetailViewCellMenuType) {
-    MsgDetailViewCellMenuTypeCopy,  // 复制
-    MsgDetailViewCellMenuTypeDelete // 删除
+    MsgDetailViewCellMenuTypeCalendar,    // 添加日历提醒
+    MsgDetailViewCellMenuTypeCopy,      // 复制
+    MsgDetailViewCellMenuTypeDelete     // 删除
 };
 
 @protocol MessageDetailViewCellDelegate <NSObject>

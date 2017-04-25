@@ -116,8 +116,8 @@
     
 }
 
-- (void)deleteMsgWithSourceCode:(NSString *)sourceCode pushUserCode:(NSString *)pushUserCode success:(void (^)())success failed:(void (^)(NSString *))failed{
-    NSString *jsonString = [BaseHandleUtil dataToJsonString:@{@"sourcecode" : sourceCode, @"pushusercode" : pushUserCode}];
+- (void)deleteMsgWithSourceCode:(NSString *)sourceCode pushOrgCode:(NSString *)pushOrgCode success:(void (^)())success failed:(void (^)(NSString *))failed{
+    NSString *jsonString = [BaseHandleUtil dataToJsonString:@{@"sourcecode" : sourceCode, @"swjgdm" : pushOrgCode}];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:jsonString, @"msg", nil];
     NSString *url = @"message/delMsgBySource";
     [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:parameters success:^(NSDictionary *responseDic) {

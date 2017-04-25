@@ -152,12 +152,12 @@ static int const pageSize = 100;
         
         MessageListViewCell *cell = (MessageListViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
         NSString *sourceCode = cell.messageListModel.sourceCode;
-        NSString *pushUserCode = cell.messageListModel.pushUserCode;
-        if(pushUserCode == nil){
-            pushUserCode = @"";
+        NSString *pushOrgCode = cell.messageListModel.pushOrgCode;
+        if(pushOrgCode == nil){
+            pushOrgCode = @"";
         }
         [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"删除中..."];
-        [_msgListUtil deleteMsgWithSourceCode:sourceCode pushUserCode:pushUserCode success:^{
+        [_msgListUtil deleteMsgWithSourceCode:sourceCode pushOrgCode:pushOrgCode success:^{
             [YZProgressHUD hiddenHUDForView:SELF_VIEW];
             // 删除成功，重新加载数据
             [_msgListUtil loadMsgDataWithPageNo:_pageNo pageSize:pageSize dataBlock:^(NSDictionary *dataDict) {
@@ -209,15 +209,15 @@ static int const pageSize = 100;
         
         for(NSDictionary *dict in results){
             NSString *sourceCode = [dict objectForKey:@"sourcecode"];
-            NSString *pushUserCode = [dict objectForKey:@"pushusercode"];
-            if(pushUserCode == nil){
-                pushUserCode = @"";
+            NSString *pushOrgCode = [dict objectForKey:@"swjgdm"];
+            if(pushOrgCode == nil){
+                pushOrgCode = @"";
             }
-            if(cell.messageListModel.pushUserCode == nil){
-                cell.messageListModel.pushUserCode = @"";
+            if(cell.messageListModel.pushOrgCode == nil){
+                cell.messageListModel.pushOrgCode = @"";
             }
             
-            if([sourceCode isEqualToString:cell.messageListModel.sourceCode] && [pushUserCode isEqualToString:cell.messageListModel.pushUserCode]){
+            if([sourceCode isEqualToString:cell.messageListModel.sourceCode] && [pushOrgCode isEqualToString:cell.messageListModel.pushOrgCode]){
                 NSMutableDictionary *mutableDict = [NSMutableDictionary dictionaryWithDictionary:dict];
                 [mutableDict setObject:@"0" forKey:@"unreadcount"];
                 [mutableResults addObject:mutableDict];
@@ -236,7 +236,7 @@ static int const pageSize = 100;
     messageDetailVC.title = cell.messageListModel.name; // 设置详细视图标题
     
     messageDetailVC.sourceCode = cell.messageListModel.sourceCode;
-    messageDetailVC.pushUserCode = cell.messageListModel.pushUserCode;
+    messageDetailVC.pushOrgCode = cell.messageListModel.pushOrgCode;
     
 }
 

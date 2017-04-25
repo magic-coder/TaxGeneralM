@@ -29,7 +29,7 @@
     model.sourceCode = sourceCode;
     if([sourceCode isEqualToString:@"01"]){     // 一般用户推送
         model.avatar = @"msg_head";
-        model.name = [dict objectForKey:@"taxofficialname"];
+        model.name = [dict objectForKey:@"swjgjc"];
     }else if([sourceCode isEqualToString:@"02"]){
         model.avatar = @"msg_notification";
         model.name = [dict objectForKey:@"sourcename"];
@@ -38,7 +38,7 @@
         model.name = [dict objectForKey:@"sourcename"];
     }
     
-    model.pushUserCode = [dict objectForKey:@"pushusercode"];
+    model.pushOrgCode = [dict objectForKey:@"swjgdm"];
     model.message = [dict objectForKey:@"pushcontent"];
     model.date = [[dict objectForKey:@"pushdate"] substringWithRange:NSMakeRange(0, 16)];
     model.unReadCount = [NSString stringWithFormat:@"%@", [dict objectForKey:@"unreadcount"]];;

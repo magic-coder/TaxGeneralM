@@ -52,9 +52,10 @@
     if (longPressGesture.state == UIGestureRecognizerStateBegan) {
         [self becomeFirstResponder];
         UIMenuController *menu = [UIMenuController sharedMenuController];
+        UIMenuItem *calendarItem = [[UIMenuItem alloc] initWithTitle:@"加入提醒" action:@selector(calendarItemClicked:)];
         UIMenuItem *copyItem = [[UIMenuItem alloc] initWithTitle:@"复制" action:@selector(copyItemClicked:)];
         UIMenuItem *deleteItem = [[UIMenuItem alloc] initWithTitle:@"删除" action:@selector(deleteItemClicked:)];
-        [menu setMenuItems:[NSArray arrayWithObjects:copyItem, deleteItem, nil]];
+        [menu setMenuItems:[NSArray arrayWithObjects:calendarItem, copyItem, deleteItem, nil]];
         [menu setTargetRect:self.bounds inView:self];
         [menu setMenuVisible:YES animated:YES];
         
@@ -66,9 +67,7 @@
 
 #pragma mark 长按处理Action事件
 -(BOOL)canPerformAction:(SEL)action withSender:(id)sender{
-    if(action ==@selector(copyItemClicked:)){
-        return YES;
-    }else if (action==@selector(deleteItemClicked:)){
+    if(action==@selector(calendarItemClicked:) || action ==@selector(copyItemClicked:) || action==@selector(deleteItemClicked:)){
         return YES;
     }
     return [super canPerformAction:action withSender:sender];
@@ -79,6 +78,12 @@
 }
 
 #pragma mark 菜单meun对应的方法实现
+- (void)calendarItemClicked:(id)sender{
+    // 如果协议响应了msgDetailViewCellMenuClicked:type::方法
+    if([_delegate respondsToSelector:@selector(msgDetailViewCellMenuClicked:type:)]){
+        [_delegate msgDetailViewCellMenuClicked:self type:MsgDetailViewCellMenuTypeCalendar];
+    }
+}
 - (void)copyItemClicked:(id)sender{
     // 如果协议响应了msgDetailViewCellMenuClicked:type::方法
     if([_delegate respondsToSelector:@selector(msgDetailViewCellMenuClicked:type:)]){

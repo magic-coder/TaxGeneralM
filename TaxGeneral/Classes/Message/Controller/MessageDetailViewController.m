@@ -13,6 +13,7 @@
 #import "MessageListUtil.h"
 #import "MessageDetailUtil.h"
 #import "YZRefreshHeader.h"
+#import <EventKit/EventKit.h>
 
 @interface MessageDetailViewController () <MessageDetailViewCellDelegate>
 
@@ -103,6 +104,22 @@ static int const pageSize = 5;
     
     MessageDetailModel *model = cell.messageDetailModel;
     
+    if(type == MsgDetailViewCellMenuTypeCalendar){
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+        NSDate *startDate = [formatter dateFromString:@"2017-04-26 14:30:00"];
+        NSDate *endDate = [formatter dateFromString:@"2017-04-26 16:00:00"];
+        NSString *notes = @"";
+        if(model.url.length > 0){
+             notes = [NSString stringWithFormat:@"会议详细内容请点击地址查看：%@", model.url];
+        }
+        
+        NSString *alarmStr = [NSString stringWithFormat:@"%lf", 60.0f * -5.0f * 1];// 设置提醒时间为5分钟前
+        
+        [BaseHandleUtil createEventCalendarTitle:model.title location:model.content startDate:startDate endDate:endDate notes:(NSString *)notes allDay:NO alarmArray:@[alarmStr] block:^(NSString *str) {
+            [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:str];
+        }];
+    }
     if(type == MsgDetailViewCellMenuTypeCopy){
         UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard]; // 黏贴板
         NSString *pasteString = [NSString stringWithFormat:@"标题：%@\n时间：%@\n摘要：%@", model.title, model.date, model.content];
@@ -145,10 +162,10 @@ static int const pageSize = 5;
     [param setObject:[NSNumber numberWithInt:_pageNo] forKey:@"pageNo"];
     [param setObject:[NSNumber numberWithInt:pageSize] forKey:@"pageSize"];
     [param setObject:_sourceCode forKey:@"sourcecode"];
-    if(_pushUserCode == nil){
-        _pushUserCode = @"";
+    if(_pushOrgCode == nil){
+        _pushOrgCode = @"";
     }
-    [param setObject:_pushUserCode forKey:@"pushusercode"];
+    [param setObject:_pushOrgCode forKey:@"swjgdm"];
     
     
     [_msgDetailUtil loadMsgDataWithParam:param dataBlock:^(NSDictionary *dataDict) {
@@ -195,7 +212,7 @@ static int const pageSize = 5;
     [param setObject:[NSNumber numberWithInt:_pageNo] forKey:@"pageNo"];
     [param setObject:[NSNumber numberWithInt:pageSize] forKey:@"pageSize"];
     [param setObject:_sourceCode forKey:@"sourcecode"];
-    [param setObject:_pushUserCode forKey:@"pushusercode"];
+    [param setObject:_pushOrgCode forKey:@"swjgdm"];
     
     [_msgDetailUtil loadMsgDataWithParam:param dataBlock:^(NSDictionary *dataDict) {
         // 加载结束

@@ -10,6 +10,7 @@
 
 #import "BaseHandleUtil.h"
 #import "MainTabBarController.h"
+#import <EventKit/EventKit.h>
 
 @implementation BaseHandleUtil
 
@@ -81,6 +82,49 @@
 // 获取一个随机整数，范围在[from,to），包括from，包括to
 + (int)getRandomNumber:(int)from to:(int)to{
     return (int)(from + (arc4random() % (to - from + 1)));
+}
+
++ (void)createEventCalendarTitle:(NSString *)title location:(NSString *)location startDate:(NSDate *)startDate endDate:(NSDate *)endDate notes:(NSString *)notes allDay:(BOOL)allDay alarmArray:(NSArray *)alarmArray block:(void(^)(NSString *str))block{
+    
+    EKEventStore *eventStore = [[EKEventStore alloc] init];
+    
+    if ([eventStore respondsToSelector:@selector(requestAccessToEntityType:completion:)]){
+        [eventStore requestAccessToEntityType:EKEntityTypeEvent completion:^(BOOL granted, NSError *error){
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error){
+                    block(@"添加失败，请稍后重试！");
+                }else if (!granted){
+                    block(@"不允许使用日历,请在设置中允许此App使用日历！");
+                }else{
+                    EKEvent *event = [EKEvent eventWithEventStore:eventStore];
+                    event.title = [NSString stringWithFormat:@"互联网+税务：%@", title];
+                    event.location = location;
+                    
+                    NSDateFormatter *tempFormatter = [[NSDateFormatter alloc] init];
+                    [tempFormatter setDateFormat:@"dd.MM.yyyy HH:mm"];
+                    
+                    event.startDate = startDate;
+                    event.endDate   = endDate;
+                    event.allDay = allDay;
+                    event.notes  = notes;
+                    
+                    //添加提醒
+                    if (alarmArray && alarmArray.count > 0) {
+                        for (NSString *timeString in alarmArray) {
+                            [event addAlarm:[EKAlarm alarmWithRelativeOffset:[timeString integerValue]]];
+                        }
+                    }
+                    
+                    [event setCalendar:[eventStore defaultCalendarForNewEvents]];
+                    NSError *err;
+                    [eventStore saveEvent:event span:EKSpanThisEvent error:&err];
+                    block(@"已添加到系统日历中！");
+                    
+                }
+            });
+        }];
+    }
 }
 
 @end
