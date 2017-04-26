@@ -74,7 +74,7 @@
         _mapView.zoomLevel = 17;
         DLog(@"反geo检索发送成功");
     } else {
-        DLog(@"反geo检索发送失败");
+        RLog(@"反geo检索发送失败");
     }
     
 }
@@ -236,12 +236,13 @@
     if (error == 0) {
         BMKPointAnnotation* item = [[BMKPointAnnotation alloc] init];
         item.coordinate = result.location;
-        item.title = result.address;
+        //item.title = result.address;  // 百度地图反向定位地址
+        item.title = _model.name;       // 系统参数名称
         [_mapView addAnnotation:item];
         _mapView.centerCoordinate = result.location;
         NSString* showmeg;
         showmeg = [NSString stringWithFormat:@"%@",item.title];
-        DLog(@"反向地理编码，%@", showmeg);
+        RLog(@"反向地理编码，%@", showmeg);
     }
 }
 
@@ -552,7 +553,7 @@
                 DLog(@"car检索发送成功");
             }
             else{
-                DLog(@"car检索发送失败");
+                RLog(@"car检索发送失败");
             }
         }
         if(item.tag == 101){
@@ -569,7 +570,7 @@
             if(flag) {
                 DLog(@"公交交通检索（支持垮城）发送成功");
             } else {
-                DLog(@"公交交通检索（支持垮城）发送失败");
+                RLog(@"公交交通检索（支持垮城）发送失败");
             }
         }
         if(item.tag == 102){
@@ -586,7 +587,7 @@
                 DLog(@"walk检索发送成功");
             }
             else{
-                DLog(@"walk检索发送失败");
+                RLog(@"walk检索发送失败");
             }
         }
     }];

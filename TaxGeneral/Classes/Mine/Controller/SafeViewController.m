@@ -33,7 +33,7 @@
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    self.data = [MineUtil getSafeItems];
+    self.data = [[MineUtil shareInstance] getSafeItems];
     
     [self.tableView reloadData];
 }
@@ -105,7 +105,7 @@
         // ps:以上的状态处理并没有写完全!
         // 在使用中你需要根据回调的状态进行处理,需要处理什么就处理什么
         
-        SettingUtil *settingUtil = [[SettingUtil alloc] init];
+        SettingUtil *settingUtil = [[SettingUtil shareInstance] init];
         NSMutableDictionary *settingDict = [settingUtil loadSettingData];
         [settingDict setValue:[NSNumber numberWithBool:sender.isOn] forKey:@"touchID"];
         BOOL res = [settingUtil writeSettingData:settingDict];

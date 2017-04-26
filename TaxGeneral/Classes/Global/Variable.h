@@ -14,7 +14,10 @@
 
 @property (nonatomic, assign) NSInteger lastSelectedIds;    // TabBar记录最近一次选中的视图
 @property (nonatomic, assign) BOOL msgRefresh;              // 标记视图是否刷新
-@property (nonatomic, assign) int unReadCount;        // 未读消息条数
+@property (nonatomic, assign) int unReadCount;              // 未读消息条数
+@property (nonatomic, strong) NSString *runtimeLog;         // 运行日志
+@property (nonatomic, strong) NSString *crashLog;           // 崩溃日志
+
 /**
  * @breif 实现声明单例方法 GCD
  */

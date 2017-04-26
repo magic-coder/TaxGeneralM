@@ -12,6 +12,8 @@
 
 @interface NewsUtil : NSObject
 
++ (instancetype)shareInstance;
+
 - (NSMutableDictionary *)loadData;
 
 - (void)initDataWithPageSize:(int)pageSize dataBlock:(void (^)(NSDictionary *dataDict))dataBlock failed:(void(^)(NSString *error))failed;

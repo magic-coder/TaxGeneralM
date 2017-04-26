@@ -13,6 +13,8 @@
 
 @interface MessageListUtil : NSObject
 
++ (instancetype)shareInstance;
+
 - (NSDictionary *)loadMsgDataWithFile;
 
 - (int)getMsgUnReadCountSuccess:(void(^)(int unReadCount))success;

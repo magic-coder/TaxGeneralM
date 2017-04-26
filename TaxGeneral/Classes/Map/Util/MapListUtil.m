@@ -15,8 +15,17 @@
 
 @implementation MapListUtil
 
++ (instancetype)shareInstance{
+    static MapListUtil *mapListUtil = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        mapListUtil = [[MapListUtil alloc] init];
+    });
+    return mapListUtil;
+}
+
 - (NSMutableArray *)getMapData{
-    NSDictionary *dict = [[BaseSandBoxUtil alloc] loadDataWithFileName:FILE_NAME];
+    NSDictionary *dict = [[BaseSandBoxUtil shareInstance] loadDataWithFileName:FILE_NAME];
     return [self handleDataDict:dict];
 }
 
@@ -27,7 +36,7 @@
         NSString *statusCode = [responseDic objectForKey:@"statusCode"];
         DLog(@"Yan -> 请求处理结果状态值 : statusCode = %@", statusCode);
         if([statusCode isEqualToString:@"00"]){
-            [[BaseSandBoxUtil alloc] writeData:responseDic fileName:FILE_NAME];
+            [[BaseSandBoxUtil shareInstance] writeData:responseDic fileName:FILE_NAME];
             dataBlock([self handleDataDict:responseDic]);
         }else{
             failed([responseDic objectForKey:@"msg"]);

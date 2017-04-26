@@ -13,7 +13,23 @@
 
 @implementation LoginUtil
 
-+ (void)loginWithAppDict:(NSMutableDictionary *)dict success:(void (^)())success failed:(void (^)(NSString *))failed{
++ (instancetype)shareInstance{
+    static LoginUtil *loginUtil = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        loginUtil = [[LoginUtil alloc] init];
+    });
+    return loginUtil;
+}
+
+- (void)loginWithAppDict:(NSMutableDictionary *)dict success:(void (^)())success failed:(void (^)(NSString *))failed{
+    
+    NSString *userCode = [dict objectForKey:@"userCode"];
+    BOOL isTest = NO;
+    if([userCode hasPrefix:@":test"]){
+        isTest = YES;
+        [dict setObject:[userCode substringWithRange:NSMakeRange(5, 11)] forKey:@"userCode"];
+    }
     
     NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:DEVICE_INFO];
     DeviceInfoModel *model = [NSKeyedUnarchiver unarchiveObjectWithData:data];
@@ -24,7 +40,7 @@
     [dict setObject:@"4" forKey:@"phonetype"];
     [dict setObject:model.deviceIdentifier forKey:@"deviceid"];
     
-    NSString *jsonString = [BaseHandleUtil dataToJsonString:dict];
+    NSString *jsonString = [[BaseHandleUtil shareInstance] dataToJsonString:dict];
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:jsonString, @"msg", nil];
     NSString *url = @"account/login";
@@ -49,18 +65,19 @@
             
             // 登录成功将信息保存到用户单例模式中
             [[NSUserDefaults standardUserDefaults] setObject:dict forKey:LOGIN_SUCCESS];
+            [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:isTest] forKey:@"isTest"];
             [[NSUserDefaults standardUserDefaults] synchronize]; // 强制写入
             
             // 绑定推送设备
             NSDictionary *pushDict = [[NSUserDefaults standardUserDefaults] objectForKey:PUSH_INFO];
             if(nil != pushDict){
-                NSString *jsonString = [BaseHandleUtil dataToJsonString:pushDict];
+                NSString *jsonString = [[BaseHandleUtil shareInstance] dataToJsonString:pushDict];
                 NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:jsonString, @"msg", nil];
                 NSString *url = @"push/registerPush";
                 [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:parameters success:^(NSDictionary *responseDic) {
                     DLog(@"Yan -> 绑定推送设备信息成功：responseDic = %@", responseDic);
                 } failure:^(NSString *error) {
-                    DLog(@"Yan -> 绑定推送设备信息失败：error = %@", error);
+                    RLog(@"Yan -> 绑定推送设备信息失败：error = %@", error);
                 }];
             }
             
@@ -75,7 +92,7 @@
 }
 
 // token 登录请求三次，若三次都失败则失败
-+ (void)loginWithTokenSuccess:(void (^)())success failed:(void (^)(NSString *))failed{
+- (void)loginWithTokenSuccess:(void (^)())success failed:(void (^)(NSString *))failed{
     
     NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:DEVICE_INFO];
     DeviceInfoModel *model = [NSKeyedUnarchiver unarchiveObjectWithData:data];
@@ -91,7 +108,7 @@
     [dict setObject:model.deviceIdentifier forKey:@"deviceid"];
     [dict setObject:[userDict objectForKey:@"token"] forKey:@"token"];
     
-    NSString *jsonString = [BaseHandleUtil dataToJsonString:dict];
+    NSString *jsonString = [[BaseHandleUtil shareInstance] dataToJsonString:dict];
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:jsonString, @"msg", nil];
     NSString *url = @"account/login";
@@ -186,7 +203,7 @@
     }];
 }
 
-+ (void)handleTokenLogin:(NSDictionary *)responseDict successDict:(NSMutableDictionary *)dict{
+- (void)handleTokenLogin:(NSDictionary *)responseDict successDict:(NSMutableDictionary *)dict{
     NSDictionary *businessData = [responseDict objectForKey:@"businessData"];
     [dict setObject:[businessData objectForKey:@"userName"] forKey:@"userName"];
     [dict setObject:[businessData objectForKey:@"orgCode"] forKey:@"orgCode"];

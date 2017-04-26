@@ -13,18 +13,20 @@
 
 @interface MineUtil : NSObject
 
-+(NSMutableArray *) getMineItems;       // 获取我的列表
++ (instancetype)shareInstance;
 
-+(NSMutableArray *) getAccountItems;    // 获取账户管理列表
+- (NSMutableArray *) getMineItems;       // 获取我的列表
 
-+(NSMutableArray *) getSafeItems;       // 获取安全中心列表
+- (NSMutableArray *) getAccountItems;    // 获取账户管理列表
 
-+(NSMutableArray *) getGestureItems;    // 获取手势密码列表
+- (NSMutableArray *) getSafeItems;       // 获取安全中心列表
 
-+(NSMutableArray *) getScheduleItems;   // 获取我的日程列表
+- (NSMutableArray *) getGestureItems;    // 获取手势密码列表
 
-+(NSMutableArray *) getServiceItems;    // 获取我的服务列表
+- (NSMutableArray *) getScheduleItems;   // 获取我的日程列表
 
-+(NSMutableArray *) getSettingItems;    // 获取设置信息列表
+- (NSMutableArray *) getServiceItems;    // 获取我的服务列表
+
+- (NSMutableArray *) getSettingItems;    // 获取设置信息列表
 
 @end

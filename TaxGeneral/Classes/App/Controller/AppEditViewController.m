@@ -15,8 +15,6 @@
 
 @interface AppEditViewController () <BaseCollectionViewControllerDelegate>
 
-@property (nonatomic, strong) AppUtil *appUtil;
-
 @end
 
 @implementation AppEditViewController
@@ -33,10 +31,10 @@
     self.navigationItem.rightBarButtonItem.enabled = NO;// 初始化保存按钮不可点击
     
     self.collectionStyle = CollectionStyleEdit;
-    self.data = [self.appUtil loadDataWithType:AppItemsTypeEdit];
+    self.data = [[AppUtil shareInstance] loadDataWithType:AppItemsTypeEdit];
     if(self.data == nil){
         [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"加载中..."];
-        [self.appUtil initDataWithType:AppItemsTypeEdit dataBlock:^(NSMutableArray *dataArray) {
+        [[AppUtil shareInstance] initDataWithType:AppItemsTypeEdit dataBlock:^(NSMutableArray *dataArray) {
             [YZProgressHUD hiddenHUDForView:SELF_VIEW];
             self.data = dataArray;
             [self.collectionView reloadData];
@@ -96,7 +94,7 @@
     
     NSMutableDictionary *dataDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:mineData, @"mineData", otherData, @"otherData", allData, @"allData", nil];
     
-    BOOL res = [[AppUtil alloc] writeNewAppData:dataDict];
+    BOOL res = [[AppUtil shareInstance] writeNewAppData:dataDict];
     if(res){
         [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:@"保存成功!"];
     }else{
@@ -135,14 +133,6 @@
     [self.collectionView reloadData];
     // 点击编辑按钮后设置保存按钮可点击
     self.navigationItem.rightBarButtonItem.enabled = YES;
-}
-
-#pragma mark - 懒加载
--(AppUtil *)appUtil{
-    if(_appUtil == nil){
-        _appUtil = [[AppUtil alloc] init];
-    }
-    return _appUtil;
 }
 
 - (void)didReceiveMemoryWarning {

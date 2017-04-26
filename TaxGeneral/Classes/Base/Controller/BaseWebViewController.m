@@ -133,14 +133,14 @@
     // 如果响应的地址是指定域名，则允许跳转
     if ([response.URL.absoluteString rangeOfString:@"account/initLogin"].location != NSNotFound) {
         // 启动/挂起恢复时进行登录操作
-        [LoginUtil loginWithTokenSuccess:^{
+        [[LoginUtil shareInstance] loginWithTokenSuccess:^{
             [self.webView loadRequest:self.request];
         } failed:^(NSString *error) {
             [YZProgressHUD hiddenHUDForView:self.webView];
             [YZAlertView showAlertWith:self title:@"登录失效" message:@"您当前登录信息已失效，请重新登录！" callbackBlock:^(NSInteger btnIndex) {
                 // 注销方法
                 [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"注销中..."];
-                [AccountUtil accountLogout];
+                [[AccountUtil shareInstance] accountLogout];
                 [YZProgressHUD hiddenHUDForView:SELF_VIEW];
                 
                 LoginViewController *loginVC = [[LoginViewController alloc] init];

@@ -45,7 +45,7 @@ static int const pageSize = 10;
     [super viewDidLoad];
     
     _pageNo = 1;
-    _newsUtil = [[NewsUtil alloc] init];
+    _newsUtil = [NewsUtil shareInstance];
     
     MainTabBarController *mainTabBarController = (MainTabBarController *)self.tabBarController;
     mainTabBarController.customDelegate = self;
@@ -58,7 +58,7 @@ static int const pageSize = 10;
         // 获取首次加载标志
         NSString *isLoad = [[NSUserDefaults standardUserDefaults] stringForKey:LOAD_FINISH];
         if(isLoad){
-            NSDictionary *settingDict = [[SettingUtil alloc] loadSettingData];
+            NSDictionary *settingDict = [[SettingUtil shareInstance] loadSettingData];
             if([[settingDict objectForKey:@"touchID"] boolValue]){  // 指纹解锁
                 [[NSUserDefaults standardUserDefaults] removeObjectForKey:LOAD_FINISH];// 删除首次加载信息
                 TouchIDViewController *touchIDVC = [[TouchIDViewController alloc] init];
@@ -175,7 +175,7 @@ static int const pageSize = 10;
             }
         }
         
-        if([[BaseHandleUtil getCurrentVC] isKindOfClass:self.class]){
+        if([[[BaseHandleUtil shareInstance] getCurrentVC] isKindOfClass:self.class]){
             [self showNewStatusesCount:_refreshCount];
         }
         

@@ -44,12 +44,12 @@
     
     DeviceScreenInch deviceInch = [UIDevice deviceScreenInch];
     
-    DLog(@"Yan -> 唯一标示 : %@", deviceIdentifier);
-    DLog(@"Yan -> 设备名称 : %@", deviceName);
-    DLog(@"Yan -> 手机型号 : %@", deviceModel);
-    DLog(@"Yan -> 系统名称 : %@", systemName);
-    DLog(@"Yan -> 手机序系统版本 : %@", systemVersion);
-    DLog(@"Yan -> 屏幕尺寸 : %ld", (long)deviceInch);
+    RLog(@"Yan -> 唯一标示 : %@", deviceIdentifier);
+    RLog(@"Yan -> 设备名称 : %@", deviceName);
+    RLog(@"Yan -> 手机型号 : %@", deviceModel);
+    RLog(@"Yan -> 系统名称 : %@", systemName);
+    RLog(@"Yan -> 手机序系统版本 : %@", systemVersion);
+    RLog(@"Yan -> 屏幕尺寸 : %ld", (long)deviceInch);
     
     DeviceInfoModel *model = [[DeviceInfoModel alloc] init];
     model.deviceIdentifier = deviceIdentifier;

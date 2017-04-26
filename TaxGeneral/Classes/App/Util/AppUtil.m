@@ -16,9 +16,17 @@
 
 @implementation AppUtil
 
++ (instancetype)shareInstance{
+    static AppUtil *appUtil = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        appUtil = [[AppUtil alloc] init];
+    });
+    return appUtil;
+}
+
 - (NSMutableArray *)loadDataWithType:(AppItemsType)type{
-    BaseSandBoxUtil *sandBoxUtil = [[BaseSandBoxUtil alloc] init];
-    NSMutableDictionary *appDict = [sandBoxUtil loadDataWithFileName:FILE_NAME];
+    NSMutableDictionary *appDict = [[BaseSandBoxUtil shareInstance] loadDataWithFileName:FILE_NAME];
     return [self handleData:appDict WithType:type];
 }
 
@@ -167,7 +175,7 @@
         [paramsArray addObject:paramDict];
     }
     
-    NSString *jsonString = [BaseHandleUtil dataToJsonString:paramsArray];
+    NSString *jsonString = [[BaseHandleUtil shareInstance] dataToJsonString:paramsArray];
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:jsonString, @"msg", nil];
     
@@ -176,7 +184,7 @@
         // 获取请求状态值
         DLog(@"statusCode = %@", [responseDic objectForKey:@"statusCode"]);
     } failure:^(NSString *error) {
-        DLog(@"同步消息失败，error=%@", error);
+        RLog(@"Yan -> 同步消息失败，error=%@", error);
     }];
     
 }
@@ -186,17 +194,13 @@
     
     [self saveCustomData:[appData objectForKey:@"mineData"]];
     
-    BaseSandBoxUtil *sandBoxUtil = [[BaseSandBoxUtil alloc] init];
-    
-    return [sandBoxUtil writeData:appData fileName:FILE_NAME];
+    return [[BaseSandBoxUtil shareInstance] writeData:appData fileName:FILE_NAME];
 }
 
 // 子类信息写入应用数据到本地SandBox中
 - (BOOL)writeNewAppSubData:(NSDictionary *)appData{
     
-    BaseSandBoxUtil *sandBoxUtil = [[BaseSandBoxUtil alloc] init];
-    
-    return [sandBoxUtil writeData:appData fileName:SUB_FILE_NAME];
+    return [[BaseSandBoxUtil shareInstance] writeData:appData fileName:SUB_FILE_NAME];
 }
 
 // 私有为NSMutableArray排序方法

@@ -13,7 +13,16 @@
 
 @implementation MineUtil
 
-+ (NSMutableArray *)getMineItems{
++ (instancetype)shareInstance{
+    static MineUtil *mineUtil = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        mineUtil = [[MineUtil alloc] init];
+    });
+    return mineUtil;
+}
+
+- (NSMutableArray *)getMineItems{
     NSMutableArray *items = [[NSMutableArray alloc] init];
     BaseTableModelItem *mineInfo = [BaseTableModelItem createWithImageName:@"mine_account" title:@"账户管理"];
     BaseTableModelGroup *group1 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:nil settingItems:mineInfo, nil];
@@ -35,14 +44,17 @@
     BaseTableModelGroup *group4 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:nil settingItems:about, nil];
     [items addObject:group4];
     
-    BaseTableModelItem *test = [BaseTableModelItem createWithImageName:@"mine_test" title:@"测试"];
-    BaseTableModelGroup *group5 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:nil settingItems:test, nil];
-    [items addObject:group5];
+    BOOL isTest = [[[NSUserDefaults standardUserDefaults] objectForKey:@"isTest"] boolValue];
+    if(isTest){
+        BaseTableModelItem *test = [BaseTableModelItem createWithImageName:@"mine_test" title:@"测试"];
+        BaseTableModelGroup *group5 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:nil settingItems:test, nil];
+        [items addObject:group5];
+    }
     
     return items;
 }
 
-+ (NSMutableArray *)getAccountItems{
+- (NSMutableArray *)getAccountItems{
     
     NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS];
     
@@ -79,7 +91,7 @@
     return items;
 }
 
-+ (NSMutableArray *)getSafeItems{
+- (NSMutableArray *)getSafeItems{
     NSMutableArray *items = [[NSMutableArray alloc] init];
     BaseTableModelItem *item1 = [BaseTableModelItem createWithTitle:@"密码修改"];
     NSString *gesturePwd = [[NSUserDefaults standardUserDefaults] objectForKey:@"gesturespassword"];
@@ -93,7 +105,7 @@
     BaseTableModelGroup *group1 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:nil settingItems:item1, item2, nil];
     [items addObject:group1];
     
-    NSDictionary *settingDict = [[SettingUtil alloc] loadSettingData];
+    NSDictionary *settingDict = [[SettingUtil shareInstance] loadSettingData];
     BOOL touchIDOn = [[settingDict objectForKey:@"touchID"] boolValue];
     
     BaseTableModelItem *item3 = [BaseTableModelItem createWithTitle:@"指纹解锁"];
@@ -106,7 +118,7 @@
     return items;
 }
 
-+(NSMutableArray *)getGestureItems{
+- (NSMutableArray *)getGestureItems{
     NSMutableArray *items = [[NSMutableArray alloc] init];
     
     BaseTableModelItem *item1= [BaseTableModelItem createWithTitle:@"删除手势密码"];
@@ -117,7 +129,7 @@
     return items;
 }
 
-+ (NSMutableArray *)getScheduleItems{
+- (NSMutableArray *)getScheduleItems{
     NSMutableArray *items = [[NSMutableArray alloc] init];
     BaseTableModelItem *item1 = [BaseTableModelItem createWithTitle:@"日程提醒管理"];
     BaseTableModelItem *item2= [BaseTableModelItem createWithTitle:@"办税日历"];
@@ -127,7 +139,7 @@
     return items;
 }
 
-+ (NSMutableArray *)getServiceItems{
+- (NSMutableArray *)getServiceItems{
     NSMutableArray *items = [[NSMutableArray alloc] init];
     BaseTableModelItem *item1 = [BaseTableModelItem createWithTitle:@"客服电话" subTitle:@"12366"];
     item1.accessoryType = UITableViewCellAccessoryNone;
@@ -143,7 +155,7 @@
     return items;
 }
 
-+ (NSMutableArray *)getSettingItems{
+- (NSMutableArray *)getSettingItems{
     
     NSMutableArray *items = [[NSMutableArray alloc] init];
     
@@ -162,7 +174,7 @@
     [items addObject:group1];
     
     // 获取声音、震动值
-    NSDictionary *settingDict = [[SettingUtil alloc] loadSettingData];
+    NSDictionary *settingDict = [[SettingUtil shareInstance] loadSettingData];
     BOOL voiceOn = [[settingDict objectForKey:@"voice"] boolValue];
     BOOL shakeOn = [[settingDict objectForKey:@"shake"] boolValue];
     

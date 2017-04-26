@@ -50,6 +50,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+        
+    // 初始化log日志信息(目前只记录上次运行日志，不然记录太多)
+    [Variable shareInstance].runtimeLog = [[[BaseSandBoxUtil shareInstance] loadDataWithFileName:@"runtimeLog.plist"] objectForKey:@"runtimeLog"]; // 运行时日志
+    [Variable shareInstance].crashLog = [[[BaseSandBoxUtil shareInstance] loadDataWithFileName:@"crashLog.plist"] objectForKey:@"crashLog"];   // 崩溃日志
+    
     
     // 隐藏顶部状态栏设为NO
     //[UIApplication sharedApplication].statusBarHidden = NO;
@@ -71,7 +76,7 @@
     _mapManager = [[BMKMapManager alloc] init];
     BOOL ret = [_mapManager start:BMAP_APPKEY generalDelegate:self];
     if (!ret) {
-        DLog(@"manager start failed!");
+        RLog(@"Yan -> BaiduMapManager Start Failed!");
     }
     
     // BaiduPush 注册消息推送服务
@@ -114,14 +119,14 @@
     //[[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
 
     [self deviceInfo];  // 获取设备基本信息
-    [[SettingUtil alloc] initSettingData];// 初始化默认值的setting数据(写入SandBox)
+    [[SettingUtil shareInstance] initSettingData];// 初始化默认值的setting数据(写入SandBox)
     [self inspectPermission];// 获取权限（网络访问、定位）
     
     // 初始化地图数据结构，写入SandBox
-    [[MapListUtil alloc] loadMapDataBlock:^(NSMutableArray *dataArray) {
+    [[MapListUtil shareInstance] loadMapDataBlock:^(NSMutableArray *dataArray) {
         DLog(@"Yan -> 初始化地图Tree数据成功");
     } failed:^(NSString *error) {
-        DLog(@"Yan -> 初始化地图Tree数据失败：error = %@", error);
+        RLog(@"Yan -> 初始化地图Tree数据失败：error = %@", error);
     }];
     
     //_viewController = [[ViewController alloc] init];
@@ -137,6 +142,9 @@
     
     // 添加欢迎页动画效果
     [self welcomeView];
+    
+    // 记录Crash信息
+    NSSetUncaughtExceptionHandler (&UncaughtExceptionHandler);
     
     return YES;
 }
@@ -174,6 +182,8 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    
+    [[BaseHandleUtil shareInstance] writeLogsToFile];
 }
 
 #pragma mark - Baidu Map SDK
@@ -208,7 +218,7 @@
         */
         
         // 读取系统设置文件内容(声音/震动)
-        NSDictionary *settingDict = [[SettingUtil alloc] loadSettingData];
+        NSDictionary *settingDict = [[SettingUtil shareInstance] loadSettingData];
         BOOL voiceOn = [[settingDict objectForKey:@"voice"] boolValue];
         BOOL shakeOn = [[settingDict objectForKey:@"shake"] boolValue];
         
@@ -221,9 +231,9 @@
         }
         
         int badge = [Variable shareInstance].unReadCount + 1;
-        [BaseHandleUtil setBadge:badge];
+        [[BaseHandleUtil shareInstance] setBadge:badge];
         if(_mainTabBarController.selectedIndex == 2){
-            MessageListViewController *messageListVC = (MessageListViewController *)[BaseHandleUtil getCurrentVC];
+            MessageListViewController *messageListVC = (MessageListViewController *)[[BaseHandleUtil shareInstance] getCurrentVC];
             [messageListVC autoLoadData];
         }
         
@@ -231,7 +241,7 @@
     else {  // 杀死状态下 或者后台开启状态下，直接跳转到跳转页面。
         
         int badge = [Variable shareInstance].unReadCount + 1;
-        [BaseHandleUtil setBadge:badge];
+        [[BaseHandleUtil shareInstance] setBadge:badge];
         
         _mainTabBarController.selectedIndex = 2;
         if([userInfo[@"url"] length] > 0){
@@ -244,7 +254,7 @@
             }
             [_mainTabBarController.selectedViewController pushViewController:webVC animated:YES];
         }else{
-            MessageListViewController *messageListVC = (MessageListViewController *)[BaseHandleUtil getCurrentVC];
+            MessageListViewController *messageListVC = (MessageListViewController *)[[BaseHandleUtil shareInstance] getCurrentVC];
             [messageListVC autoLoadData];
         }
         
@@ -263,7 +273,7 @@
     DLog(@"test:%@",deviceToken);
     [BPush registerDeviceToken:deviceToken];
     [BPush bindChannelWithCompleteHandler:^(id result, NSError *error) {
-        DLog(@"Yan -> 输出：%@", [NSString stringWithFormat:@"Method: %@\n%@",BPushRequestMethodBind,result]);
+        RLog(@"Yan -> 输出：%@", [NSString stringWithFormat:@"Method: %@\n%@",BPushRequestMethodBind,result]);
         // 需要在绑定成功后进行 settag listtag deletetag unbind 操作否则会失败
         // 注册BPush成功后，绑定推送设备
         [self registerPushID:result];
@@ -279,11 +289,11 @@
             }
             // 获取channel_id
             NSString *myChannel_id = [BPush getChannelId];
-            DLog(@"myChannel_id = %@",myChannel_id);
+            DLog(@"Yan -> BPush : myChannel_id = %@",myChannel_id);
             
             [BPush listTagsWithCompleteHandler:^(id result, NSError *error) {
                 if (result) {
-                    DLog(@"result ============== %@",result);
+                    RLog(@"Yan -> BPush : result ============== %@",result);
                 }
             }];
             [BPush setTag:@"Mytag" withCompleteHandler:^(id result, NSError *error) {
@@ -300,7 +310,7 @@
 
 // 当 DeviceToken 获取失败时，系统会回调此方法
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error{
-    DLog(@"DeviceToken 获取失败，原因：%@",error);
+    RLog(@"Yan -> DeviceToken 获取失败，原因：%@",error);
 }
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification{
@@ -337,14 +347,14 @@
             UIAlertView *networkingAlert =[[UIAlertView alloc]initWithTitle:@"没有网络" message:@"请在iPhone的\"设置-无限局域网/蜂窝移动网\"中打开网络连接。" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
             networkingAlert.tag = 1;
             [networkingAlert show];
-            DLog(@"没有网络");
+            RLog(@"Yan -> 没有网络");
             break;
         }
         case ReachableViaWWAN:
-            DLog(@"3G/4G");
+            RLog(@"Yan -> 3G/4G");
             break;
         case ReachableViaWiFi:
-            DLog(@"Wifi网络");
+            RLog(@"Yan -> Wifi网络");
             break;
     }
     
@@ -359,18 +369,18 @@
      // 获取相机权限
      [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {//相机权限
      if (granted) {
-     NSLog(@"Authorized");
+     DLog(@"Authorized");
      }else{
-     NSLog(@"Denied or Restricted");
+     DLog(@"Denied or Restricted");
      }
      }];
      
      // 获取相册权限
      [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
      if (status == PHAuthorizationStatusAuthorized) {
-     NSLog(@"Authorized");
+     DLog(@"Authorized");
      }else{
-     NSLog(@"Denied or Restricted");
+     DLog(@"Denied or Restricted");
      }
      }];
      
@@ -378,9 +388,9 @@
      EKEventStore *store = [[EKEventStore alloc]init];
      [store requestAccessToEntityType:EKEntityTypeEvent completion:^(BOOL granted, NSError * _Nullable error) {
      if (granted) {
-     NSLog(@"Authorized");
+     DLog(@"Authorized");
      }else{
-     NSLog(@"Denied or Restricted");
+     DLog(@"Denied or Restricted");
      }
      }];
      */
@@ -500,23 +510,23 @@
     if(nil != userDict){
         
         // 登录用户加载数据
-        [LoginUtil loginWithTokenSuccess:^{
+        [[LoginUtil shareInstance] loginWithTokenSuccess:^{
             DLog(@"Yan -> login成功");
             // 加载app列表
-            [[AppUtil alloc] initDataWithType:AppItemsTypeNone dataBlock:^(NSMutableArray *dataArray) {
+            [[AppUtil shareInstance] initDataWithType:AppItemsTypeNone dataBlock:^(NSMutableArray *dataArray) {
             } failed:^(NSString *error) {
-                DLog(@"初始化应用列表失败error=%@", error);
+                RLog(@"Yan -> 初始化应用列表失败 error = %@", error);
             }];
             
             // 获取未读条数
-            [[MessageListUtil alloc] getMsgUnReadCountSuccess:^(int unReadCount) {
+            [[MessageListUtil shareInstance] getMsgUnReadCountSuccess:^(int unReadCount) {
                 // 将未读条数存储到全局变量中
                 [Variable shareInstance].unReadCount = unReadCount;
-                [BaseHandleUtil setBadge:unReadCount];
+                [[BaseHandleUtil shareInstance] setBadge:unReadCount];
             }];
             
         } failed:^(NSString *error) {
-            DLog(@"Yan -> login失败 error = %@", error);
+            RLog(@"Yan -> login失败 error = %@", error);
         }];
         
     }
@@ -580,5 +590,17 @@
         //[view removeFromSuperview];
     }];
 }
+
+#pragma mark - 记录Crash信息
+void UncaughtExceptionHandler(NSException *exception) {
+
+    NSString *name = [exception name];
+    NSString *reason = [exception reason];
+    NSString *stack = [[exception callStackSymbols] componentsJoinedByString:@"\n"];
+    // 或者直接用代码，输入这个崩溃信息，以便在console中进一步分析错误原因
+    NSString *crashInfo = [NSString stringWithFormat:@"[DATE] = %@ \n [NAME] = %@ \n [REASON] = %@ \n [STACK TRACE] = %@", [[BaseHandleUtil shareInstance] getCurrentDate], name, reason, stack];
+    CLog(@"Yan -> Crash : \n %@", crashInfo);
+}
+
 
 @end

@@ -61,7 +61,7 @@
     if(_newsModel.style == NewsModelStyleText){
         float titleLabelX = _baseSpace;
         float titleLabelY = _baseSpace;
-        CGSize titleSize = [self sizeWithString:_newsModel.title font:TITLE_FONT maxSize:CGSizeMake(self.frameWidth - (_baseSpace * 2), MAXFLOAT)];
+        CGSize titleSize = [[BaseHandleUtil shareInstance] sizeWithString:_newsModel.title font:TITLE_FONT maxSize:CGSizeMake(self.frameWidth - (_baseSpace * 2), MAXFLOAT)];
         float titleLabelW = titleSize.width;
         float titleLabelH = titleSize.height;
         [_titleLabel setFrame:CGRectMake(titleLabelX, titleLabelY, titleLabelW, titleLabelH)];
@@ -88,7 +88,7 @@
         
         float titleLabelX = _baseSpace;
         float titleLabelY = _baseSpace;
-        CGSize titleSize = [self sizeWithString:_newsModel.title font:TITLE_FONT maxSize:CGSizeMake(self.frameWidth - (_baseSpace * 3) - fewImageViewW, MAXFLOAT)];
+        CGSize titleSize = [[BaseHandleUtil shareInstance] sizeWithString:_newsModel.title font:TITLE_FONT maxSize:CGSizeMake(self.frameWidth - (_baseSpace * 3) - fewImageViewW, MAXFLOAT)];
         float titleLabelW = titleSize.width;
         float titleLabelH = titleSize.height;
         [_titleLabel setFrame:CGRectMake(titleLabelX, titleLabelY, titleLabelW, titleLabelH)];
@@ -119,7 +119,7 @@
         
         float titleLabelX = _baseSpace;
         float titleLabelY = _baseSpace;
-        CGSize titleSize = [self sizeWithString:_newsModel.title font:TITLE_FONT maxSize:CGSizeMake(self.frameWidth - (_baseSpace * 2), MAXFLOAT)];
+        CGSize titleSize = [[BaseHandleUtil shareInstance] sizeWithString:_newsModel.title font:TITLE_FONT maxSize:CGSizeMake(self.frameWidth - (_baseSpace * 2), MAXFLOAT)];
         float titleLabelW = titleSize.width;
         float titleLabelH = titleSize.height;
         [_titleLabel setFrame:CGRectMake(titleLabelX, titleLabelY, titleLabelW, titleLabelH)];
@@ -276,23 +276,6 @@
     [_bottomLine setAlpha:0.4];
     [self.contentView addSubview:_bottomLine];
     return nil;
-}
-
-/**
- *  计算文本的宽高
- *
- *  @param str     需要计算的文本
- *  @param font    文本显示的字体
- *  @param maxSize 文本显示的范围
- *
- *  @return 文本占用的真实宽高
- */
-- (CGSize)sizeWithString:(NSString *)str font:(UIFont *)font maxSize:(CGSize)maxSize{
-    NSDictionary *dict = @{NSFontAttributeName : font};
-    // 如果将来计算的文字的范围超出了指定的范围,返回的就是指定的范围
-    // 如果将来计算的文字的范围小于指定的范围, 返回的就是真实的范围
-    CGSize size = [str boundingRectWithSize:maxSize options:NSStringDrawingUsesLineFragmentOrigin attributes:dict context:nil].size;
-    return size;
 }
 
 @end

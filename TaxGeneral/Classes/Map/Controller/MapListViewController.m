@@ -134,7 +134,7 @@ static NSString * const reuseIdentifier = @"reuseIdentifierGroup";
     // 点击cell跳转到地图页面处理方法
     if(startPosition == endPosition){
         if(!parentModel.latitude && !parentModel.longitude){
-            DLog(@"没有坐标点，不可以跳转");
+            RLog(@"没有坐标点，不可以跳转");
             return;
         }
         MapViewController *mapVC = [[MapViewController alloc] init];
@@ -174,11 +174,11 @@ static NSString * const reuseIdentifier = @"reuseIdentifierGroup";
 
 // 初始化数据
 -(void)initData{
-    _data = [[MapListUtil alloc] getMapData];
+    _data = [[MapListUtil shareInstance] getMapData];
     _tempData = [self createTempData:_data];
     if(_data.count <= 0){
         [YZProgressHUD showHUDView:self.view Mode:LOCKMODE Text:@"加载中..."];
-        [[MapListUtil alloc] loadMapDataBlock:^(NSMutableArray *dataArray) {
+        [[MapListUtil shareInstance] loadMapDataBlock:^(NSMutableArray *dataArray) {
             _data = dataArray;
             _tempData = [self createTempData:_data];
             

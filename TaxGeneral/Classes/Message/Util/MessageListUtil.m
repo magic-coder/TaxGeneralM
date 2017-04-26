@@ -14,9 +14,17 @@
 
 @implementation MessageListUtil
 
++ (instancetype)shareInstance{
+    static MessageListUtil *messageListUtil = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        messageListUtil = [[MessageListUtil alloc] init];
+    });
+    return messageListUtil;
+}
+
 - (NSDictionary *)loadMsgDataWithFile{
-    BaseSandBoxUtil *sandBoxUtil = [[BaseSandBoxUtil alloc] init];
-    return [sandBoxUtil loadDataWithFileName:FILE_NAME];
+    return [[BaseSandBoxUtil shareInstance] loadDataWithFileName:FILE_NAME];
 }
 
 - (int)getMsgUnReadCountSuccess:(void (^)(int))success{
@@ -64,8 +72,7 @@
             
             NSDictionary *resDict = [NSDictionary dictionaryWithObjectsAndKeys:totalPage, @"totalPage", results, @"results", nil];
             if(pageNo == 1){
-                BaseSandBoxUtil *sandBoxUtil = [[BaseSandBoxUtil alloc] init];
-                [sandBoxUtil writeData:resDict fileName:FILE_NAME];
+                [[BaseSandBoxUtil shareInstance] writeData:resDict fileName:FILE_NAME];
             }
             dataBlock(resDict);
         }else{
@@ -82,7 +89,7 @@
     [dict setObject:[NSNumber numberWithInt:pageNo] forKey:@"pageNo"];
     [dict setObject:[NSNumber numberWithInt:pageSize] forKey:@"pageSize"];
     
-    NSString *jsonString = [BaseHandleUtil dataToJsonString:dict];
+    NSString *jsonString = [[BaseHandleUtil shareInstance] dataToJsonString:dict];
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:jsonString, @"msg", nil];
     NSString *url = @"message/getMsgList";
@@ -93,7 +100,7 @@
         if([statusCode isEqualToString:@"00"]){
             dataBlock([self handleDataDict:responseDic]);
         }else if([statusCode isEqualToString:@"500"]){
-            [LoginUtil loginWithTokenSuccess:^{
+            [[LoginUtil shareInstance] loginWithTokenSuccess:^{
                 [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:parameters success:^(NSDictionary *responseDic) {
                     if([[responseDic objectForKey:@"statusCode"] isEqualToString:@"00"]){
                         dataBlock([self handleDataDict:responseDic]);
@@ -104,7 +111,7 @@
                     failed(error);
                 }];
             } failed:^(NSString *error) {
-                DLog(@"Yan -> token登录失败，注销用户，跳转至登录界面[error = %@]", error);
+                RLog(@"Yan -> token登录失败，注销用户，跳转至登录界面[error = %@]", error);
                 failed(@"510");
             }];
         }else{
@@ -117,7 +124,7 @@
 }
 
 - (void)deleteMsgWithSourceCode:(NSString *)sourceCode pushOrgCode:(NSString *)pushOrgCode success:(void (^)())success failed:(void (^)(NSString *))failed{
-    NSString *jsonString = [BaseHandleUtil dataToJsonString:@{@"sourcecode" : sourceCode, @"swjgdm" : pushOrgCode}];
+    NSString *jsonString = [[BaseHandleUtil shareInstance] dataToJsonString:@{@"sourcecode" : sourceCode, @"swjgdm" : pushOrgCode}];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:jsonString, @"msg", nil];
     NSString *url = @"message/delMsgBySource";
     [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:parameters success:^(NSDictionary *responseDic) {
@@ -140,13 +147,12 @@
     NSArray *results = [businessData objectForKey:@"results"];
     if(results.count <= 0){
         // 删除msg列表信息
-        [[BaseSandBoxUtil alloc] removeFileName:@"msgData.plist"];
+        [[BaseSandBoxUtil shareInstance] removeFileName:@"msgData.plist"];
     }
     
     NSDictionary *resDict = [NSDictionary dictionaryWithObjectsAndKeys: results, @"results", nil];
     // 写入本地缓存（SandBox）
-    BaseSandBoxUtil *sandBoxUtil = [[BaseSandBoxUtil alloc] init];
-    [sandBoxUtil writeData:resDict fileName:FILE_NAME];
+    [[BaseSandBoxUtil shareInstance] writeData:resDict fileName:FILE_NAME];
     
     return resDict;
 }

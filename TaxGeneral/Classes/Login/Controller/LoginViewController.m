@@ -235,7 +235,6 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
     
     NSString *userCode = _usernameTextField.text;
     NSString *password = _passwordTextField.text;
-    DLog(@"userCode=%@，password=%@",userCode, password);
     
     if(userCode.length > 0 && password.length > 0){
 
@@ -243,7 +242,7 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
         [dict setObject:userCode forKey:@"userCode"];
         [dict setObject:password forKey:@"password"];
         
-        [LoginUtil loginWithAppDict:dict success:^{
+        [[LoginUtil shareInstance] loginWithAppDict:dict success:^{
             [YZProgressHUD hiddenHUDForView:self.view];
             
             CATransition *animation = [CATransition animation];

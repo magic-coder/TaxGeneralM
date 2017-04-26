@@ -17,6 +17,7 @@
 #import "ServiceViewController.h"
 #import "SettingViewController.h"
 #import "AboutViewController.h"
+#import "LogViewController.h"
 
 @interface MineViewController ()
 
@@ -29,7 +30,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
         
-    self.data = [MineUtil getMineItems];
+    //self.data = [[MineUtil shareInstance] getMineItems];
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    
+    self.data = [[MineUtil shareInstance] getMineItems];
+    [self.tableView reloadData];
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -70,24 +78,22 @@
         viewController = aboutViewController;
     }
     if ([item.title isEqualToString:@"测试"]) {
-        [YZActionSheet showActionSheetWithTitle:nil cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"WKWebView" otherButtonTitles:@[@"UIWebView"] handler:^(YZActionSheet *actionSheet, NSInteger index) {
+        
+        [YZActionSheet showActionSheetWithTitle:@"Which logs do you want to see? Pelase choose!" cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Crash Logs" otherButtonTitles:@[@"Runtime Logs"] handler:^(YZActionSheet *actionSheet, NSInteger index) {
             if(index == -1){
-                // WKWebView
-                NSString *url = [NSString stringWithFormat:@"%@/test/file", SERVER_URL];
-                UIViewController *vc = nil;
-                vc = [[YZWebViewController alloc] initWithURL:url];
-                vc.title = @"WKWebView - Test";;
-                [self.navigationController pushViewController:vc animated:YES];
+                LogViewController *logViewController = [[LogViewController alloc] init];
+                logViewController.log = [Variable shareInstance].crashLog;
+                logViewController.title = @"Crash Logs";
+                [self.navigationController pushViewController:logViewController animated:YES];
             }
             if(index == 1){
-                // UIWebView
-                NSString *url = [NSString stringWithFormat:@"%@/test/file", SERVER_URL];
-                UIViewController *vc = nil;
-                vc = [[BaseWebViewController alloc] initWithURL:url];
-                vc.title = @"UIWebView - Test";
-                [self.navigationController pushViewController:vc animated:YES];
+                LogViewController *logViewController = [[LogViewController alloc] init];
+                logViewController.log = [Variable shareInstance].runtimeLog;
+                logViewController.title = @"Runtime Logs";
+                [self.navigationController pushViewController:logViewController animated:YES];
             }
         }];
+        
     }
     
     if(nil != viewController){

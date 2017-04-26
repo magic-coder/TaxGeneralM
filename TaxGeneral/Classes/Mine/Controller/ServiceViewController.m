@@ -23,7 +23,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.data = [MineUtil getServiceItems];
+    self.data = [[MineUtil shareInstance] getServiceItems];
 }
 
 - (void)didReceiveMemoryWarning {

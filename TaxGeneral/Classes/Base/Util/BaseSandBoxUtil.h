@@ -12,10 +12,12 @@
 
 @interface BaseSandBoxUtil : NSObject
 
-- (NSMutableDictionary *)loadDataWithFileName:(NSString *)fileName;    // 读取文件
++ (instancetype)shareInstance;                                          // 单例模式
 
-- (BOOL)writeData:(NSDictionary *)data fileName:(NSString *)fileName;    // 写入文件
+- (NSMutableDictionary *)loadDataWithFileName:(NSString *)fileName;     // 读取文件
 
-- (void)removeFileName:(NSString *)fileName;    // 删除文件
+- (BOOL)writeData:(NSDictionary *)data fileName:(NSString *)fileName;   // 写入文件
+
+- (void)removeFileName:(NSString *)fileName;                            // 删除文件
 
 @end

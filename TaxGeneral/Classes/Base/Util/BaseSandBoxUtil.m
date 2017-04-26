@@ -12,9 +12,18 @@
 
 @implementation BaseSandBoxUtil
 
++ (instancetype)shareInstance{
+    static BaseSandBoxUtil *baseSandBoxUtil = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        baseSandBoxUtil = [[BaseSandBoxUtil alloc] init];
+    });
+    return baseSandBoxUtil;
+}
+
 #pragma mark - 沙盒操作（SandBox）
 #pragma mark 读取文件数据
--(NSMutableDictionary *)loadDataWithFileName:(NSString *)fileName{
+- (NSMutableDictionary *)loadDataWithFileName:(NSString *)fileName{
     
     NSString *dataFile = [self getFile:fileName];
     //读取所有内容
@@ -26,7 +35,7 @@
 }
 
 #pragma mark 将数据写入文件
--(BOOL)writeData:(NSDictionary *)data fileName:(NSString *)fileName{
+- (BOOL)writeData:(NSDictionary *)data fileName:(NSString *)fileName{
     
     NSString *dataFile = [self getFile:fileName];
     
@@ -41,7 +50,7 @@
 }
 
 #pragma mark 删除文件
--(void)removeFileName:(NSString *)fileName{
+- (void)removeFileName:(NSString *)fileName{
     
     NSString *dataFile = [self getFile:fileName];
     
@@ -57,7 +66,7 @@
 
 #pragma mark - 该类的工具方法
 #pragma mark 获取路径
--(NSString *)getPath{
+- (NSString *)getPath{
     // 获取Documents目录
     NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     //获取Documents文件夹目录,第一个参数是说明获取Doucments文件夹目录，第二个参数说明是在当前应用沙盒中获取，所有应用沙盒目录组成一个数组结构的数据存放
@@ -68,7 +77,7 @@
 }
 
 #pragma mark 文件是否需要创建
--(BOOL)isFileNeedCreate:(NSString *)filePath{
+- (BOOL)isFileNeedCreate:(NSString *)filePath{
     if ( NO == [[NSFileManager defaultManager] fileExistsAtPath:filePath] ){
         return [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil];
     }
@@ -76,7 +85,7 @@
 }
 
 #pragma mark 获取完整的沙盒文件名
--(NSString *)getFile:(NSString *)fileName{
+- (NSString *)getFile:(NSString *)fileName{
     //获取应用程序沙盒的Documents目录
     NSString *documentsPath = [self getPath];
     

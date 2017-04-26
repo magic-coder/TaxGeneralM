@@ -12,6 +12,8 @@
 
 @interface MapListUtil : NSObject
 
++ (instancetype)shareInstance;
+
 - (NSMutableArray *)getMapData;
 
 - (void)loadMapDataBlock:(void(^)(NSMutableArray *dataArray))dataBlock failed:(void(^)(NSString *error))failed;

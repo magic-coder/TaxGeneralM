@@ -76,7 +76,7 @@
                 // 请求失败
                 failure([self stringWithError:error]);
                 
-                DLog(@"\n GET请求失败:%@\n\n", [error localizedDescription]);
+                RLog(@"\n GET请求失败:%@\n\n", [error localizedDescription]);
             }];
         }
             break;
@@ -98,7 +98,7 @@
                 // 请求失败
                 failure([self stringWithError:error]);
                 
-                DLog(@"\n POST请求失败:%@\n\n",[error localizedDescription]);
+                RLog(@"\n POST请求失败:%@\n\n",[error localizedDescription]);
                 
             }];
         }

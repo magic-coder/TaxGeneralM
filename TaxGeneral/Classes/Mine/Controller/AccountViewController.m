@@ -21,7 +21,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.data = [MineUtil getAccountItems];
+    self.data = [[MineUtil shareInstance] getAccountItems];
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -32,7 +32,7 @@
     if([item.title isEqualToString:@"退出登录"]){
         [YZActionSheet showActionSheetWithTitle:@"退出登录后下次使用时需重新登录，您确定要退出吗？" cancelButtonTitle:@"取消" destructiveButtonTitle:@"退出" otherButtonTitles:nil handler:^(YZActionSheet *actionSheet, NSInteger index) {
             if(-1 == index){
-                [AccountUtil accountLogout];
+                [[AccountUtil shareInstance] accountLogout];
                 [self.navigationController popViewControllerAnimated:YES];
             }
         }];

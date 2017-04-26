@@ -15,9 +15,17 @@
 
 @implementation NewsUtil
 
++ (instancetype)shareInstance{
+    static NewsUtil *newsUtil = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        newsUtil = [[NewsUtil alloc] init];
+    });
+    return newsUtil;
+}
+
 - (NSMutableDictionary *)loadData{
-    BaseSandBoxUtil *sandBoxUtil = [[BaseSandBoxUtil alloc] init];
-    NSMutableDictionary *newsDict = [sandBoxUtil loadDataWithFileName:FILE_NAME];
+    NSMutableDictionary *newsDict = [[BaseSandBoxUtil shareInstance] loadDataWithFileName:FILE_NAME];
     return newsDict;
 }
 
@@ -26,7 +34,7 @@
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     [dict setObject:[NSNumber numberWithInt:pageSize] forKey:@"pageSize"];
     
-    NSString *jsonString = [BaseHandleUtil dataToJsonString:dict];
+    NSString *jsonString = [[BaseHandleUtil shareInstance] dataToJsonString:dict];
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:jsonString, @"msg", nil];
     
@@ -56,8 +64,7 @@
             
             NSDictionary *resDict = [NSDictionary dictionaryWithObjectsAndKeys:loopResult, @"loopResult", newsResult, @"newsResult", totalPage, @"totalPage", nil];
             
-            BaseSandBoxUtil *sandBoxUtil = [[BaseSandBoxUtil alloc] init];
-            [sandBoxUtil writeData:resDict fileName:FILE_NAME];
+            [[BaseSandBoxUtil shareInstance] writeData:resDict fileName:FILE_NAME];
             dataBlock(resDict);
         }else{
             failed([responseDic objectForKey:@"msg"]);
@@ -73,7 +80,7 @@
     [dict setObject:[NSNumber numberWithInt:pageNo] forKey:@"pageNo"];
     [dict setObject:[NSNumber numberWithInt:pageSize] forKey:@"pageSize"];
     
-    NSString *jsonString = [BaseHandleUtil dataToJsonString:dict];
+    NSString *jsonString = [[BaseHandleUtil shareInstance] dataToJsonString:dict];
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:jsonString, @"msg", nil];
     

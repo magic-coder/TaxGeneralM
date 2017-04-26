@@ -27,7 +27,6 @@
 @property (nonatomic, strong) AppTopView *topView;
 @property (nonatomic, strong) UIImageView *topLogoImageView;    // 顶部回弹logo视图
 @property (nonatomic, assign) BOOL adjustStatus;                // 调整状态
-@property (nonatomic, strong) AppUtil *appUtil;
 
 @end
 
@@ -36,8 +35,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
-    _appUtil = [[AppUtil alloc] init];
     
     // 设置导航控制器的代理为self
     self.navigationController.delegate = self;
@@ -62,12 +59,12 @@
     _adjustStatus = NO;// 初始化调整状态值
     
     if([self isLogin]){
-        self.data = [_appUtil loadDataWithType:AppItemsTypeNone];
+        self.data = [[AppUtil shareInstance] loadDataWithType:AppItemsTypeNone];
         if(self.data != nil){
             [self.collectionView reloadData];
         }else{
             [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"加载中..."];
-            [_appUtil initDataWithType:AppItemsTypeNone dataBlock:^(NSMutableArray *dataArray) {
+            [[AppUtil shareInstance] initDataWithType:AppItemsTypeNone dataBlock:^(NSMutableArray *dataArray) {
                 [YZProgressHUD hiddenHUDForView:SELF_VIEW];
                 self.data = dataArray;
                 [self.collectionView reloadData];
@@ -200,7 +197,7 @@
         otherGroup = [[BaseCollectionModelGroup alloc] init];
         otherGroup.items = [[NSMutableArray alloc] init];
     }
-    BaseCollectionModelGroup *allGroup = [[_appUtil loadDataWithType:AppItemsTypeEdit] objectAtIndex:1];
+    BaseCollectionModelGroup *allGroup = [[[AppUtil shareInstance] loadDataWithType:AppItemsTypeEdit] objectAtIndex:1];
     
     NSMutableArray *mineData = [[NSMutableArray alloc] init];
     NSMutableArray *otherData = [[NSMutableArray alloc] init];
@@ -232,7 +229,7 @@
     
     NSMutableDictionary *dataDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:mineData, @"mineData", otherData, @"otherData", allData, @"allData", nil];
     
-    [_appUtil writeNewAppData:dataDict];
+    [[AppUtil shareInstance] writeNewAppData:dataDict];
 }
 
 #pragma mark - 判断是否登录，及跳转登录
@@ -240,12 +237,12 @@
 -(BOOL)isLogin{
     NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS];
     if(nil != userDict){
-        [LoginUtil loginWithTokenSuccess:^{
+        [[LoginUtil shareInstance] loginWithTokenSuccess:^{
         } failed:^(NSString *error) {
             [YZAlertView showAlertWith:self title:@"登录失效" message:@"您当前登录信息已失效，请重新登录！" callbackBlock:^(NSInteger btnIndex) {
                 // 注销方法
                 [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"注销中..."];
-                [AccountUtil accountLogout];
+                [[AccountUtil shareInstance] accountLogout];
                 [YZProgressHUD hiddenHUDForView:SELF_VIEW];
                 
                 LoginViewController *loginVC = [[LoginViewController alloc] init];

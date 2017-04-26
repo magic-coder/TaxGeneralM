@@ -41,6 +41,7 @@
 	SDWebImage & FLAnimatedImage(异步请求加载图片支持https)
 	Sangfor(深信服VPN)
 	Reachability(检测网络链接状态)
+	Lumberjack(捕获日志类库)
 
 # 自己进行封装的组件(Element)
 	YZNetworkingManager(封装网络请求)

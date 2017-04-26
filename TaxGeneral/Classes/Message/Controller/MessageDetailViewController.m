@@ -20,7 +20,6 @@
 @property (nonatomic, strong) NSMutableArray *data;             // 消息数据内容列表
 @property (nonatomic, assign) int pageNo;                       // 页码值
 @property (nonatomic, assign) int totalPage;            // 最大页
-@property (nonatomic, strong) MessageDetailUtil *msgDetailUtil;
 
 @end
 
@@ -33,7 +32,6 @@ static int const pageSize = 5;
     [super viewDidLoad];
         
     _data = [[NSMutableArray alloc] init];
-    _msgDetailUtil = [[MessageDetailUtil alloc] init];
     
     [self.view setBackgroundColor:DEFAULT_BACKGROUND_COLOR];
     [self.tableView setBackgroundColor:DEFAULT_BACKGROUND_COLOR];
@@ -107,8 +105,8 @@ static int const pageSize = 5;
     if(type == MsgDetailViewCellMenuTypeCalendar){
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-        NSDate *startDate = [formatter dateFromString:@"2017-04-26 14:30:00"];
-        NSDate *endDate = [formatter dateFromString:@"2017-04-26 16:00:00"];
+        NSDate *startDate = [formatter dateFromString:@"2017-04-27 14:30:00"];
+        NSDate *endDate = [formatter dateFromString:@"2017-04-27 16:00:00"];
         NSString *notes = @"";
         if(model.url.length > 0){
              notes = [NSString stringWithFormat:@"会议详细内容请点击地址查看：%@", model.url];
@@ -116,7 +114,7 @@ static int const pageSize = 5;
         
         NSString *alarmStr = [NSString stringWithFormat:@"%lf", 60.0f * -5.0f * 1];// 设置提醒时间为5分钟前
         
-        [BaseHandleUtil createEventCalendarTitle:model.title location:model.content startDate:startDate endDate:endDate notes:(NSString *)notes allDay:NO alarmArray:@[alarmStr] block:^(NSString *str) {
+        [[BaseHandleUtil shareInstance] createEventCalendarTitle:model.title location:model.content startDate:startDate endDate:endDate notes:(NSString *)notes allDay:YES alarmArray:@[alarmStr] block:^(NSString *str) {
             [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:str];
         }];
     }
@@ -134,9 +132,9 @@ static int const pageSize = 5;
         [YZActionSheet showActionSheetWithTitle:@"是否删除该条消息？" cancelButtonTitle:@"取消" destructiveButtonTitle:@"确定" otherButtonTitles:nil handler:^(YZActionSheet *actionSheet, NSInteger index) {
             if(index == -1){
                 [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"删除中..."];
-                [_msgDetailUtil deleteMsgWithUUID:cell.messageDetailModel.uuid success:^{
+                [[MessageDetailUtil shareInstance] deleteMsgWithUUID:cell.messageDetailModel.uuid success:^{
                     // 删除成功，重新获取数据
-                    [[MessageListUtil alloc] loadMsgDataWithPageNo:1 pageSize:100 dataBlock:^(NSDictionary *dataDict) {
+                    [[MessageListUtil shareInstance] loadMsgDataWithPageNo:1 pageSize:100 dataBlock:^(NSDictionary *dataDict) {
                         [YZProgressHUD hiddenHUDForView:SELF_VIEW];
                         // 移除本行
                         [_data removeObjectAtIndex:cell.indexPath.section];
@@ -168,7 +166,7 @@ static int const pageSize = 5;
     [param setObject:_pushOrgCode forKey:@"swjgdm"];
     
     
-    [_msgDetailUtil loadMsgDataWithParam:param dataBlock:^(NSDictionary *dataDict) {
+    [[MessageDetailUtil shareInstance] loadMsgDataWithParam:param dataBlock:^(NSDictionary *dataDict) {
         [self handleDataDict:dataDict];// 数据处理
         [self.tableView reloadData];
         [self reloadAfterMessage:NO];
@@ -181,7 +179,7 @@ static int const pageSize = 5;
             [YZAlertView showAlertWith:self title:@"登录失效" message:@"您当前登录信息已失效，请重新登录！" callbackBlock:^(NSInteger btnIndex) {
                 // 注销方法
                 [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"注销中..."];
-                [AccountUtil accountLogout];
+                [[AccountUtil shareInstance] accountLogout];
                 [YZProgressHUD hiddenHUDForView:SELF_VIEW];
                 
                 LoginViewController *loginVC = [[LoginViewController alloc] init];
@@ -214,7 +212,7 @@ static int const pageSize = 5;
     [param setObject:_sourceCode forKey:@"sourcecode"];
     [param setObject:_pushOrgCode forKey:@"swjgdm"];
     
-    [_msgDetailUtil loadMsgDataWithParam:param dataBlock:^(NSDictionary *dataDict) {
+    [[MessageDetailUtil shareInstance] loadMsgDataWithParam:param dataBlock:^(NSDictionary *dataDict) {
         // 加载结束
         [self.tableView.mj_header endRefreshing];
         if(_pageNo == _totalPage){

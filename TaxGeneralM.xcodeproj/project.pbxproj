@@ -58,6 +58,7 @@
 		1856DA3F1E482C900092DE3F /* AccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1856DA3E1E482C900092DE3F /* AccountViewController.m */; };
 		1856DA4E1E48765E0092DE3F /* ServiceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1856DA4D1E48765E0092DE3F /* ServiceViewController.m */; };
 		1856DA511E4877D90092DE3F /* SafeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1856DA501E4877D90092DE3F /* SafeViewController.m */; };
+		1858FDFA1EB04BE100EB5CD9 /* LogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1858FDF91EB04BE100EB5CD9 /* LogViewController.m */; };
 		18779CF41D62B9FF00191646 /* MessageListUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 18779CF31D62B9FF00191646 /* MessageListUtil.m */; };
 		188052211D3CBEC200C36F00 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 188052201D3CBEC200C36F00 /* main.m */; };
 		188052241D3CBEC200C36F00 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 188052231D3CBEC200C36F00 /* AppDelegate.m */; };
@@ -350,6 +351,8 @@
 		1856DA4D1E48765E0092DE3F /* ServiceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ServiceViewController.m; path = Classes/Mine/Controller/ServiceViewController.m; sourceTree = "<group>"; };
 		1856DA4F1E4877D90092DE3F /* SafeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SafeViewController.h; path = Classes/Mine/Controller/SafeViewController.h; sourceTree = "<group>"; };
 		1856DA501E4877D90092DE3F /* SafeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SafeViewController.m; path = Classes/Mine/Controller/SafeViewController.m; sourceTree = "<group>"; };
+		1858FDF81EB04BE100EB5CD9 /* LogViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LogViewController.h; path = Classes/Mine/Controller/LogViewController.h; sourceTree = "<group>"; };
+		1858FDF91EB04BE100EB5CD9 /* LogViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LogViewController.m; path = Classes/Mine/Controller/LogViewController.m; sourceTree = "<group>"; };
 		186BEC941D3F5302003F84A4 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		18779CF21D62B9FF00191646 /* MessageListUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageListUtil.h; path = Classes/Message/Util/MessageListUtil.h; sourceTree = "<group>"; };
 		18779CF31D62B9FF00191646 /* MessageListUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MessageListUtil.m; path = Classes/Message/Util/MessageListUtil.m; sourceTree = "<group>"; };
@@ -900,6 +903,15 @@
 			name = Util;
 			sourceTree = "<group>";
 		};
+		1858FDFB1EB0757300EB5CD9 /* Test */ = {
+			isa = PBXGroup;
+			children = (
+				1858FDF81EB04BE100EB5CD9 /* LogViewController.h */,
+				1858FDF91EB04BE100EB5CD9 /* LogViewController.m */,
+			);
+			name = Test;
+			sourceTree = "<group>";
+		};
 		186512961D50A1C800D8E2D1 /* Mine */ = {
 			isa = PBXGroup;
 			children = (
@@ -1379,6 +1391,7 @@
 				18DEE9541E4AA5B100536155 /* Service */,
 				18DEE9531E4AA5A000536155 /* Setting */,
 				18DEE9521E4AA59500536155 /* About */,
+				1858FDFB1EB0757300EB5CD9 /* Test */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -2156,6 +2169,7 @@
 				183C19D41E69514100D7203F /* NSString+MJExtension.m in Sources */,
 				18293D911D631A7F008A4A8C /* MJRefreshGifHeader.m in Sources */,
 				18FF35231E5AD8DE000887E2 /* MapListModel.m in Sources */,
+				1858FDFA1EB04BE100EB5CD9 /* LogViewController.m in Sources */,
 				18DC62181E641632001834D1 /* YZTouchID.m in Sources */,
 				18D5B2571E6FD21E00F5F555 /* SDImageCache.m in Sources */,
 				18293D961D631A7F008A4A8C /* NSBundle+MJRefresh.m in Sources */,

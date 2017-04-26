@@ -12,13 +12,17 @@
 
 @interface BaseHandleUtil : NSObject
 
-+ (NSString *)dataToJsonString:(id)object;      // 数据转换jsonString
++ (instancetype)shareInstance;                  // 单例模式
 
-+ (void)setBadge:(int)badge;                    // 设置应用、消息角标
+- (NSString *)dataToJsonString:(id)object;      // 数据转换jsonString
 
-+ (UIViewController *)getCurrentVC;             // 获取当前展示的视图
+- (void)setBadge:(int)badge;                    // 设置应用、消息角标
 
-+ (int)getRandomNumber:(int)from to:(int)to;    // 获取一个随机整数，范围在[from,to），包括from，包括to
+- (UIViewController *)getCurrentVC;             // 获取当前展示的视图
+
+- (int)getRandomNumber:(int)from to:(int)to;    // 获取一个随机整数，范围在[from,to），包括from，包括to
+
+- (NSString *)getCurrentDate;                   // 获取当前时间
 
 /**
  *  将App事件添加到系统日历提醒事项，实现闹铃提醒的功能
@@ -31,6 +35,26 @@
  *  @param alarmArray 闹钟集合
  *  @param block      回调方法
  */
-+ (void)createEventCalendarTitle:(NSString *)title location:(NSString *)location startDate:(NSDate *)startDate endDate:(NSDate *)endDate notes:(NSString *)notes allDay:(BOOL)allDay alarmArray:(NSArray *)alarmArray block:(void(^)(NSString *str))block;
+- (void)createEventCalendarTitle:(NSString *)title location:(NSString *)location startDate:(NSDate *)startDate endDate:(NSDate *)endDate notes:(NSString *)notes allDay:(BOOL)allDay alarmArray:(NSArray *)alarmArray block:(void(^)(NSString *str))block;
+
+/**
+ *  计算文本的宽高
+ *
+ *  @param str     需要计算的文本
+ *  @param font    文本显示的字体
+ *  @param maxSize 文本显示的范围
+ *
+ *  @return 文本占用的真实宽高
+ */
+- (CGSize)sizeWithString:(NSString *)str font:(UIFont *)font maxSize:(CGSize)maxSize;
+
+// 组织拼接log
+- (void)organizeRuntimeLog:(NSString *)log;
+
+// 组织拼接CrashLog
+- (void)organizeCrashLog:(NSString *)log;
+
+// 将所有日志写入到本地文件
+- (void)writeLogsToFile;
 
 @end

@@ -25,7 +25,6 @@
 @property (nonatomic, strong) NSMutableArray *data;             // 消息列表数据
 @property (nonatomic, strong) UIImageView *topLogoImageView;    // 顶部回弹logo视图
 @property (nonatomic, assign) int pageNo;                       // 页码值
-@property (nonatomic, strong) MessageListUtil *msgListUtil;
 
 @end
 
@@ -37,7 +36,6 @@ static int const pageSize = 100;
 - (void)viewDidLoad {
     [super viewDidLoad];
     _data = [[NSMutableArray alloc] init];
-    _msgListUtil = [[MessageListUtil alloc] init];
     
     [self.view setBackgroundColor:DEFAULT_BACKGROUND_COLOR];
     [self.tableView setBackgroundColor:[UIColor whiteColor]];
@@ -72,7 +70,7 @@ static int const pageSize = 100;
             //[Variable shareInstance].msgRefresh = NO;
             //item.badgeValue = nil;
         }else{
-            NSDictionary *dataDict = [_msgListUtil loadMsgDataWithFile];
+            NSDictionary *dataDict = [[MessageListUtil shareInstance] loadMsgDataWithFile];
             if(dataDict != nil){
                 [self handleDataDict:dataDict];// 数据处理
             }else{
@@ -157,17 +155,17 @@ static int const pageSize = 100;
             pushOrgCode = @"";
         }
         [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"删除中..."];
-        [_msgListUtil deleteMsgWithSourceCode:sourceCode pushOrgCode:pushOrgCode success:^{
+        [[MessageListUtil shareInstance] deleteMsgWithSourceCode:sourceCode pushOrgCode:pushOrgCode success:^{
             [YZProgressHUD hiddenHUDForView:SELF_VIEW];
             // 删除成功，重新加载数据
-            [_msgListUtil loadMsgDataWithPageNo:_pageNo pageSize:pageSize dataBlock:^(NSDictionary *dataDict) {
+            [[MessageListUtil shareInstance] loadMsgDataWithPageNo:_pageNo pageSize:pageSize dataBlock:^(NSDictionary *dataDict) {
             } failed:^(NSString *error) {
             }];
             // 移除本行
             [[_data objectAtIndex:indexPath.section] removeObjectAtIndex:indexPath.row];
             [tableView reloadData];
             // 设置角标
-            [BaseHandleUtil setBadge:[Variable shareInstance].unReadCount - [cell.messageListModel.unReadCount intValue]];
+            [[BaseHandleUtil shareInstance] setBadge:[Variable shareInstance].unReadCount - [cell.messageListModel.unReadCount intValue]];
             
         } failed:^(NSString *error) {
             [YZProgressHUD hiddenHUDForView:SELF_VIEW];
@@ -202,7 +200,7 @@ static int const pageSize = 100;
     MessageListViewCell *cell = (MessageListViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     
     if([cell.messageListModel.unReadCount intValue] > 0){
-        NSDictionary *dataDict = [_msgListUtil loadMsgDataWithFile];
+        NSDictionary *dataDict = [[MessageListUtil shareInstance] loadMsgDataWithFile];
         
         NSArray *results = [dataDict objectForKey:@"results"];
         NSMutableArray *mutableResults = [[NSMutableArray alloc] init];
@@ -229,8 +227,7 @@ static int const pageSize = 100;
         
         NSDictionary *resDict = [NSDictionary dictionaryWithObjectsAndKeys: mutableResults, @"results", nil];
         // 写入本地缓存（SandBox）
-        BaseSandBoxUtil *sandBoxUtil = [[BaseSandBoxUtil alloc] init];
-        [sandBoxUtil writeData:resDict fileName:@"msgData.plist"];
+        [[BaseSandBoxUtil shareInstance] writeData:resDict fileName:@"msgData.plist"];
     }
     
     messageDetailVC.title = cell.messageListModel.name; // 设置详细视图标题
@@ -287,7 +284,7 @@ static int const pageSize = 100;
     
     self.navigationItem.titleView = titleView;
     _pageNo = 1;
-    [_msgListUtil loadMsgDataWithPageNo:_pageNo pageSize:pageSize dataBlock:^(NSDictionary *dataDict) {
+    [[MessageListUtil shareInstance] loadMsgDataWithPageNo:_pageNo pageSize:pageSize dataBlock:^(NSDictionary *dataDict) {
         [self handleDataDict:dataDict];// 数据处理
         
         self.navigationItem.titleView = nil;
@@ -300,7 +297,7 @@ static int const pageSize = 100;
             [YZAlertView showAlertWith:self title:@"登录失效" message:@"您当前登录信息已失效，请重新登录！" callbackBlock:^(NSInteger btnIndex) {
                 // 注销方法
                 [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"注销中..."];
-                [AccountUtil accountLogout];
+                [[AccountUtil shareInstance] accountLogout];
                 [YZProgressHUD hiddenHUDForView:SELF_VIEW];
                 
                 LoginViewController *loginVC = [[LoginViewController alloc] init];
@@ -344,7 +341,7 @@ static int const pageSize = 100;
         badge += [model.unReadCount intValue];
     }
     [Variable shareInstance].unReadCount = badge;
-    [BaseHandleUtil setBadge:badge];// 设置提醒角标
+    [[BaseHandleUtil shareInstance] setBadge:badge];// 设置提醒角标
     
     [_data addObject:sysData];
     [_data addObject:userData];

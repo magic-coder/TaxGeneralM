@@ -23,7 +23,7 @@
     
     self.delegate = self;
     
-    self.data = [MineUtil getSettingItems];
+    self.data = [[MineUtil shareInstance] getSettingItems];
     
     // 增加监听（监听程序从后台切入前台）
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appHasGoneInForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
@@ -39,7 +39,7 @@
 
 #pragma mark - 进入前台方法
 - (void)appHasGoneInForeground:(NSNotificationCenter *)defaultCenter{
-    self.data = [MineUtil getSettingItems];
+    self.data = [[MineUtil shareInstance] getSettingItems];
     [self.tableView reloadData];
 }
 
@@ -70,7 +70,7 @@
                     }
                     [[SDImageCache sharedImageCache] clearDiskOnCompletion:^{
                         
-                        [[BaseSandBoxUtil alloc] removeFileName:@"newsData.plist"];
+                        [[BaseSandBoxUtil shareInstance] removeFileName:@"newsData.plist"];
                         
                         UIImage *image = [UIImage imageNamed:@"common_mark_success"];
                         UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
@@ -78,7 +78,7 @@
                         hud.mode = MBProgressHUDModeCustomView;
                         hud.labelText = @"清理完成！";
                         // 重新加载数据
-                        self.data = [MineUtil getSettingItems];
+                        self.data = [[MineUtil shareInstance] getSettingItems];
                         [self.tableView reloadData];
                     }];
                     [[SDImageCache sharedImageCache] clearMemory];
@@ -99,7 +99,7 @@
     NSNumber *open = [NSNumber numberWithBool:YES];
     NSNumber *close = [NSNumber numberWithBool:NO];
     
-    NSMutableDictionary *settingDict = [[SettingUtil alloc] loadSettingData];
+    NSMutableDictionary *settingDict = [[SettingUtil shareInstance] loadSettingData];
     
     NSInteger tag = sender.tag;
     if([sender isOn]){
@@ -125,7 +125,7 @@
     DLog(@"settingDict = %@", settingDict);
     
     // 写入本地SandBox设置文件中
-    BOOL res = [[SettingUtil alloc] writeSettingData:settingDict];
+    BOOL res = [[SettingUtil shareInstance] writeSettingData:settingDict];
     if(!res){
         [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:@"设置异常！"];
     }

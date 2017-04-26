@@ -14,7 +14,16 @@
 
 @implementation BaseHandleUtil
 
-+ (NSString *)dataToJsonString:(id)object{
++ (instancetype)shareInstance{
+    static BaseHandleUtil *baseHandleUtil = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        baseHandleUtil = [[BaseHandleUtil alloc] init];
+    });
+    return baseHandleUtil;
+}
+
+- (NSString *)dataToJsonString:(id)object{
     NSString *jsonString = nil;
     NSError *error;
     
@@ -22,13 +31,13 @@
     if(jsonData){
         jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     }else{
-        DLog(@"Yan -> 转换失败 error : %@",error);
+        RLog(@"Yan -> JSON 转换失败 error : %@",error);
     }
     
     return jsonString;
 }
 
-+ (void)setBadge:(int)badge{
+- (void)setBadge:(int)badge{
     // 设置app角标(若为0则系统会自动清除角标)
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:badge];
     
@@ -43,7 +52,7 @@
 
 
 #pragma mark - 获取当前展示的视图
-+ (UIViewController *)getCurrentVC{
+- (UIViewController *)getCurrentVC{
     UIViewController *result = nil;
     UIWindow * window = [[UIApplication sharedApplication] keyWindow];
     // app默认windowLevel是UIWindowLevelNormal，如果不是，找到UIWindowLevelNormal的
@@ -80,11 +89,18 @@
 }
 
 // 获取一个随机整数，范围在[from,to），包括from，包括to
-+ (int)getRandomNumber:(int)from to:(int)to{
+- (int)getRandomNumber:(int)from to:(int)to{
     return (int)(from + (arc4random() % (to - from + 1)));
 }
 
-+ (void)createEventCalendarTitle:(NSString *)title location:(NSString *)location startDate:(NSDate *)startDate endDate:(NSDate *)endDate notes:(NSString *)notes allDay:(BOOL)allDay alarmArray:(NSArray *)alarmArray block:(void(^)(NSString *str))block{
+- (NSString *)getCurrentDate{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    
+    return [formatter stringFromDate:[NSDate date]];
+}
+
+- (void)createEventCalendarTitle:(NSString *)title location:(NSString *)location startDate:(NSDate *)startDate endDate:(NSDate *)endDate notes:(NSString *)notes allDay:(BOOL)allDay alarmArray:(NSArray *)alarmArray block:(void(^)(NSString *str))block{
     
     EKEventStore *eventStore = [[EKEventStore alloc] init];
     
@@ -125,6 +141,33 @@
             });
         }];
     }
+}
+
+- (CGSize)sizeWithString:(NSString *)str font:(UIFont *)font maxSize:(CGSize)maxSize{
+    NSDictionary *dict = @{NSFontAttributeName : font};
+    // 如果将来计算的文字的范围超出了指定的范围,返回的就是指定的范围
+    // 如果将来计算的文字的范围小于指定的范围, 返回的就是真实的范围
+    CGSize size = [str boundingRectWithSize:maxSize options:NSStringDrawingUsesLineFragmentOrigin attributes:dict context:nil].size;
+    return size;
+}
+
+- (void)organizeRuntimeLog:(NSString *)log{
+    log = [NSString stringWithFormat:@"[DATE] = %@ \n %@", [self getCurrentDate], log];
+    NSString *tempLog = [NSString stringWithFormat:@"%@ \n %@", log, [Variable shareInstance].runtimeLog];
+    [Variable shareInstance].runtimeLog = tempLog;
+}
+
+- (void)organizeCrashLog:(NSString *)log{
+    NSString *tempLog = [NSString stringWithFormat:@"%@ \n %@", log, [Variable shareInstance].crashLog];
+    [Variable shareInstance].crashLog = tempLog;
+    
+    NSDictionary *crashLogDict = [NSDictionary dictionaryWithObjectsAndKeys:[Variable shareInstance].crashLog, @"crashLog", nil];
+    [[BaseSandBoxUtil shareInstance] writeData:crashLogDict fileName:@"crashLog.plist"];
+}
+
+- (void)writeLogsToFile{
+    NSDictionary *runtimeLogDict = [NSDictionary dictionaryWithObjectsAndKeys:[Variable shareInstance].runtimeLog, @"runtimeLog", nil];
+    [[BaseSandBoxUtil shareInstance] writeData:runtimeLogDict fileName:@"runtimeLog.plist"];
 }
 
 @end

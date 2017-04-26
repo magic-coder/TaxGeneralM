@@ -12,6 +12,8 @@
 
 @interface SettingUtil : NSObject
 
++ (instancetype)shareInstance;
+
 - (void)initSettingData;// 初始化setting设置信息
 
 - (NSMutableDictionary *)loadSettingData;// 读取已有数据

@@ -46,7 +46,7 @@
 
 - (void)removeProgress{
     // 指纹验证解锁
-    NSDictionary *settingDict = [[SettingUtil alloc] loadSettingData];
+    NSDictionary *settingDict = [[SettingUtil shareInstance] loadSettingData];
     if([[settingDict objectForKey:@"touchID"] boolValue]){
         TouchIDViewController *touchIDVC = [[TouchIDViewController alloc] init];
         [[UIApplication sharedApplication] setStatusBarHidden:NO];
@@ -73,24 +73,24 @@
     NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS];
     if(nil != userDict){
         
-        [LoginUtil loginWithTokenSuccess:^{
+        [[LoginUtil shareInstance] loginWithTokenSuccess:^{
             DLog(@"Yan -> login成功");
             // 加载app列表
-            [[AppUtil alloc] initDataWithType:AppItemsTypeNone dataBlock:^(NSMutableArray *dataArray) {
+            [[AppUtil shareInstance] initDataWithType:AppItemsTypeNone dataBlock:^(NSMutableArray *dataArray) {
             } failed:^(NSString *error) {
                 DLog(@"初始化应用列表失败error=%@", error);
             }];
             
             // 获取未读条数
-            [[MessageListUtil alloc] getMsgUnReadCountSuccess:^(int unReadCount) {
+            [[MessageListUtil shareInstance] getMsgUnReadCountSuccess:^(int unReadCount) {
                 // 将未读条数存储到全局变量中
                 [Variable shareInstance].unReadCount = unReadCount;
                 
-                [BaseHandleUtil setBadge:unReadCount];
+                [[BaseHandleUtil shareInstance] setBadge:unReadCount];
             }];
             
         } failed:^(NSString *error) {
-            DLog(@"Yan -> login失败 error = %@", error);
+            RLog(@"Yan -> login失败 error = %@", error);
         }];
         
         // 添加等待圈
@@ -116,7 +116,7 @@
 - (void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
     
-    [BaseHandleUtil setBadge:[Variable shareInstance].unReadCount];
+    [[BaseHandleUtil shareInstance] setBadge:[Variable shareInstance].unReadCount];
 }
 
 - (void)didReceiveMemoryWarning {

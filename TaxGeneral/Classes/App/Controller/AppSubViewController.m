@@ -46,7 +46,7 @@ static NSString * const reuseIdentifier = @"appSubCell";
     [self.tableView setSeparatorStyle: UITableViewCellSeparatorStyleNone];
     
     //_data = [AppSubUtil getAppSubData];
-    _data = [[AppSubUtil alloc] loadSubDataWithPno:_pno level:_level];
+    _data = [[AppSubUtil shareInstance] loadSubDataWithPno:_pno level:_level];
 }
 
 #pragma mark - Table view data source

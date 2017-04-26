@@ -10,6 +10,8 @@
 
 @interface AppSubUtil : NSObject
 
++ (instancetype)shareInstance;
+
 - (NSMutableArray *)loadSubDataWithPno:(NSString *)pno level:(NSString *)level;
 
 @end

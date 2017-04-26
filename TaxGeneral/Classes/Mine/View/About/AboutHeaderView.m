@@ -37,7 +37,7 @@
         [self addSubview:nameLabel];
         
         UILabel *versionLabel = [self labelWithFrame:CGRectMake(0, 110, WIDTH_SCREEN, 20)];
-        versionLabel.text = [NSString stringWithFormat:@"iPhone客户端 v%@版", appVersion];
+        versionLabel.text = [NSString stringWithFormat:@"iPhone客户端 v%@", appVersion];
         versionLabel.font = [UIFont systemFontOfSize:12.0f];
         versionLabel.textColor = [UIColor grayColor];
         [self addSubview:versionLabel];

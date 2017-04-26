@@ -1,19 +1,17 @@
 /************************************************************
- Class    : AccountUtil.h
- Describe : 账户管理工具类
+ Class    : LogViewController.h
+ Describe : 日志界面
  Company  : Prient
  Author   : Yanzheng
- Date     : 2017-03-09
+ Date     : 2017-04-26
  Version  : 1.0
  Declare  : Copyright © 2017 Yanzheng. All rights reserved.
  ************************************************************/
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-@interface AccountUtil : NSObject
+@interface LogViewController : UIViewController
 
-+ (instancetype)shareInstance;
-
-- (void)accountLogout;// 用户注销方法
+@property (nonatomic, strong) NSString *log;
 
 @end

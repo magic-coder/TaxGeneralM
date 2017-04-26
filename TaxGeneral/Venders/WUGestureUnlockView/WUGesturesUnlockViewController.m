@@ -193,7 +193,7 @@
             [YZAlertView showAlertWith:self title:@"异常操作" message:@"手势密码输入错误次数过多，需要注销后重新登录！" callbackBlock:^(NSInteger btnIndex) {
                 errorCount = 5;
                 // 注销方法
-                [AccountUtil accountLogout];
+                [[AccountUtil shareInstance] accountLogout];
                 
                 LoginViewController *loginVC = [[LoginViewController alloc] init];
                 loginVC.isLogin = YES;

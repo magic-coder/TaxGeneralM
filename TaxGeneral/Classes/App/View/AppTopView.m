@@ -15,7 +15,7 @@
 - (instancetype)initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
         self.backgroundColor = DEFAULT_BLUE_COLOR;
-        NSString *imageName = [NSString stringWithFormat:@"app_top_bg_%d", [BaseHandleUtil getRandomNumber:0 to:2]];
+        NSString *imageName = [NSString stringWithFormat:@"app_top_bg_%d", [[BaseHandleUtil shareInstance] getRandomNumber:0 to:2]];
         if(![imageName isEqualToString:@"app_top_bg_0"]){
             self.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:imageName scaleToSize:frame.size]];
         }

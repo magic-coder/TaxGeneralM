@@ -6,13 +6,6 @@
 // 弱引用
 #define MJWeakSelf __weak typeof(self) weakSelf = self;
 
-// 日志输出
-#ifdef DEBUG
-#define MJRefreshLog(...) NSLog(__VA_ARGS__)
-#else
-#define MJRefreshLog(...)
-#endif
-
 // 过期提醒
 #define MJRefreshDeprecated(instead) NS_DEPRECATED(2_0, 2_0, 2_0, 2_0, instead)
 

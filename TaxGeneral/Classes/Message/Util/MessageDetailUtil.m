@@ -13,9 +13,18 @@
 
 @implementation MessageDetailUtil
 
++ (instancetype)shareInstance{
+    static MessageDetailUtil *messageDetailUtil = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        messageDetailUtil = [[MessageDetailUtil alloc] init];
+    });
+    return messageDetailUtil;
+}
+
 - (void)loadMsgDataWithParam:(NSDictionary *)param dataBlock:(void (^)(NSDictionary *))dataBlock failed:(void (^)(NSString *))failed{
     
-    NSString *jsonString = [BaseHandleUtil dataToJsonString:param];
+    NSString *jsonString = [[BaseHandleUtil shareInstance] dataToJsonString:param];
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:jsonString, @"msg", nil];
     NSString *url = @"message/getMsgDetail";
@@ -28,7 +37,7 @@
             DLog(@"请求报文成功，开始进行处理...");
             dataBlock([self handleDataDict:responseDic]);
         }else if([statusCode isEqualToString:@"500"]){
-            [LoginUtil loginWithTokenSuccess:^{
+            [[LoginUtil shareInstance] loginWithTokenSuccess:^{
                 [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:parameters success:^(NSDictionary *responseDic) {
                     if([[responseDic objectForKey:@"statusCode"] isEqualToString:@"00"]){
                         dataBlock([self handleDataDict:responseDic]);
@@ -39,7 +48,7 @@
                     failed(error);
                 }];
             } failed:^(NSString *error) {
-                DLog(@"Yan -> token登录失败，注销用户，跳转至登录界面[error = %@]", error);
+                RLog(@"Yan -> token登录失败，注销用户，跳转至登录界面[error = %@]", error);
                 failed(@"510");
             }];
         }else{
@@ -53,7 +62,7 @@
 
 -(void)deleteMsgWithUUID:(NSString *)uuid success:(void (^)())success failed:(void (^)(NSString *))failed{
 
-    NSString *jsonString = [BaseHandleUtil dataToJsonString:@[@{@"pushdetailuuid" : uuid}]];
+    NSString *jsonString = [[BaseHandleUtil shareInstance] dataToJsonString:@[@{@"pushdetailuuid" : uuid}]];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:jsonString, @"msg", nil];
     NSString *url = @"message/delMsgByItem";
     [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:parameters success:^(NSDictionary *responseDic) {

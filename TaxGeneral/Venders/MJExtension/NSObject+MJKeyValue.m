@@ -189,7 +189,7 @@ static NSNumberFormatter *numberFormatter_;
             [property setValue:value forObject:self];
         } @catch (NSException *exception) {
             MJExtensionBuildError([self class], exception.reason);
-            MJExtensionLog(@"%@", exception);
+            RLog(@"%@", exception);
         }
     }];
     
@@ -382,7 +382,7 @@ static NSNumberFormatter *numberFormatter_;
             }
         } @catch (NSException *exception) {
             MJExtensionBuildError([self class], exception.reason);
-            MJExtensionLog(@"%@", exception);
+            RLog(@"%@", exception);
         }
     }];
     

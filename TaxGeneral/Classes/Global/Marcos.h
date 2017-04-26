@@ -40,10 +40,15 @@
 
 #pragma mark - 设置调试日志输出
 #ifdef DEBUG
-#define DLog(FORMAT, ...) NSLog((@"%s [Line %d] " FORMAT), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+// 在控制台输出Log日志
+#define DLog(FORMAT, ...) NSLog((@"%s [Line %d] " FORMAT), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
 #else
 #define DLog(...)
 #endif
+
+// 记录运行时日志、崩溃日志
+#define RLog(FORMAT, ...) do{ NSLog((@"%s [Line %d] " FORMAT), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__); [[BaseHandleUtil shareInstance] organizeRuntimeLog:[NSString stringWithFormat:(@"%s [Line %d] " FORMAT), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__]]; }while(0)
+#define CLog(FORMAT, ...) do{ [[BaseHandleUtil shareInstance] organizeCrashLog:[NSString stringWithFormat:(@"%s [Line %d] " FORMAT), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__]]; }while(0)
 
 #pragma mark - ServiceUrl
 //#define SERVER_URL      @"http://127.0.0.1:8080/json_demo/" // Yan测试http服务器地址

@@ -12,6 +12,8 @@
 
 @interface MessageDetailUtil : NSObject
 
++ (instancetype)shareInstance;
+
 - (void)loadMsgDataWithParam:(NSDictionary *)param dataBlock:(void (^)(NSDictionary *dataDict))dataBlock failed:(void (^)(NSString *error))failed;
 
 - (void)deleteMsgWithUUID:(NSString *)uuid success:(void (^)())success failed:(void (^)(NSString *error))failed;

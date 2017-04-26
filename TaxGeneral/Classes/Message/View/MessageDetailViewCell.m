@@ -120,7 +120,7 @@
     // 标题
     float titleLabelX = _baseSpace;
     float titleLabelY = _baseSpace;
-    CGSize titleSize = [self sizeWithString:_messageDetailModel.title font:TITLE_FONT maxSize:CGSizeMake(frameWidth, MAXFLOAT)];
+    CGSize titleSize = [[BaseHandleUtil shareInstance] sizeWithString:_messageDetailModel.title font:TITLE_FONT maxSize:CGSizeMake(frameWidth, MAXFLOAT)];
     float titleLabelW = titleSize.width;
     float titleLabelH = titleSize.height;
     [_titleLabel setFrame:CGRectMake(titleLabelX, titleLabelY, titleLabelW, titleLabelH)];
@@ -149,7 +149,7 @@
     // 内容
     float contentLabelX = _baseSpace + abstractLabelW;
     float contentLabelY = abstractLabelY;
-    CGSize contentSize = [self sizeWithString:_messageDetailModel.content font:CONTENT_FONT maxSize:CGSizeMake(frameWidth - abstractLabelW, MAXFLOAT)];
+    CGSize contentSize = [[BaseHandleUtil shareInstance] sizeWithString:_messageDetailModel.content font:CONTENT_FONT maxSize:CGSizeMake(frameWidth - abstractLabelW, MAXFLOAT)];
     float contentLabelW = contentSize.width;
     float contentLabelH = contentSize.height;
     [_contentLabel setFrame:CGRectMake(contentLabelX, contentLabelY, contentLabelW, contentLabelH)];
@@ -334,23 +334,6 @@
         _arrowImageView.image = [UIImage imageNamed:@"msg_right_arrow"];
     }
     return _arrowImageView;
-}
-
-/**
- *  计算文本的宽高
- *
- *  @param str     需要计算的文本
- *  @param font    文本显示的字体
- *  @param maxSize 文本显示的范围
- *
- *  @return 文本占用的真实宽高
- */
-- (CGSize)sizeWithString:(NSString *)str font:(UIFont *)font maxSize:(CGSize)maxSize{
-    NSDictionary *dict = @{NSFontAttributeName : font};
-    // 如果将来计算的文字的范围超出了指定的范围,返回的就是指定的范围
-    // 如果将来计算的文字的范围小于指定的范围, 返回的就是真实的范围
-    CGSize size = [str boundingRectWithSize:maxSize options:NSStringDrawingUsesLineFragmentOrigin attributes:dict context:nil].size;
-    return size;
 }
 
 @end

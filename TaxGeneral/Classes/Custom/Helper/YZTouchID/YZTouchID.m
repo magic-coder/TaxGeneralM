@@ -25,7 +25,7 @@
     if (NSFoundationVersionNumber < NSFoundationVersionNumber_iOS_8_0) {
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            DLog(@"系统版本不支持TouchID (必须高于iOS 8.0才能使用)");
+            RLog(@"系统版本不支持TouchID (必须高于iOS 8.0才能使用)");
             block(YZTouchIDStateVersionNotSupport,nil);
         });
         
@@ -45,7 +45,7 @@
             
             if (success) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    DLog(@"TouchID 验证成功");
+                    RLog(@"TouchID 验证成功");
                     block(YZTouchIDStateSuccess,error);
                 });
             }else if(error){
@@ -53,70 +53,70 @@
                 switch (error.code) {
                     case LAErrorAuthenticationFailed:{
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            DLog(@"TouchID 验证失败");
+                            RLog(@"TouchID 验证失败");
                             block(YZTouchIDStateFail,error);
                         });
                         break;
                     }
                     case LAErrorUserCancel:{
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            DLog(@"TouchID 被用户手动取消");
+                            RLog(@"TouchID 被用户手动取消");
                             block(YZTouchIDStateUserCancel,error);
                         });
                     }
                         break;
                     case LAErrorUserFallback:{
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            DLog(@"用户不使用TouchID,选择手动输入密码");
+                            RLog(@"用户不使用TouchID,选择手动输入密码");
                             block(YZTouchIDStateInputPassword,error);
                         });
                     }
                         break;
                     case LAErrorSystemCancel:{
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            DLog(@"TouchID 被系统取消 (如遇到来电,锁屏,按了Home键等)");
+                            RLog(@"TouchID 被系统取消 (如遇到来电,锁屏,按了Home键等)");
                             block(YZTouchIDStateSystemCancel,error);
                         });
                     }
                         break;
                     case LAErrorPasscodeNotSet:{
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            DLog(@"TouchID 无法启动,因为用户没有设置密码");
+                            RLog(@"TouchID 无法启动,因为用户没有设置密码");
                             block(YZTouchIDStatePasswordNotSet,error);
                         });
                     }
                         break;
                     case LAErrorTouchIDNotEnrolled:{
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            DLog(@"TouchID 无法启动,因为用户没有设置TouchID");
+                            RLog(@"TouchID 无法启动,因为用户没有设置TouchID");
                             block(YZTouchIDStateTouchIDNotSet,error);
                         });
                     }
                         break;
                     case LAErrorTouchIDNotAvailable:{
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            DLog(@"TouchID 无效");
+                            RLog(@"TouchID 无效");
                             block(YZTouchIDStateTouchIDNotAvailable,error);
                         });
                     }
                         break;
                     case LAErrorTouchIDLockout:{
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            DLog(@"TouchID 被锁定(连续多次验证TouchID失败,系统需要用户手动输入密码)");
+                            RLog(@"TouchID 被锁定(连续多次验证TouchID失败,系统需要用户手动输入密码)");
                             block(YZTouchIDStateTouchIDLockout,error);
                         });
                     }
                         break;
                     case LAErrorAppCancel:{
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            DLog(@"当前软件被挂起并取消了授权 (如App进入了后台等)");
+                            RLog(@"当前软件被挂起并取消了授权 (如App进入了后台等)");
                             block(YZTouchIDStateAppCancel,error);
                         });
                     }
                         break;
                     case LAErrorInvalidContext:{
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            DLog(@"当前软件被挂起并取消了授权 (LAContext对象无效)");
+                            RLog(@"当前软件被挂起并取消了授权 (LAContext对象无效)");
                             block(YZTouchIDStateInvalidContext,error);
                         });
                     }
@@ -130,7 +130,7 @@
     }else{
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            DLog(@"当前设备不支持TouchID");
+            RLog(@"当前设备不支持TouchID");
             block(YZTouchIDStateNotSupport,error);
         });
         

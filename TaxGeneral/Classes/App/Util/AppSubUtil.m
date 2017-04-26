@@ -13,11 +13,18 @@
 
 @implementation AppSubUtil
 
++ (instancetype)shareInstance{
+    static AppSubUtil *appSubUtil = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        appSubUtil = [[AppSubUtil alloc] init];
+    });
+    return appSubUtil;
+}
+
 - (NSMutableArray *)loadSubDataWithPno:(NSString *)pno level:(NSString *)level{
     NSMutableArray *mutableArray = [[NSMutableArray alloc] init];
-    
-    BaseSandBoxUtil *sandBoxUtil = [[BaseSandBoxUtil alloc] init];
-    NSMutableDictionary *subAppDict = [sandBoxUtil loadDataWithFileName:SUB_FILE_NAME];
+    NSMutableDictionary *subAppDict = [[BaseSandBoxUtil shareInstance] loadDataWithFileName:SUB_FILE_NAME];
     NSArray *subAppData = [subAppDict objectForKey:@"subAppData"];
     for(NSDictionary *dict in subAppData){
         NSString *pappno = [dict objectForKey:@"pappno"];
