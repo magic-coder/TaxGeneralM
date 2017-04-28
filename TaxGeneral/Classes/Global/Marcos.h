@@ -61,10 +61,13 @@
 #define BPUSH_APIKEY    @"ZodL7vsmdWTxn83jRO6KX1OSpOVFsnUn"
 
 #pragma mark - Commons Key
-#define LOGIN_SUCCESS   @"loginSuccess"
-#define DEVICE_INFO     @"deviceInfo"
-#define PUSH_INFO       @"pushInfo"
-#define LOAD_FINISH     @"loadFinish"
+#define DEVICE_INFO         @"deviceInfo"
+#define LOGIN_SUCCESS       @"loginSuccess"
+#define GESTURES_PASSWORD   @"gesturespassword"
+#define PUSH_INFO           @"pushInfo"
+#define LOAD_FINISH         @"loadFinish"
+#define REGISTER_PUSH       @"registerPush"
+#define IS_TEST             @"isTest"
 
 #pragma mark - Common View
 #define SELF_VIEW self.view

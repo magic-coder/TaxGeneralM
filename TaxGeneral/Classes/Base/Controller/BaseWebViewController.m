@@ -63,7 +63,7 @@
     
     [self addProgressBar];
     
-    [YZProgressHUD showHUDView:self.webView Mode:LOCKMODE Text:@"加载中..."];
+    [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"加载中..."];
 }
 
 #pragma mark - <UIWebViewDelegate> 代理方法
@@ -93,7 +93,7 @@
 - (void)webViewDidFinishLoad:(UIWebView *)webView{
     self.theBool = YES; //加载完毕后，进度条完成
     //self.title = [webView stringByEvaluatingJavaScriptFromString:@"document.title"];
-    [YZProgressHUD hiddenHUDForView:self.webView];
+    [YZProgressHUD hiddenHUDForView:SELF_VIEW];
     
     //判断是否有上一层H5页面
     if ([self.webView canGoBack]) {
@@ -124,8 +124,8 @@
     }
 }
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error{
-    [YZProgressHUD hiddenHUDForView:self.webView];
-    [YZProgressHUD showHUDView:self.webView Mode:SHOWMODE Text:[NSString stringWithFormat:@"网络连接异常！error.code=%ld", error.code]];
+    [YZProgressHUD hiddenHUDForView:SELF_VIEW];
+    [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:[NSString stringWithFormat:@"网络连接异常！error.code=%ld", error.code]];
 }
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response{
     self.isAuthed = YES;
@@ -136,26 +136,32 @@
         [[LoginUtil shareInstance] loginWithTokenSuccess:^{
             [self.webView loadRequest:self.request];
         } failed:^(NSString *error) {
-            [YZProgressHUD hiddenHUDForView:self.webView];
+            [YZProgressHUD hiddenHUDForView:SELF_VIEW];
             [YZAlertView showAlertWith:self title:@"登录失效" message:@"您当前登录信息已失效，请重新登录！" callbackBlock:^(NSInteger btnIndex) {
                 // 注销方法
                 [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"注销中..."];
-                [[AccountUtil shareInstance] accountLogout];
-                [YZProgressHUD hiddenHUDForView:SELF_VIEW];
-                
-                LoginViewController *loginVC = [[LoginViewController alloc] init];
-                loginVC.isLogin = YES;
-                
-                // 水波纹动画效果
-                CATransition *animation = [CATransition animation];
-                animation.duration = 1.0f;
-                animation.timingFunction = UIViewAnimationCurveEaseInOut;
-                animation.type = @"rippleEffect";
-                //animation.type = kCATransitionMoveIn;
-                animation.subtype = kCATransitionFromTop;
-                [self.view.window.layer addAnimation:animation forKey:nil];
-                
-                [self presentViewController:loginVC animated:YES completion:nil];
+                [[AccountUtil shareInstance] accountLogout:^{
+                    DLog(@"用户注销成功");
+                    [YZProgressHUD hiddenHUDForView:SELF_VIEW];
+                    
+                    LoginViewController *loginVC = [[LoginViewController alloc] init];
+                    loginVC.isLogin = YES;
+                    
+                    // 水波纹动画效果
+                    CATransition *animation = [CATransition animation];
+                    animation.duration = 1.0f;
+                    animation.timingFunction = UIViewAnimationCurveEaseInOut;
+                    animation.type = @"rippleEffect";
+                    //animation.type = kCATransitionMoveIn;
+                    animation.subtype = kCATransitionFromTop;
+                    [self.view.window.layer addAnimation:animation forKey:nil];
+                    
+                    [self presentViewController:loginVC animated:YES completion:nil];
+                } failed:^(NSString *error) {
+                    DLog(@"用户注销失败，error=%@", error);
+                    [YZProgressHUD hiddenHUDForView:SELF_VIEW];
+                    [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:error];
+                }];
                 
             } cancelButtonTitle:@"重新登录" destructiveButtonTitle:nil otherButtonTitles: nil];
         }];
@@ -197,8 +203,8 @@
     _timeLong ++;
     DLog(@"进入Timer - > 次数:%ld",_timeLong);
     if(_timeLong == 1000){
-        [YZProgressHUD hiddenHUDForView:self.webView];
-        [YZProgressHUD showHUDView:self.webView Mode:SHOWMODE Text:@"加载失败，请重新加载"];
+        [YZProgressHUD hiddenHUDForView:SELF_VIEW];
+        [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:@"加载失败，请重新加载"];
         self.progressView.hidden = YES;
         [self.timer invalidate];
         self.timer = nil;

@@ -32,8 +32,18 @@
     if([item.title isEqualToString:@"退出登录"]){
         [YZActionSheet showActionSheetWithTitle:@"退出登录后下次使用时需重新登录，您确定要退出吗？" cancelButtonTitle:@"取消" destructiveButtonTitle:@"退出" otherButtonTitles:nil handler:^(YZActionSheet *actionSheet, NSInteger index) {
             if(-1 == index){
-                [[AccountUtil shareInstance] accountLogout];
-                [self.navigationController popViewControllerAnimated:YES];
+                [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"注销中..."];
+                [[AccountUtil shareInstance] accountLogout:^{
+                    DLog(@"用户注销成功");
+                    [YZProgressHUD hiddenHUDForView:SELF_VIEW];
+                   
+                    [self.navigationController popViewControllerAnimated:YES];
+                    
+                } failed:^(NSString *error) {
+                    DLog(@"用户注销失败，error=%@", error);
+                    [YZProgressHUD hiddenHUDForView:SELF_VIEW];
+                    [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:error];
+                }];
             }
         }];
     }

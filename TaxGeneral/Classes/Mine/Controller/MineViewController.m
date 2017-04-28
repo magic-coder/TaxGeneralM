@@ -62,8 +62,13 @@
         }
     }
     if([item.title isEqualToString:@"我的日程"]){
-        ScheduleViewController *scheduleViewController = [[ScheduleViewController alloc] init];
-        viewController = scheduleViewController;
+        //ScheduleViewController *scheduleViewController = [[ScheduleViewController alloc] init];
+        //viewController = scheduleViewController;
+        [YZAlertView showAlertWith:self title:@"我的日程" message:@"\"互联网+税务\"想要打开\"日历\"" callbackBlock:^(NSInteger btnIndex) {
+            if(btnIndex == 1){
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"calshow:"]];
+            }
+        } cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"打开", nil];
     }
     if([item.title isEqualToString:@"我的客服"]){
         ServiceViewController *serviceViewController = [[ServiceViewController alloc] init];

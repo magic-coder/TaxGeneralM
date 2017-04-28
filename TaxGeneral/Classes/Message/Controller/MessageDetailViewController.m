@@ -13,7 +13,6 @@
 #import "MessageListUtil.h"
 #import "MessageDetailUtil.h"
 #import "YZRefreshHeader.h"
-#import <EventKit/EventKit.h>
 
 @interface MessageDetailViewController () <MessageDetailViewCellDelegate>
 
@@ -105,17 +104,28 @@ static int const pageSize = 5;
     if(type == MsgDetailViewCellMenuTypeCalendar){
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-        NSDate *startDate = [formatter dateFromString:@"2017-04-27 14:30:00"];
-        NSDate *endDate = [formatter dateFromString:@"2017-04-27 16:00:00"];
+        
+        NSString *currentDate = [[[BaseHandleUtil shareInstance] getCurrentDate] substringWithRange:NSMakeRange(0, 10)];
+
+        NSDate *startDate = [formatter dateFromString:[NSString stringWithFormat:@"%@ 09:00:00", currentDate]];
+        NSDate *endDate = [formatter dateFromString:[NSString stringWithFormat:@"%@ 18:00:00", currentDate]];
         NSString *notes = @"";
         if(model.url.length > 0){
-             notes = [NSString stringWithFormat:@"会议详细内容请点击地址查看：%@", model.url];
+             notes = [NSString stringWithFormat:@"详细内容请点击：%@", model.url];
         }
         
         NSString *alarmStr = [NSString stringWithFormat:@"%lf", 60.0f * -5.0f * 1];// 设置提醒时间为5分钟前
         
-        [[BaseHandleUtil shareInstance] createEventCalendarTitle:model.title location:model.content startDate:startDate endDate:endDate notes:(NSString *)notes allDay:YES alarmArray:@[alarmStr] block:^(NSString *str) {
-            [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:str];
+        [[BaseHandleUtil shareInstance] createEventCalendarTitle:model.title location:model.content startDate:startDate endDate:endDate notes:(NSString *)notes allDay:NO alarmArray:@[alarmStr] block:^(NSString *msg) {
+            if([msg isEqualToString:@"success"]){
+                [YZAlertView showAlertWith:self title:@"提醒添加成功！" message:@"是否打开\"日历\"查看、编辑提醒事件？" callbackBlock:^(NSInteger btnIndex) {
+                    if(btnIndex == 1){
+                        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"calshow:"]];
+                    }
+                } cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"打开", nil];
+            }else{
+                [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:msg];
+            }
         }];
     }
     if(type == MsgDetailViewCellMenuTypeCopy){
@@ -179,22 +189,29 @@ static int const pageSize = 5;
             [YZAlertView showAlertWith:self title:@"登录失效" message:@"您当前登录信息已失效，请重新登录！" callbackBlock:^(NSInteger btnIndex) {
                 // 注销方法
                 [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"注销中..."];
-                [[AccountUtil shareInstance] accountLogout];
-                [YZProgressHUD hiddenHUDForView:SELF_VIEW];
-                
-                LoginViewController *loginVC = [[LoginViewController alloc] init];
-                loginVC.isLogin = YES;
-                
-                // 水波纹动画效果
-                CATransition *animation = [CATransition animation];
-                animation.duration = 1.0f;
-                animation.timingFunction = UIViewAnimationCurveEaseInOut;
-                animation.type = @"rippleEffect";
-                //animation.type = kCATransitionMoveIn;
-                animation.subtype = kCATransitionFromTop;
-                [self.view.window.layer addAnimation:animation forKey:nil];
-                
-                [self presentViewController:loginVC animated:YES completion:nil];
+                [[AccountUtil shareInstance] accountLogout:^{
+                    DLog(@"用户注销成功");
+                    [YZProgressHUD hiddenHUDForView:SELF_VIEW];
+                    
+                    LoginViewController *loginVC = [[LoginViewController alloc] init];
+                    loginVC.isLogin = YES;
+                    
+                    // 水波纹动画效果
+                    CATransition *animation = [CATransition animation];
+                    animation.duration = 1.0f;
+                    animation.timingFunction = UIViewAnimationCurveEaseInOut;
+                    animation.type = @"rippleEffect";
+                    //animation.type = kCATransitionMoveIn;
+                    animation.subtype = kCATransitionFromTop;
+                    [self.view.window.layer addAnimation:animation forKey:nil];
+                    
+                    [self presentViewController:loginVC animated:YES completion:nil];
+                    
+                } failed:^(NSString *error) {
+                    DLog(@"用户注销失败，error=%@", error);
+                    [YZProgressHUD hiddenHUDForView:SELF_VIEW];
+                    [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:error];
+                }];
             } cancelButtonTitle:@"重新登录" destructiveButtonTitle:nil otherButtonTitles: nil];
         }else{
             [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:error];

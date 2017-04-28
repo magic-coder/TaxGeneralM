@@ -43,13 +43,31 @@
     NSString *systemVersion = [[UIDevice currentDevice] systemVersion];
     
     DeviceScreenInch deviceInch = [UIDevice deviceScreenInch];
+    NSString *inchStr = nil;
+    switch (deviceInch) {
+        case DeviceScreenInch_3_5:
+            inchStr = @"3.5 Inch (320x480)";
+            break;
+        case DeviceScreenInch_4_0:
+            inchStr = @"4.0 Inch (320x568)";
+            break;
+        case DeviceScreenInch_4_7:
+            inchStr = @"4.7 Inch (375x667)";
+            break;
+        case DeviceScreenInch_5_5:
+            inchStr = @"5.5 Inch (414x736)";
+            break;
+        default:
+            inchStr = @"No Inch was fond!";
+            break;
+    }
     
     RLog(@"Yan -> 唯一标示 : %@", deviceIdentifier);
     RLog(@"Yan -> 设备名称 : %@", deviceName);
     RLog(@"Yan -> 手机型号 : %@", deviceModel);
     RLog(@"Yan -> 系统名称 : %@", systemName);
     RLog(@"Yan -> 手机序系统版本 : %@", systemVersion);
-    RLog(@"Yan -> 屏幕尺寸 : %ld", (long)deviceInch);
+    RLog(@"Yan -> 屏幕尺寸 : %@", inchStr);
     
     DeviceInfoModel *model = [[DeviceInfoModel alloc] init];
     model.deviceIdentifier = deviceIdentifier;

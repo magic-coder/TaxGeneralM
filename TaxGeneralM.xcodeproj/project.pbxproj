@@ -2432,6 +2432,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 28MS2284NQ;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/BaiduMapAPI",
@@ -2448,12 +2449,14 @@
 					"$(PROJECT_DIR)/TaxGeneral/Venders/normalversion",
 				);
 				OTHER_LDFLAGS = (
-					"-Obj-C",
+					"-ObjC",
 					"-all_load",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.prient.TaxGeneralM;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = 1;
+				USER_HEADER_SEARCH_PATHS = "$(OBJROOT)/UninstalledProducts/$(PLATFORM_NAME)/include";
 			};
 			name = Debug;
 		};
@@ -2465,6 +2468,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 28MS2284NQ;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/BaiduMapAPI",
@@ -2481,12 +2485,14 @@
 					"$(PROJECT_DIR)/TaxGeneral/Venders/normalversion",
 				);
 				OTHER_LDFLAGS = (
-					"-Obj-C",
+					"-ObjC",
 					"-all_load",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.prient.TaxGeneralM;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = 1;
+				USER_HEADER_SEARCH_PATHS = "$(OBJROOT)/UninstalledProducts/$(PLATFORM_NAME)/include";
 			};
 			name = Release;
 		};

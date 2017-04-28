@@ -37,7 +37,7 @@
     questionLabel.attributedText = attrStr;
     
     CGSize questionSize = [[BaseHandleUtil shareInstance] sizeWithString:str font:[UIFont systemFontOfSize:17.0f] maxSize:CGSizeMake(WIDTH_SCREEN - 20, MAXFLOAT)];
-    questionLabel.frame = CGRectMake(10, 10, questionSize.width, questionSize.height);
+    questionLabel.frame = CGRectMake(10, 0, questionSize.width, questionSize.height);
     [scrollView addSubview:questionLabel];
     
     [self.view addSubview:scrollView];

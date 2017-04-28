@@ -2,6 +2,7 @@
 	This is TaxGeneralM project.(M -> Manager)
 	互联网+税务(管理端)
 	混搭模式：原生 + Web + (Cordova[Native H5])
+	Apple ID : 1230863080
 
 # 项目结构(Construction)
 * **Classes**：项目源码目录(包含全局、自定义、通用以及各模块目录，每个模块根据实际情况拥有对应的Controller、View、Model、Util)

@@ -52,7 +52,7 @@
         [[UIApplication sharedApplication] setStatusBarHidden:NO];
         [_appDelegate.window setRootViewController:touchIDVC];
     }else{
-        NSString *gesturePwd = [[NSUserDefaults standardUserDefaults] objectForKey:@"gesturespassword"];
+        NSString *gesturePwd = [[NSUserDefaults standardUserDefaults] objectForKey:GESTURES_PASSWORD];
         if(gesturePwd.length > 0){  // 手势验证解锁
             WUGesturesUnlockViewController *gesturesUnlockVC= [[WUGesturesUnlockViewController alloc] initWithUnlockType:WUUnlockTypeLoginPwd];
             [[UIApplication sharedApplication] setStatusBarHidden:NO];

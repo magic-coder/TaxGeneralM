@@ -96,9 +96,9 @@
     
     BOOL res = [[AppUtil shareInstance] writeNewAppData:dataDict];
     if(res){
-        [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:@"保存成功!"];
+        [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:@"保存成功!"];
     }else{
-        [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:@"对不起，保存失败!"];
+        [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:@"对不起，保存失败!"];
     }
 }
 

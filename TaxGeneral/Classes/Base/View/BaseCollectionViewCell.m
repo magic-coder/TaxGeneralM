@@ -12,13 +12,14 @@
 
 @interface BaseCollectionViewCell()
 
-@property (nonatomic, strong) UIView *topLine;          // 顶部边线
-@property (nonatomic, strong) UIView *leftLine;         // 左侧边线
-@property (nonatomic, strong) UIView *rightLine;        // 右侧边线
-@property (nonatomic, strong) UIView *bottomLine;       // 底部边线
+@property (nonatomic, strong) UIView *topLine;              // 顶部边线
+@property (nonatomic, strong) UIView *leftLine;             // 左侧边线
+@property (nonatomic, strong) UIView *rightLine;            // 右侧边线
+@property (nonatomic, strong) UIView *bottomLine;           // 底部边线
+@property (nonatomic, strong) UIImageView *newsImageView;    // 新角标
 
-@property (nonatomic, strong) UIImageView *imageView;   // 图片视图
-@property (nonatomic, strong) UIButton *editBtn;        // 右上角编辑按钮
+@property (nonatomic, strong) UIImageView *imageView;       // 图片视图
+@property (nonatomic, strong) UIButton *editBtn;            // 右上角编辑按钮
 
 @end
 
@@ -57,6 +58,9 @@
     [_editBtn addTarget:self action:@selector(editBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_editBtn];
     
+    // 新角标
+    _newsImageView = [[UIImageView alloc] init];
+    [self.contentView addSubview:_newsImageView];
 }
 
 #pragma mark - 设置布局样式
@@ -74,6 +78,8 @@
         [_bottomLine setFrame:CGRectMake(0.5f, self.frameHeight-0.5f, self.frameWidth-0.5f, 0.5f)];
         [_bottomLine setBackgroundColor:DEFAULT_LINE_GRAY_COLOR];
         
+        // 新角标
+        [_newsImageView setFrame:CGRectMake(0, 0, 30, 30)];
     }
     
     if(_cellStyle == CollectionCellStyleEdit){
@@ -140,6 +146,25 @@
     item.webImg = @"";
     [_imageView sd_setImageWithURL:[NSURL URLWithString:item.webImg] placeholderImage:[UIImage imageNamed:item.localImg] options:SDWebImageAllowInvalidSSLCertificates completed:nil];
     _titleLabel.text = self.item.title;
+    
+    // 添加新角标
+    if([item.no isEqualToString:@"24"]){
+        NSDate *currentDate = [NSDate date];
+        
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+        NSDate *otherDate = [formatter dateFromString:@"2017-05-01 00:00:00"];
+        
+        int i = [[BaseHandleUtil shareInstance] compareOneDay:currentDate withAnotherDay:otherDate];
+        
+        if( i == -1){
+            [_newsImageView setImage:[UIImage imageNamed:@"app_new"]];
+        }else{
+            [_newsImageView setImage:[UIImage imageNamed:@"app_new_bak"]];
+        }
+    }else{
+        [_newsImageView setImage:[UIImage imageNamed:@"app_new_bak"]];
+    }
     
     [self layoutSubviews];
 }

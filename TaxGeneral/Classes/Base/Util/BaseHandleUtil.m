@@ -100,10 +100,17 @@
     return [formatter stringFromDate:[NSDate date]];
 }
 
-- (void)createEventCalendarTitle:(NSString *)title location:(NSString *)location startDate:(NSDate *)startDate endDate:(NSDate *)endDate notes:(NSString *)notes allDay:(BOOL)allDay alarmArray:(NSArray *)alarmArray block:(void(^)(NSString *str))block{
+- (void)createEventCalendarTitle:(NSString *)title location:(NSString *)location startDate:(NSDate *)startDate endDate:(NSDate *)endDate notes:(NSString *)notes allDay:(BOOL)allDay alarmArray:(NSArray *)alarmArray block:(void (^)(NSString *))block{
     
     EKEventStore *eventStore = [[EKEventStore alloc] init];
-    
+    // 检索提醒事件是否存在
+    /*
+    NSPredicate *predicate = [eventStore predicateForEventsWithStartDate:startDate endDate:endDate calendars:[eventStore calendarsForEntityType:EKEntityTypeEvent]];
+    NSArray *eventArray = [eventStore eventsMatchingPredicate:predicate];
+    if(eventArray){
+        block(@"该提醒已经添加，请进入\"日历\"查看！");
+    }
+    */
     if ([eventStore respondsToSelector:@selector(requestAccessToEntityType:completion:)]){
         [eventStore requestAccessToEntityType:EKEntityTypeEvent completion:^(BOOL granted, NSError *error){
             
@@ -135,7 +142,8 @@
                     [event setCalendar:[eventStore defaultCalendarForNewEvents]];
                     NSError *err;
                     [eventStore saveEvent:event span:EKSpanThisEvent error:&err];
-                    block(@"已添加到系统日历中！");
+                    // 已添加到系统日历中！
+                    block(@"success");
                     
                 }
             });
@@ -149,6 +157,28 @@
     // 如果将来计算的文字的范围小于指定的范围, 返回的就是真实的范围
     CGSize size = [str boundingRectWithSize:maxSize options:NSStringDrawingUsesLineFragmentOrigin attributes:dict context:nil].size;
     return size;
+}
+
+- (int)compareOneDay:(NSDate *)oneDay withAnotherDay:(NSDate *)anotherDay{
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"dd-MM-yyyy-HHmmss"];
+    NSString *oneDayStr = [dateFormatter stringFromDate:oneDay];
+    NSString *anotherDayStr = [dateFormatter stringFromDate:anotherDay];
+    NSDate *dateA = [dateFormatter dateFromString:oneDayStr];
+    NSDate *dateB = [dateFormatter dateFromString:anotherDayStr];
+    NSComparisonResult result = [dateA compare:dateB];
+    NSLog(@"date1 : %@, date2 : %@", oneDay, anotherDay);
+    if (result == NSOrderedDescending) {
+        DLog(@"oneDay is GT anotherDay (大于)");
+        return 1;
+    }
+    else if (result == NSOrderedAscending){
+        DLog(@"oneDay is LT anotherDay (小于)");
+        return -1;
+    }
+    DLog(@"oneDay is EQ anotherDay (等于)");
+    return 0;
+    
 }
 
 - (void)organizeRuntimeLog:(NSString *)log{

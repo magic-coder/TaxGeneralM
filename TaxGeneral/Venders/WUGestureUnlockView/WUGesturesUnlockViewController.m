@@ -13,8 +13,6 @@
 #import "MainTabBarController.h"
 #import "SettingUtil.h"
 
-#define GesturesPassword @"gesturespassword"
-
 @interface WUGesturesUnlockViewController ()<WUGesturesUnlockViewDelegate,UIAlertViewDelegate>
 
 @property (weak, nonatomic) IBOutlet WUGesturesUnlockView *gesturesUnlockView;
@@ -46,17 +44,17 @@
 #pragma mark - 类方法
 
 + (void)deleteGesturesPassword {
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:GesturesPassword];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:GESTURES_PASSWORD];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 + (void)addGesturesPassword:(NSString *)gesturesPassword {
-    [[NSUserDefaults standardUserDefaults] setObject:gesturesPassword forKey:GesturesPassword];
+    [[NSUserDefaults standardUserDefaults] setObject:gesturesPassword forKey:GESTURES_PASSWORD];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 + (NSString *)gesturesPassword {
-    return [[NSUserDefaults standardUserDefaults] objectForKey:GesturesPassword];
+    return [[NSUserDefaults standardUserDefaults] objectForKey:GESTURES_PASSWORD];
 }
 
 #pragma mark - inint
@@ -105,7 +103,7 @@
             // 校验的时候不显示底部按钮
             self.otherAcountLoginButton.hidden = YES;
             self.forgetGesturesPasswordButton.hidden = YES;
-            self.nameLabel.text = @"您好，Yanzheng！";
+            self.nameLabel.text = [NSString stringWithFormat:@"您好，%@", [[[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS] objectForKey:@"userName"]];
         }
             break;
         default:
@@ -193,24 +191,31 @@
             [YZAlertView showAlertWith:self title:@"异常操作" message:@"手势密码输入错误次数过多，需要注销后重新登录！" callbackBlock:^(NSInteger btnIndex) {
                 errorCount = 5;
                 // 注销方法
-                [[AccountUtil shareInstance] accountLogout];
-                
-                LoginViewController *loginVC = [[LoginViewController alloc] init];
-                loginVC.isLogin = YES;
-                if(_unlockType == WUUnlockTypeValidatePwd){
-                    loginVC.selectedIndex = 3;
-                }
-                
-                CATransition *animation = [CATransition animation];
-                animation.duration = 1.0f;
-                animation.timingFunction = UIViewAnimationCurveEaseInOut;
-                animation.type = @"rippleEffect";
-                //animation.type = kCATransitionMoveIn;
-                animation.subtype = kCATransitionFromTop;
-                [self.view.window.layer addAnimation:animation forKey:nil];
-                
-                [self dismissViewControllerAnimated:YES completion:nil];
-                
+                [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"注销中..."];
+                [[AccountUtil shareInstance] accountLogout:^{
+                    DLog(@"用户注销成功");
+                    [YZProgressHUD hiddenHUDForView:SELF_VIEW];
+                    
+                    LoginViewController *loginVC = [[LoginViewController alloc] init];
+                    loginVC.isLogin = YES;
+                    if(_unlockType == WUUnlockTypeValidatePwd){
+                        loginVC.selectedIndex = 3;
+                    }
+                    
+                    CATransition *animation = [CATransition animation];
+                    animation.duration = 1.0f;
+                    animation.timingFunction = UIViewAnimationCurveEaseInOut;
+                    animation.type = @"rippleEffect";
+                    //animation.type = kCATransitionMoveIn;
+                    animation.subtype = kCATransitionFromTop;
+                    [self.view.window.layer addAnimation:animation forKey:nil];
+                    
+                    [self dismissViewControllerAnimated:YES completion:nil];
+                } failed:^(NSString *error) {
+                    DLog(@"用户注销失败，error=%@", error);
+                    [YZProgressHUD hiddenHUDForView:SELF_VIEW];
+                    [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:error];
+                }];
             } cancelButtonTitle:@"重新登录" destructiveButtonTitle:nil otherButtonTitles: nil];
             return;
         }

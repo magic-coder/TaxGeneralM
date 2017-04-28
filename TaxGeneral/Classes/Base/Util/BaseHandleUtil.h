@@ -35,7 +35,7 @@
  *  @param alarmArray 闹钟集合
  *  @param block      回调方法
  */
-- (void)createEventCalendarTitle:(NSString *)title location:(NSString *)location startDate:(NSDate *)startDate endDate:(NSDate *)endDate notes:(NSString *)notes allDay:(BOOL)allDay alarmArray:(NSArray *)alarmArray block:(void(^)(NSString *str))block;
+- (void)createEventCalendarTitle:(NSString *)title location:(NSString *)location startDate:(NSDate *)startDate endDate:(NSDate *)endDate notes:(NSString *)notes allDay:(BOOL)allDay alarmArray:(NSArray *)alarmArray block:(void(^)(NSString *msg))block;
 
 /**
  *  计算文本的宽高
@@ -47,6 +47,9 @@
  *  @return 文本占用的真实宽高
  */
 - (CGSize)sizeWithString:(NSString *)str font:(UIFont *)font maxSize:(CGSize)maxSize;
+
+// 判断时间大小对比
+- (int)compareOneDay:(NSDate *)oneDay withAnotherDay:(NSDate *)anotherDay;
 
 // 组织拼接log
 - (void)organizeRuntimeLog:(NSString *)log;

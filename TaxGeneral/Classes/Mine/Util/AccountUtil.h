@@ -14,6 +14,8 @@
 
 + (instancetype)shareInstance;
 
-- (void)accountLogout;// 用户注销方法
+//- (void)accountLogout;// 用户注销方法
+
+- (void)accountLogout:(void (^)())success failed:(void (^)(NSString *error))failed;  // 使用接口注销方法
 
 @end

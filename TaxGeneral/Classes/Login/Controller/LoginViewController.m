@@ -63,33 +63,35 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
     [_imageView addSubview:effectview];
     
     // 顶部税徽标志
-    UIImageView *titleView = [[UIImageView alloc] initWithFrame:CGRectMake(WIDTH_SCREEN/2-90, 26, 180, 137)];
-    titleView.image = [UIImage imageNamed:@"login_emblem"];
-    [effectview addSubview:titleView];
+    //UIImageView *titleView = [[UIImageView alloc] initWithFrame:CGRectMake(WIDTH_SCREEN/2-90, 26, 180, 137)];
+    //titleView.image = [UIImage imageNamed:@"login_emblem"];
+    //[effectview addSubview:titleView];
     
-    //猫头
-    UIImageView* imgLogin = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 211 / 2, 150-99, 211, 108)];
-    imgLogin.image = [UIImage imageNamed:@"login_head_bak"];
+    // head (猫头/人头)
+    //UIImageView* imgLogin = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 211 / 2, 150-99, 211, 108)];
+    UIImageView* imgLogin = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 211 / 2, 150-109, 211, 108)];
+    imgLogin.image = [UIImage imageNamed:@"login_head"];
     imgLogin.layer.masksToBounds = YES;
     [self.view addSubview:imgLogin];
     
-    //捂眼的左右爪
-    _imgLeftHand = [[UIImageView alloc] initWithFrame:CGRectMake(1, 90, 40, 65)];
-    _imgLeftHand.image = [UIImage imageNamed:@"login_arm_left_bak"];
+    // 左手/右手
+    //_imgLeftHand = [[UIImageView alloc] initWithFrame:CGRectMake(1, 90, 40, 65)];
+    _imgLeftHand = [[UIImageView alloc] initWithFrame:CGRectMake(1, 100, 40, 65)];
+    _imgLeftHand.image = [UIImage imageNamed:@"login_arm_left"];
     [imgLogin addSubview:_imgLeftHand];
     
     _imgRightHand = [[UIImageView alloc] initWithFrame:CGRectMake(imgLogin.frame.size.width / 2 + 60, 90, 40, 65)];
-    _imgRightHand.image = [UIImage imageNamed:@"login_arm_right_bak"];
+    _imgRightHand.image = [UIImage imageNamed:@"login_arm_right"];
     [imgLogin addSubview:_imgRightHand];
     
     //展开的左右爪
     _imgLeftHandGone = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 100, 150-22, 40, 40)];
-    _imgLeftHandGone.image = [UIImage imageNamed:@"login_hand_bak"];
+    _imgLeftHandGone.image = [UIImage imageNamed:@"login_hand"];
     [self.view addSubview:_imgLeftHandGone];
     
     
     _imgRightHandGone = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 + 62,  150-22, 40, 40)];
-    _imgRightHandGone.image = [UIImage imageNamed:@"login_hand_bak"];
+    _imgRightHandGone.image = [UIImage imageNamed:@"login_hand"];
     [self.view addSubview:_imgRightHandGone];
     
     
@@ -168,7 +170,8 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
         }
         _showType = LoginShowType_USER;
         [UIView animateWithDuration:0.5 animations:^{
-            _imgLeftHand.frame = CGRectMake(_imgLeftHand.frame.origin.x - 60, _imgLeftHand.frame.origin.y + 30, _imgLeftHand.frame.size.width, _imgLeftHand.frame.size.height);
+            //_imgLeftHand.frame = CGRectMake(_imgLeftHand.frame.origin.x - 60, _imgLeftHand.frame.origin.y + 30, _imgLeftHand.frame.size.width, _imgLeftHand.frame.size.height);
+            _imgLeftHand.frame = CGRectMake(_imgLeftHand.frame.origin.x - 40, _imgLeftHand.frame.origin.y + 55, _imgLeftHand.frame.size.width, _imgLeftHand.frame.size.height);
             
             _imgRightHand.frame = CGRectMake(_imgRightHand.frame.origin.x + 48, _imgRightHand.frame.origin.y + 30, _imgRightHand.frame.size.width, _imgRightHand.frame.size.height);
             
@@ -176,7 +179,6 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
             _imgLeftHandGone.frame = CGRectMake(_imgLeftHandGone.frame.origin.x - 70, _imgLeftHandGone.frame.origin.y, 40, 40);
             
             _imgRightHandGone.frame = CGRectMake(_imgRightHandGone.frame.origin.x + 30, _imgRightHandGone.frame.origin.y, 40, 40);
-            
             
         } completion:^(BOOL b) {
         }];
@@ -190,10 +192,11 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
         }
         _showType = LoginShowType_PASS;
         [UIView animateWithDuration:0.5 animations:^{
-            _imgLeftHand.frame = CGRectMake(_imgLeftHand.frame.origin.x + 60, _imgLeftHand.frame.origin.y - 30, _imgLeftHand.frame.size.width, _imgLeftHand.frame.size.height);
+            //_imgLeftHand.frame = CGRectMake(_imgLeftHand.frame.origin.x + 60, _imgLeftHand.frame.origin.y - 30, _imgLeftHand.frame.size.width, _imgLeftHand.frame.size.height);
+            _imgLeftHand.frame = CGRectMake(_imgLeftHand.frame.origin.x + 40, _imgLeftHand.frame.origin.y - 55, _imgLeftHand.frame.size.width, _imgLeftHand.frame.size.height);
+            
             _imgRightHand.frame = CGRectMake(_imgRightHand.frame.origin.x - 48, _imgRightHand.frame.origin.y - 30, _imgRightHand.frame.size.width, _imgRightHand.frame.size.height);
-            
-            
+
             _imgLeftHandGone.frame = CGRectMake(_imgLeftHandGone.frame.origin.x + 70, _imgLeftHandGone.frame.origin.y, 0, 0);
             
             _imgRightHandGone.frame = CGRectMake(_imgRightHandGone.frame.origin.x - 30, _imgRightHandGone.frame.origin.y, 0, 0);
@@ -209,7 +212,8 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
         {
             _showType = LoginShowType_USER;
             [UIView animateWithDuration:0.5 animations:^{
-                _imgLeftHand.frame = CGRectMake(_imgLeftHand.frame.origin.x - 60, _imgLeftHand.frame.origin.y + 30, _imgLeftHand.frame.size.width, _imgLeftHand.frame.size.height);
+                //_imgLeftHand.frame = CGRectMake(_imgLeftHand.frame.origin.x - 60, _imgLeftHand.frame.origin.y + 30, _imgLeftHand.frame.size.width, _imgLeftHand.frame.size.height);
+                _imgLeftHand.frame = CGRectMake(_imgLeftHand.frame.origin.x - 40, _imgLeftHand.frame.origin.y + 55, _imgLeftHand.frame.size.width, _imgLeftHand.frame.size.height);
                 
                 _imgRightHand.frame = CGRectMake(_imgRightHand.frame.origin.x + 48, _imgRightHand.frame.origin.y + 30, _imgRightHand.frame.size.width, _imgRightHand.frame.size.height);
                 
@@ -231,7 +235,7 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
 //登录方法
 -(void)loginAction:(UIButton *)sender{
     
-    [YZProgressHUD showHUDView:self.view Mode:LOCKMODE Text:@"登录中..."];
+    [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"登录中..."];
     
     NSString *userCode = _usernameTextField.text;
     NSString *password = _passwordTextField.text;
@@ -257,11 +261,11 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
             
         } failed:^(NSString *error) {
             [YZProgressHUD hiddenHUDForView:self.view];
-            [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:error];
+            [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:error];
         }];
     }else{
         [YZProgressHUD hiddenHUDForView:self.view];
-        [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:@"用户名、密码不能为空！"];
+        [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:@"用户名、密码不能为空！"];
     }
 
     [self.view endEditing:YES];

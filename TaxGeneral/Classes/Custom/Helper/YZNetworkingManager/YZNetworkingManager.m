@@ -56,7 +56,10 @@
     manager.requestSerializer.timeoutInterval = 20.0;
     
     // 6.设置url请求地址
-    NSString *requestURL = [NSString stringWithFormat:@"%@%@", SERVER_URL, url];
+    NSString *requestURL = url;
+    if(![url hasPrefix:@"http"]){
+        requestURL = [NSString stringWithFormat:@"%@%@", SERVER_URL, url];
+    }
     
     // 7.选择请求方式 GET 或 POST
     switch (method) {

@@ -55,6 +55,8 @@
             [dict setObject:[businessData objectForKey:@"userName"] forKey:@"userName"];
             [dict setObject:[businessData objectForKey:@"orgCode"] forKey:@"orgCode"];
             [dict setObject:[businessData objectForKey:@"orgName"] forKey:@"orgName"];
+            [dict setObject:[businessData objectForKey:@"userMobile"] forKey:@"userMobile"];
+            [dict setObject:[businessData objectForKey:@"userPhone"] forKey:@"userPhone"];
             [dict setObject:[businessData objectForKey:@"token"] forKey:@"token"];
             // 获取系统当前时间(登录时间)
             NSDate *sendDate = [NSDate date];
@@ -65,7 +67,7 @@
             
             // 登录成功将信息保存到用户单例模式中
             [[NSUserDefaults standardUserDefaults] setObject:dict forKey:LOGIN_SUCCESS];
-            [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:isTest] forKey:@"isTest"];
+            [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:isTest] forKey:IS_TEST];
             [[NSUserDefaults standardUserDefaults] synchronize]; // 强制写入
             
             // 绑定推送设备
@@ -75,8 +77,13 @@
                 NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:jsonString, @"msg", nil];
                 NSString *url = @"push/registerPush";
                 [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:parameters success:^(NSDictionary *responseDic) {
+                    // 绑定成功删除标志推送注册标志
+                    [[NSUserDefaults standardUserDefaults] removeObjectForKey:REGISTER_PUSH];
                     DLog(@"Yan -> 绑定推送设备信息成功：responseDic = %@", responseDic);
                 } failure:^(NSString *error) {
+                    // 绑定失败设置注册推送为YES
+                    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:REGISTER_PUSH];
+                    [[NSUserDefaults standardUserDefaults] synchronize]; // 强制写入
                     RLog(@"Yan -> 绑定推送设备信息失败：error = %@", error);
                 }];
             }
@@ -208,6 +215,8 @@
     [dict setObject:[businessData objectForKey:@"userName"] forKey:@"userName"];
     [dict setObject:[businessData objectForKey:@"orgCode"] forKey:@"orgCode"];
     [dict setObject:[businessData objectForKey:@"orgName"] forKey:@"orgName"];
+    [dict setObject:[businessData objectForKey:@"userMobile"] forKey:@"userMobile"];
+    [dict setObject:[businessData objectForKey:@"userPhone"] forKey:@"userPhone"];
     // 获取系统当前时间(登录时间)
     NSDate *sendDate = [NSDate date];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];

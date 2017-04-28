@@ -177,7 +177,7 @@ static NSString * const reuseIdentifier = @"reuseIdentifierGroup";
     _data = [[MapListUtil shareInstance] getMapData];
     _tempData = [self createTempData:_data];
     if(_data.count <= 0){
-        [YZProgressHUD showHUDView:self.view Mode:LOCKMODE Text:@"加载中..."];
+        [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"加载中..."];
         [[MapListUtil shareInstance] loadMapDataBlock:^(NSMutableArray *dataArray) {
             _data = dataArray;
             _tempData = [self createTempData:_data];
@@ -186,7 +186,7 @@ static NSString * const reuseIdentifier = @"reuseIdentifierGroup";
             [self.tableView reloadData];
         } failed:^(NSString *error) {
             [YZProgressHUD hiddenHUDForView:self.view];
-            [YZProgressHUD showHUDView:self.view Mode:SHOWMODE Text:error];
+            [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:error];
         }];
     }
 }

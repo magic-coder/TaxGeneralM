@@ -44,7 +44,7 @@
     BaseTableModelGroup *group4 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:nil settingItems:about, nil];
     [items addObject:group4];
     
-    BOOL isTest = [[[NSUserDefaults standardUserDefaults] objectForKey:@"isTest"] boolValue];
+    BOOL isTest = [[[NSUserDefaults standardUserDefaults] objectForKey:IS_TEST] boolValue];
     if(isTest){
         BaseTableModelItem *test = [BaseTableModelItem createWithImageName:@"mine_test" title:@"测试"];
         BaseTableModelGroup *group5 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:nil settingItems:test, nil];
@@ -66,7 +66,7 @@
 
     BaseTableModelItem *name = [BaseTableModelItem createWithTitle:@"账号" subTitle:[userDict objectForKey:@"userCode"]];
     name.accessoryType = UITableViewCellAccessoryNone;
-    BaseTableModelItem *phoneNum = [BaseTableModelItem createWithTitle:@"手机号" subTitle:@"15691959168"];
+    BaseTableModelItem *phoneNum = [BaseTableModelItem createWithTitle:@"手机号" subTitle:[userDict objectForKey:@"userMobile"]];
     phoneNum.accessoryType = UITableViewCellAccessoryNone;
     //BaseTableModelItem *barCode = [BaseTableModelItem createWithImageName:nil title:@"我的二维码" subTitle:nil rightImageName:@"mine_barcode"];
     //barCode.accessoryType = UITableViewCellAccessoryNone;
@@ -93,8 +93,8 @@
 
 - (NSMutableArray *)getSafeItems{
     NSMutableArray *items = [[NSMutableArray alloc] init];
-    BaseTableModelItem *item1 = [BaseTableModelItem createWithTitle:@"密码修改"];
-    NSString *gesturePwd = [[NSUserDefaults standardUserDefaults] objectForKey:@"gesturespassword"];
+    //BaseTableModelItem *item1 = [BaseTableModelItem createWithTitle:@"密码修改"];
+    NSString *gesturePwd = [[NSUserDefaults standardUserDefaults] objectForKey:GESTURES_PASSWORD];
     BaseTableModelItem *item2 = nil;
     if(gesturePwd.length > 0){
         item2 = [BaseTableModelItem createWithTitle:@"手势密码" subTitle:@"已开启"];
@@ -102,7 +102,8 @@
         item2 = [BaseTableModelItem createWithTitle:@"手势密码" subTitle:@"未开启"];
     }
     
-    BaseTableModelGroup *group1 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:nil settingItems:item1, item2, nil];
+    //BaseTableModelGroup *group1 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:nil settingItems:item1, item2, nil];
+    BaseTableModelGroup *group1 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:nil settingItems:item2, nil];
     [items addObject:group1];
     
     NSDictionary *settingDict = [[SettingUtil shareInstance] loadSettingData];
@@ -141,7 +142,7 @@
 
 - (NSMutableArray *)getServiceItems{
     NSMutableArray *items = [[NSMutableArray alloc] init];
-    BaseTableModelItem *item1 = [BaseTableModelItem createWithTitle:@"客服电话" subTitle:@"12366"];
+    BaseTableModelItem *item1 = [BaseTableModelItem createWithTitle:@"客服电话" subTitle:@"029-87663504"];
     item1.accessoryType = UITableViewCellAccessoryNone;
     BaseTableModelItem *item2 = [BaseTableModelItem createWithTitle:@"客服邮箱" subTitle:@"yanzheng@prient.com"];
     item2.accessoryType = UITableViewCellAccessoryNone;

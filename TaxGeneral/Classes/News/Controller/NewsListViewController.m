@@ -23,8 +23,9 @@
 
 #import "SettingUtil.h"
 
-@interface NewsListViewController () <MainTabBarControllerDelegate, NewsLoopViewDelegate>
+@interface NewsListViewController () <MainTabBarControllerDelegate, NewsLoopViewDelegate, NSURLConnectionDataDelegate>
 
+@property (nonatomic, strong) MainTabBarController *mainTabBarController;
 @property (nonatomic, strong) NewsLoopView *loopView;
 @property (nonatomic, strong) UILabel *hintLabel;       // 刷新顶部提示浮动标
 @property (nonatomic, strong) NSMutableArray *data;     // 数据列表
@@ -44,35 +45,10 @@ static int const pageSize = 10;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [self initializeHandle];
+    
     _pageNo = 1;
     _newsUtil = [NewsUtil shareInstance];
-    
-    MainTabBarController *mainTabBarController = (MainTabBarController *)self.tabBarController;
-    mainTabBarController.customDelegate = self;
-    
-    // 判断用户是否开启了指纹、手势密码，并进行相应跳转
-    // 获取单例模式中的用户信息自动登录
-    NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS];
-    if(nil != userDict){
-        
-        // 获取首次加载标志
-        NSString *isLoad = [[NSUserDefaults standardUserDefaults] stringForKey:LOAD_FINISH];
-        if(isLoad){
-            NSDictionary *settingDict = [[SettingUtil shareInstance] loadSettingData];
-            if([[settingDict objectForKey:@"touchID"] boolValue]){  // 指纹解锁
-                [[NSUserDefaults standardUserDefaults] removeObjectForKey:LOAD_FINISH];// 删除首次加载信息
-                TouchIDViewController *touchIDVC = [[TouchIDViewController alloc] init];
-                [mainTabBarController presentViewController:touchIDVC animated:NO completion:nil];
-            }else{
-                NSString *gesturePwd = [[NSUserDefaults standardUserDefaults] objectForKey:@"gesturespassword"];
-                if(gesturePwd.length > 0){  // 手势验证解锁
-                    [[NSUserDefaults standardUserDefaults] removeObjectForKey:LOAD_FINISH];// 删除首次加载信息
-                    WUGesturesUnlockViewController *gesturesUnlockVC = [[WUGesturesUnlockViewController alloc] initWithUnlockType:WUUnlockTypeLoginPwd];
-                    [mainTabBarController presentViewController:gesturesUnlockVC animated:NO completion:nil];
-                }
-            }
-        }
-    }
     
     self.tableView.rowHeight = 80;
     
@@ -132,6 +108,7 @@ static int const pageSize = 10;
 
 #pragma mark - 下拉刷新数据
 - (void)loadNewData{
+    [self.hintLabel removeFromSuperview];
     //self.tableView.userInteractionEnabled = NO;// 不允许点击
     [_newsUtil initDataWithPageSize:pageSize dataBlock:^(NSDictionary *dataDict) {
         
@@ -274,10 +251,6 @@ static int const pageSize = 10;
 
 #pragma mark - <MainTabBarControllerDelegate> 代理方法刷新数据
 - (void)autoRefreshData{
-    // 先清除角标
-    UITabBarItem * item = [self.tabBarController.tabBar.items objectAtIndex:0];
-    item.badgeValue = nil;
-    
     // 马上进入刷新状态
     [self.tableView.mj_header beginRefreshing];
 }
@@ -351,6 +324,68 @@ static int const pageSize = 10;
     
     [self.hintLabel removeFromSuperview];
     self.hintLabel = nil;
+}
+
+#pragma mark - 初始化处理
+- (void)initializeHandle{
+    // 设置代理方法
+    _mainTabBarController = (MainTabBarController *)self.tabBarController;
+    _mainTabBarController.customDelegate = self;
+    
+    // 校验用户是否开启了指纹、手势密码，并进行相应跳转
+    // 获取单例模式中的用户信息自动登录
+    NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS];
+    if(nil != userDict){
+        // 获取首次加载标志
+        NSString *isLoad = [[NSUserDefaults standardUserDefaults] stringForKey:LOAD_FINISH];
+        if(isLoad){
+            NSDictionary *settingDict = [[SettingUtil shareInstance] loadSettingData];
+            if([[settingDict objectForKey:@"touchID"] boolValue]){  // 指纹解锁
+                [[NSUserDefaults standardUserDefaults] removeObjectForKey:LOAD_FINISH];// 删除首次加载信息
+                TouchIDViewController *touchIDVC = [[TouchIDViewController alloc] init];
+                [_mainTabBarController presentViewController:touchIDVC animated:NO completion:nil];
+            }else{
+                NSString *gesturePwd = [[NSUserDefaults standardUserDefaults] objectForKey:GESTURES_PASSWORD];
+                if(gesturePwd.length > 0){  // 手势验证解锁
+                    [[NSUserDefaults standardUserDefaults] removeObjectForKey:LOAD_FINISH];// 删除首次加载信息
+                    WUGesturesUnlockViewController *gesturesUnlockVC = [[WUGesturesUnlockViewController alloc] initWithUnlockType:WUUnlockTypeLoginPwd];
+                    [_mainTabBarController presentViewController:gesturesUnlockVC animated:NO completion:nil];
+                }
+            }
+        }
+    }
+    
+    // 效验应用版本是否可更新
+    NSString *urlStr = @"https://itunes.apple.com//lookup?id=1230863080";
+    NSURL *url = [NSURL URLWithString:urlStr];
+    NSURLRequest *req = [NSURLRequest requestWithURL:url];
+    [NSURLConnection connectionWithRequest:req delegate:self];
+}
+
+#pragma mark - <NSURLConnectionDataDelegate>代理方法
+- (void)connection:(NSURLConnection *)connection didReceiveData:(nonnull NSData *)data{
+    NSError *error; //解析
+    NSDictionary *appInfo = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+    NSArray *results = [appInfo objectForKey:@"results"];
+    if(results.count > 0){
+        // 最新版本号
+        NSString *version = [[results objectAtIndex:0] objectForKey:@"version"];
+        // 应用程序介绍网址（用户升级跳转URL）
+        //[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/app/1230863080"]];
+        NSString *trackViewUrl = [[results objectAtIndex:0] objectForKey:@"trackViewUrl"];
+        
+        // 当前版本号
+        NSDictionary *infoDic = [[NSBundle mainBundle] infoDictionary];
+        NSString *currentVersion = [infoDic objectForKey:@"CFBundleShortVersionString"];
+        
+        if (![version isEqualToString:currentVersion]) {
+            [YZAlertView showAlertWith:self title:@"版本更新" message:[NSString stringWithFormat:@"发现新版本(%@),是否升级",version] callbackBlock:^(NSInteger btnIndex) {
+                if (btnIndex == 1) {
+                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:trackViewUrl]];
+                }
+            } cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"升级", nil];
+        }
+    }
 }
 
 - (void)didReceiveMemoryWarning {

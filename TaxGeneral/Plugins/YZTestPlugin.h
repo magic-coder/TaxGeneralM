@@ -8,7 +8,7 @@
  Declare  : Copyright © 2017 Yanzheng. All rights reserved.
  ************************************************************/
 
-#import <Cordova/CDVPlugin.h>
+#import "Cordova/CDVPlugin.h"
 
 @interface YZTestPlugin : CDVPlugin
 -(void)testMethod:(CDVInvokedUrlCommand*)command;

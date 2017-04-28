@@ -34,7 +34,7 @@
 #import <EventKit/EventKit.h>
 #import "Reachability.h"
 
-@interface AppDelegate () <BMKGeneralDelegate, UIAlertViewDelegate, CLLocationManagerDelegate>
+@interface AppDelegate () <BMKGeneralDelegate, CLLocationManagerDelegate, UIAlertViewDelegate>
 
 @property (nonatomic, strong) UIImageView *splashView;  // 欢迎页动画效果
 @property (nonatomic, strong) MainTabBarController *mainTabBarController;
@@ -67,9 +67,9 @@
     
     // 判断系统版本是否支持
 #if __IPHONE_OS_VERSION_MAX_ALLOWED < __IPHONE_8_0
-    UIAlertView *alertView =[[UIAlertView alloc]initWithTitle:@"对不起，当前系统版本过低" message:@"请在iPhone的\"设置-通用-软件更新\"中升级您的操作系统至ios8.0以上再使用。" delegate:self cancelButtonTitle:@"退出应用" otherButtonTitles: nil];
-    alertView.tag = 0;
-    [alertView show];
+    UIAlertView *supportAlert =[[UIAlertView alloc]initWithTitle:@"对不起，当前系统版本过低" message:@"请在iPhone的\"设置-通用-软件更新\"中升级您的操作系统至ios8.0以上再使用。" delegate:self cancelButtonTitle:@"退出应用" otherButtonTitles: nil];
+    supportAlert.tag = 0;
+    [supportAlert show];
 #endif
     
     // BaiduMap 要使用百度地图，请先启动BaiduMapManager
@@ -273,7 +273,7 @@
     DLog(@"test:%@",deviceToken);
     [BPush registerDeviceToken:deviceToken];
     [BPush bindChannelWithCompleteHandler:^(id result, NSError *error) {
-        RLog(@"Yan -> 输出：%@", [NSString stringWithFormat:@"Method: %@\n%@",BPushRequestMethodBind,result]);
+        DLog(@"Yan -> 输出：%@", [NSString stringWithFormat:@"Method: %@\n%@",BPushRequestMethodBind,result]);
         // 需要在绑定成功后进行 settag listtag deletetag unbind 操作否则会失败
         // 注册BPush成功后，绑定推送设备
         [self registerPushID:result];
@@ -293,7 +293,7 @@
             
             [BPush listTagsWithCompleteHandler:^(id result, NSError *error) {
                 if (result) {
-                    RLog(@"Yan -> BPush : result ============== %@",result);
+                    DLog(@"Yan -> BPush : result ============== %@",result);
                 }
             }];
             [BPush setTag:@"Mytag" withCompleteHandler:^(id result, NSError *error) {
@@ -344,17 +344,17 @@
     Reachability *reachability = [Reachability reachabilityWithHostName:SERVER_URL];
     switch([reachability currentReachabilityStatus]){
         case NotReachable:{
-            UIAlertView *networkingAlert =[[UIAlertView alloc]initWithTitle:@"没有网络" message:@"请在iPhone的\"设置-无限局域网/蜂窝移动网\"中打开网络连接。" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
-            networkingAlert.tag = 1;
-            [networkingAlert show];
-            RLog(@"Yan -> 没有网络");
+            RLog(@"没有网络");
+            UIAlertView *noNetworkAlert = [[UIAlertView alloc] initWithTitle:@"没有网络" message:@"请在iPhone的\"设置-无限局域网/蜂窝移动网\"中打开网络连接。" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
+            noNetworkAlert.tag = 1;
+            [noNetworkAlert show];
             break;
         }
         case ReachableViaWWAN:
-            RLog(@"Yan -> 3G/4G");
+            RLog(@"3G/4G");
             break;
         case ReachableViaWiFi:
-            RLog(@"Yan -> Wifi网络");
+            RLog(@"Wifi网络");
             break;
     }
     
@@ -421,24 +421,6 @@
     [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
     // 设置cookie的接受政策
     [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookieAcceptPolicy:NSHTTPCookieAcceptPolicyAlways];
-}
-
-#pragma makr - alert点击方法
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
-    // 退出应用
-    if(alertView.tag == 0){
-        [UIView animateWithDuration:1.0f animations:^{
-            CATransition *animation = [CATransition animation];
-            animation.duration = 1.0f;
-            animation.timingFunction = UIViewAnimationCurveEaseInOut;
-            animation.type = @"rippleEffect";
-            //animation.type = kCATransitionMoveIn;
-            animation.subtype = kCATransitionFromBottom;
-            [_window.layer addAnimation:animation forKey:nil];
-         } completion:^(BOOL finished) {
-             exit(0);
-         }];
-    }
 }
 
 #pragma mark - 3DTouch方法注册
@@ -529,6 +511,28 @@
             RLog(@"Yan -> login失败 error = %@", error);
         }];
         
+        // 判断推送是否绑定成功
+        BOOL registerPush = [[[NSUserDefaults standardUserDefaults] objectForKey:REGISTER_PUSH] boolValue];
+        if(registerPush){
+            // 绑定推送设备
+            NSDictionary *pushDict = [[NSUserDefaults standardUserDefaults] objectForKey:PUSH_INFO];
+            if(nil != pushDict){
+                NSString *jsonString = [[BaseHandleUtil shareInstance] dataToJsonString:pushDict];
+                NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:jsonString, @"msg", nil];
+                NSString *url = @"push/registerPush";
+                [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:parameters success:^(NSDictionary *responseDic) {
+                    // 绑定成功删除标志推送注册标志
+                    [[NSUserDefaults standardUserDefaults] removeObjectForKey:REGISTER_PUSH];
+                    DLog(@"Yan -> 绑定推送设备信息成功：responseDic = %@", responseDic);
+                } failure:^(NSString *error) {
+                    // 绑定失败设置注册推送为YES
+                    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:REGISTER_PUSH];
+                    [[NSUserDefaults standardUserDefaults] synchronize]; // 强制写入
+                    RLog(@"Yan -> 绑定推送设备信息失败：error = %@", error);
+                }];
+            }
+        }
+        
     }
 }
 
@@ -589,6 +593,24 @@
         // 完成后执行code
         //[view removeFromSuperview];
     }];
+}
+
+#pragma makr - alert点击方法
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
+    // 退出应用
+    if(alertView.tag == 0){
+        [UIView animateWithDuration:1.0f animations:^{
+            CATransition *animation = [CATransition animation];
+            animation.duration = 1.0f;
+            animation.timingFunction = UIViewAnimationCurveEaseInOut;
+            animation.type = @"rippleEffect";
+            //animation.type = kCATransitionMoveIn;
+            animation.subtype = kCATransitionFromBottom;
+            [_window.layer addAnimation:animation forKey:nil];
+        } completion:^(BOOL finished) {
+            exit(0);
+        }];
+    }
 }
 
 #pragma mark - 记录Crash信息

@@ -297,22 +297,29 @@ static int const pageSize = 100;
             [YZAlertView showAlertWith:self title:@"登录失效" message:@"您当前登录信息已失效，请重新登录！" callbackBlock:^(NSInteger btnIndex) {
                 // 注销方法
                 [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"注销中..."];
-                [[AccountUtil shareInstance] accountLogout];
-                [YZProgressHUD hiddenHUDForView:SELF_VIEW];
-                
-                LoginViewController *loginVC = [[LoginViewController alloc] init];
-                loginVC.isLogin = YES;
-                
-                // 水波纹动画效果
-                CATransition *animation = [CATransition animation];
-                animation.duration = 1.0f;
-                animation.timingFunction = UIViewAnimationCurveEaseInOut;
-                animation.type = @"rippleEffect";
-                //animation.type = kCATransitionMoveIn;
-                animation.subtype = kCATransitionFromTop;
-                [self.view.window.layer addAnimation:animation forKey:nil];
-                
-                [self presentViewController:loginVC animated:YES completion:nil];
+                [[AccountUtil shareInstance] accountLogout:^{
+                    DLog(@"用户注销成功");
+                    [YZProgressHUD hiddenHUDForView:SELF_VIEW];
+                    
+                    LoginViewController *loginVC = [[LoginViewController alloc] init];
+                    loginVC.isLogin = YES;
+                    
+                    // 水波纹动画效果
+                    CATransition *animation = [CATransition animation];
+                    animation.duration = 1.0f;
+                    animation.timingFunction = UIViewAnimationCurveEaseInOut;
+                    animation.type = @"rippleEffect";
+                    //animation.type = kCATransitionMoveIn;
+                    animation.subtype = kCATransitionFromTop;
+                    [self.view.window.layer addAnimation:animation forKey:nil];
+                    
+                    [self presentViewController:loginVC animated:YES completion:nil];
+                    
+                } failed:^(NSString *error) {
+                    DLog(@"用户注销失败，error=%@", error);
+                    [YZProgressHUD hiddenHUDForView:SELF_VIEW];
+                    [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:error];
+                }];
             } cancelButtonTitle:@"重新登录" destructiveButtonTitle:nil otherButtonTitles: nil];
         }else{
             self.navigationItem.titleView = nil;
