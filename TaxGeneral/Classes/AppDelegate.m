@@ -134,6 +134,8 @@
     //[_window setRootViewController:_viewController];
     
     _mainTabBarController = [MainTabBarController shareInstance];
+    _mainTabBarController.view.userInteractionEnabled = NO;// 加载期间不允许永不与视图交互
+    
     [_window setRootViewController:_mainTabBarController];
     // 若用户登录则进行初始化登录数据
     [self loginInitialize];
@@ -580,6 +582,7 @@
         // 完成后执行code
         [NSThread sleepForTimeInterval:1.0f];
         [UIApplication sharedApplication].statusBarHidden = NO;
+        _mainTabBarController.view.userInteractionEnabled = YES;    // 动画加载完毕视图可以进行交互
         [_splashView removeFromSuperview];
     }];
 }
@@ -616,6 +619,13 @@
 #pragma mark - 记录Crash信息
 void UncaughtExceptionHandler(NSException *exception) {
 
+    // 删除news列表信息
+    [[BaseSandBoxUtil shareInstance] removeFileName:@"newsData.plist"];
+    // 删除app列表信息
+    [[BaseSandBoxUtil shareInstance] removeFileName:@"appData.plist"];
+    // 删除msg列表信息
+    [[BaseSandBoxUtil shareInstance] removeFileName:@"msgData.plist"];
+    
     NSString *name = [exception name];
     NSString *reason = [exception reason];
     NSString *stack = [[exception callStackSymbols] componentsJoinedByString:@"\n"];

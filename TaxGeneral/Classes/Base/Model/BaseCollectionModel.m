@@ -23,7 +23,36 @@
     item.webImg = [dict objectForKey:@"appimage"];// 服务器logo图标
     item.localImg = [NSString stringWithFormat:@"app_%@", item.no]; // 加载本地default图标(根据应用序列号生成)
     item.url = [dict objectForKey:@"appurl"];
+    if([[dict objectForKey:@"isnewapp"] isEqualToString:@"Y"]){
+        item.isNewApp = YES;
+    }else{
+        item.isNewApp = NO;
+    }
     return item;
+}
+
+#pragma mark - 重写属性的Getter方法
+-(NSString *)no{
+    return _no == nil ? @"" : _no;
+}
+-(NSString *)pno{
+    return _pno == nil ? @"" : _pno;
+}
+-(NSString *)level{
+    return _level == nil ? @"" : _level;
+}
+-(NSString *)title{
+    return _title == nil ? @"" : _title;
+}
+-(NSString *)webImg{
+    //return _webImg == nil ? @"" : _webImg;
+    return @"";
+}
+-(NSString *)localImg{
+    return _localImg == nil ? @"" : _localImg;
+}
+- (NSString *)url{
+    return _url == nil ? @"" : _url;
 }
 
 @end

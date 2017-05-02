@@ -162,12 +162,25 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
 #pragma mark - <UITextFieldDelegate>代理方法
 // 捂脸移动动画
 - (void)textFieldDidBeginEditing:(UITextField *)textField{
+    [UIView animateWithDuration:0.6f animations:^{
+        //_imgLeftHand.frame = CGRectMake(_imgLeftHand.frame.origin.x + 60, _imgLeftHand.frame.origin.y - 30, _imgLeftHand.frame.size.width, _imgLeftHand.frame.size.height);
+        _imgLeftHand.frame = CGRectMake(_imgLeftHand.frame.origin.x + 40, _imgLeftHand.frame.origin.y - 55, _imgLeftHand.frame.size.width, _imgLeftHand.frame.size.height);
+        
+        _imgRightHand.frame = CGRectMake(_imgRightHand.frame.origin.x - 48, _imgRightHand.frame.origin.y - 30, _imgRightHand.frame.size.width, _imgRightHand.frame.size.height);
+        
+        _imgLeftHandGone.frame = CGRectMake(_imgLeftHandGone.frame.origin.x + 70, _imgLeftHandGone.frame.origin.y, 0, 0);
+        
+        _imgRightHandGone.frame = CGRectMake(_imgRightHandGone.frame.origin.x - 30, _imgRightHandGone.frame.origin.y, 0, 0);
+        
+    } completion:^(BOOL b) {
+    }];
+    /*
     if ([textField isEqual:self.usernameTextField]) {
-        if (_showType != LoginShowType_PASS)
-        {
+        if (_showType != LoginShowType_PASS){
             _showType = LoginShowType_USER;
             return;
         }
+        
         _showType = LoginShowType_USER;
         [UIView animateWithDuration:0.5 animations:^{
             //_imgLeftHand.frame = CGRectMake(_imgLeftHand.frame.origin.x - 60, _imgLeftHand.frame.origin.y + 30, _imgLeftHand.frame.size.width, _imgLeftHand.frame.size.height);
@@ -183,10 +196,8 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
         } completion:^(BOOL b) {
         }];
         
-    }
-    else if ([textField isEqual:self.passwordTextField]) {
-        if (_showType == LoginShowType_PASS)
-        {
+    }else if ([textField isEqual:self.passwordTextField]) {
+        if (_showType == LoginShowType_PASS){
             _showType = LoginShowType_PASS;
             return;
         }
@@ -204,12 +215,25 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
         } completion:^(BOOL b) {
         }];
     }
+    */
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField{
+    [UIView animateWithDuration:0.6f animations:^{
+        //_imgLeftHand.frame = CGRectMake(_imgLeftHand.frame.origin.x - 60, _imgLeftHand.frame.origin.y + 30, _imgLeftHand.frame.size.width, _imgLeftHand.frame.size.height);
+        _imgLeftHand.frame = CGRectMake(_imgLeftHand.frame.origin.x - 40, _imgLeftHand.frame.origin.y + 55, _imgLeftHand.frame.size.width, _imgLeftHand.frame.size.height);
+        
+        _imgRightHand.frame = CGRectMake(_imgRightHand.frame.origin.x + 48, _imgRightHand.frame.origin.y + 30, _imgRightHand.frame.size.width, _imgRightHand.frame.size.height);
+        
+        _imgLeftHandGone.frame = CGRectMake(_imgLeftHandGone.frame.origin.x - 70, _imgLeftHandGone.frame.origin.y, 40, 40);
+        
+        _imgRightHandGone.frame = CGRectMake(_imgRightHandGone.frame.origin.x + 30, _imgRightHandGone.frame.origin.y, 40, 40);
+        
+    } completion:^(BOOL b) {
+    }];
+    /*
     if ([textField isEqual:self.passwordTextField]) {
-        if (_showType == LoginShowType_PASS)
-        {
+        if (_showType == LoginShowType_PASS){
             _showType = LoginShowType_USER;
             [UIView animateWithDuration:0.5 animations:^{
                 //_imgLeftHand.frame = CGRectMake(_imgLeftHand.frame.origin.x - 60, _imgLeftHand.frame.origin.y + 30, _imgLeftHand.frame.size.width, _imgLeftHand.frame.size.height);
@@ -225,6 +249,7 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
             }];
         }
     }
+    */
 }
 
 //点击空白处隐藏键盘

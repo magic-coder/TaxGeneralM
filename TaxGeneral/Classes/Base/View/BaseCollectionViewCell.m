@@ -113,6 +113,10 @@
             [_editBtn setImage:[UIImage imageNamed:@"app_edit_sel"] forState:UIControlStateNormal];
             [_editBtn setTag:2];
         }
+        
+        // 新角标
+        [_newsImageView setFrame:CGRectMake(5, 5, 28, 28)];
+        
     }
     
     // 如果image存在，进行设置图片的样式
@@ -143,27 +147,14 @@
 - (void)setItem:(BaseCollectionModelItem *)item{
     _item = item;
     // 从远程URL获取图片(默认本地图标)
-    item.webImg = @"";
     [_imageView sd_setImageWithURL:[NSURL URLWithString:item.webImg] placeholderImage:[UIImage imageNamed:item.localImg] options:SDWebImageAllowInvalidSSLCertificates completed:nil];
     _titleLabel.text = self.item.title;
     
     // 添加新角标
-    if([item.no isEqualToString:@"24"]){
-        NSDate *currentDate = [NSDate date];
-        
-        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-        NSDate *otherDate = [formatter dateFromString:@"2017-05-01 00:00:00"];
-        
-        int i = [[BaseHandleUtil shareInstance] compareOneDay:currentDate withAnotherDay:otherDate];
-        
-        if( i == -1){
-            [_newsImageView setImage:[UIImage imageNamed:@"app_new"]];
-        }else{
-            [_newsImageView setImage:[UIImage imageNamed:@"app_new_bak"]];
-        }
+    if(item.isNewApp){
+        [_newsImageView setImage:[UIImage imageNamed:@"app_common_new_mark"]];
     }else{
-        [_newsImageView setImage:[UIImage imageNamed:@"app_new_bak"]];
+        [_newsImageView setImage:[UIImage imageNamed:@"none"]];
     }
     
     [self layoutSubviews];

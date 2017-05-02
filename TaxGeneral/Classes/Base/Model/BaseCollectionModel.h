@@ -20,6 +20,7 @@
 @property (nonatomic, strong) NSString *webImg;     // 服务器应用图标
 @property (nonatomic, strong) NSString *localImg;   // 本地默认logo
 @property (nonatomic, strong) NSString *url;        // 应用链接URL（Web应用）
+@property (nonatomic, assign) BOOL isNewApp;        // 是否新App
 /*
 @property (nonatomic, assign) NSInteger uids;
 @property (nonatomic, assign) NSInteger sids;

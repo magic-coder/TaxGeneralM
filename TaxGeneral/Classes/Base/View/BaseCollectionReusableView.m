@@ -12,12 +12,12 @@
 
 @interface BaseCollectionReusableView()
 
-@property (nonatomic, strong) UIView *leftView;     // 左侧标记视图
+@property (nonatomic, strong) UIView *leftView;         // 左侧标记视图
 
-@property (nonatomic, strong) UIView *topLine;      // 顶部边线
-@property (nonatomic, strong) UIView *bottomLine;   // 底部边线
+@property (nonatomic, strong) UIView *topLine;          // 顶部边线
+@property (nonatomic, strong) UIView *bottomLine;       // 底部边线
 
-@property (nonatomic, strong) UILabel *titleLabel;  // 标签
+@property (nonatomic, strong) UILabel *titleLabel;      // 标签
 
 @end
 
@@ -61,7 +61,7 @@
         
         // 左侧标记红线
         [_leftView setFrame:CGRectMake(0, 0, 4.0f, self.frameHeight-0.5f)];
-        [_leftView setBackgroundColor:[UIColor redColor]];
+        [_leftView setBackgroundColor:[UIColor orangeColor]];
         [_leftView setAlpha:0.7f];
         
         // 底部边线样式

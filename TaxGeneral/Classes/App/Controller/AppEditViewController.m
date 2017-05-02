@@ -64,7 +64,7 @@
     // 我的应用数据
     int ids = 1;
     for(BaseCollectionModelItem *mineItem in mineGroup.items){
-        NSDictionary *mineDict = [NSDictionary dictionaryWithObjectsAndKeys: mineItem.no, @"appno", mineItem.title, @"appname", mineItem.webImg, @"appimage", mineItem.url, @"appurl", [NSString stringWithFormat:@"%d", ids], @"userappsort", nil];
+        NSDictionary *mineDict = [NSDictionary dictionaryWithObjectsAndKeys: mineItem.no, @"appno", mineItem.title, @"appname", mineItem.webImg, @"appimage", mineItem.url, @"appurl", [NSString stringWithFormat:@"%d", ids], @"userappsort", @"1", @"apptype", mineItem.isNewApp ? @"Y" : @"N", @"isnewapp", nil];
         [mineData addObject:mineDict];
         ids++;
     }
@@ -77,14 +77,14 @@
             }
         }
         if(i == 0){
-            NSDictionary *otherDict = [NSDictionary dictionaryWithObjectsAndKeys:otherItem.no, @"appno", otherItem.title, @"appname", otherItem.webImg, @"appimage", otherItem.url, @"appurl", nil];
+            NSDictionary *otherDict = [NSDictionary dictionaryWithObjectsAndKeys:otherItem.no, @"appno", otherItem.title, @"appname", otherItem.webImg, @"appimage", otherItem.url, @"appurl", @"2", @"apptype", otherItem.isNewApp ? @"Y" : @"N", @"isnewapp", nil];
             [otherData addObject:otherDict];
         }
     }
     
     // 全部应用数据
     for(BaseCollectionModelItem *allItem in allGroup.items){
-        NSDictionary *allDict = [NSDictionary dictionaryWithObjectsAndKeys:allItem.no, @"appno", allItem.title, @"appname", allItem.webImg, @"appimage", allItem.url, @"appurl", nil];
+        NSDictionary *allDict = [NSDictionary dictionaryWithObjectsAndKeys:allItem.no, @"appno", allItem.title, @"appname", allItem.webImg, @"appimage", allItem.url, @"appurl", allItem.isNewApp ? @"Y" : @"N", @"isnewapp", nil];
         [allData addObject:allDict];
     }
     

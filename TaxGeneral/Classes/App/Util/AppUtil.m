@@ -70,13 +70,14 @@
             
             NSMutableArray *appData = [[responseDic objectForKey:@"businessData"] objectForKey:@"appList"];
             for(NSDictionary *dict in appData){
-                BOOL flag = [[dict objectForKey:@"isuserapp"] boolValue];
+                int type = [[dict objectForKey:@"apptype"] intValue];  // 1:我的应用 2:其他应用 3:新增应用
+                //BOOL flag = [[dict objectForKey:@"isuserapp"] boolValue];
                 NSInteger level = [[dict objectForKey:@"applevel"] integerValue];
-                if(level == 0){// 只获取第一个级别的
-                    if(flag){  // 值为TRUE是我的应用
+                if(level == 0){ // 只获取第一个级别的 level = 0 的数据
+                    if(type == 1){  // 值为1是我的应用
                         [mineData addObject:dict];
                     }
-                    if(!flag){  // 值为FALSE是其他应用
+                    if(type == 2 || type == 3){  // 值为2、3是其他应用
                         [otherData addObject:dict];
                     }
                     [allData addObject:dict];
@@ -87,6 +88,9 @@
             
             // 对我的应用进行排序
             [self sortWithArray:mineData key:@"userappsort" ascending:YES];
+            
+            // 对其他应用进行排序
+            [self sortWithArray:otherData key:@"userappsort" ascending:YES];
             
             // 对子应用进行排序
             [self sortWithArray:subData key:@"appsort" ascending:YES];
@@ -169,8 +173,9 @@
     for(NSDictionary *dict in customData){
         appsort ++;
         NSString *appno = [dict objectForKey:@"appno"];
+        NSString *apptype = [dict objectForKey:@"apptype"];
         
-        NSDictionary *paramDict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:appsort], @"appsort", appno, @"appno", nil];
+        NSDictionary *paramDict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:appsort], @"appsort", appno, @"appno", apptype, @"apptype", nil];
         
         [paramsArray addObject:paramDict];
     }
@@ -192,7 +197,16 @@
 // 写入应用数据到本地SandBox中
 - (BOOL)writeNewAppData:(NSDictionary *)appData{
     
-    [self saveCustomData:[appData objectForKey:@"mineData"]];
+    NSMutableArray *customData = [[NSMutableArray alloc] init];
+    
+    for(NSDictionary *mineDict in [appData objectForKey:@"mineData"]){
+        [customData addObject:mineDict];
+    }
+    for(NSDictionary *otherDict in [appData objectForKey:@"otherData"]){
+        [customData addObject:otherDict];
+    }
+    
+    [self saveCustomData:customData];
     
     return [[BaseSandBoxUtil shareInstance] writeData:appData fileName:FILE_NAME];
 }

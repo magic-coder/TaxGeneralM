@@ -28,6 +28,9 @@
 @property (nonatomic, strong) UIImageView *topLogoImageView;    // 顶部回弹logo视图
 @property (nonatomic, assign) BOOL adjustStatus;                // 调整状态
 
+@property (nonatomic, assign) double lastTimestamp;             // 上次时间戳
+@property (nonatomic, assign) double currentTimestamp;          // 当前时间戳
+
 @end
 
 @implementation AppViewController
@@ -148,7 +151,8 @@
         viewController = [[AppEditViewController alloc] init];
     }
     if([sender.titleLabel.text isEqualToString:@"通知公告"]){
-        url = [NSString stringWithFormat:@"%@public/notice/index", SERVER_URL];
+        //url = [NSString stringWithFormat:@"%@public/notice/index", SERVER_URL];
+        url = [NSString stringWithFormat:@"%@public/notice/10/1", SERVER_URL];
     }
     if([sender.titleLabel.text isEqualToString:@"通讯录"]){
         url = [NSString stringWithFormat:@"%@litter/initLitter", SERVER_URL];
@@ -206,20 +210,20 @@
     // 我的应用数据
     int mine_ids = 1;
     for(BaseCollectionModelItem *mineItem in mineGroup.items){
-        NSDictionary *mineDict = [NSDictionary dictionaryWithObjectsAndKeys: mineItem.no, @"appno", mineItem.title, @"appname", mineItem.webImg, @"appimage", mineItem.url, @"appurl", [NSString stringWithFormat:@"%d", mine_ids], @"userappsort", nil];
+        NSDictionary *mineDict = [NSDictionary dictionaryWithObjectsAndKeys: mineItem.no, @"appno", mineItem.title, @"appname", mineItem.webImg, @"appimage", mineItem.url, @"appurl", [NSString stringWithFormat:@"%d", mine_ids], @"userappsort", @"1", @"apptype", mineItem.isNewApp ? @"Y" : @"N", @"isnewapp", nil];
         [mineData addObject:mineDict];
         mine_ids++;
     }
     // 其他应用数据
     int other_ids = 1;
     for(BaseCollectionModelItem *otherItem in otherGroup.items){
-        NSDictionary *otherDict = [NSDictionary dictionaryWithObjectsAndKeys: otherItem.no, @"appno", otherItem.title, @"appname", otherItem.webImg, @"appimage", otherItem.url, @"appurl", [NSString stringWithFormat:@"%d", other_ids], @"userappsort", nil];
+        NSDictionary *otherDict = [NSDictionary dictionaryWithObjectsAndKeys: otherItem.no, @"appno", otherItem.title, @"appname", otherItem.webImg, @"appimage", otherItem.url, @"appurl", [NSString stringWithFormat:@"%d", other_ids], @"userappsort", @"2", @"apptype", otherItem.isNewApp ? @"Y" : @"N", @"isnewapp", nil];
         [otherData addObject:otherDict];
         other_ids++;
     }
     // 全部应用
     for(BaseCollectionModelItem *allItem in allGroup.items){
-        NSDictionary *allDict = [NSDictionary dictionaryWithObjectsAndKeys: allItem.no, @"appno", allItem.title, @"appname", allItem.webImg, @"appimage", allItem.url, @"appurl", nil];
+        NSDictionary *allDict = [NSDictionary dictionaryWithObjectsAndKeys: allItem.no, @"appno", allItem.title, @"appname", allItem.webImg, @"appimage", allItem.url, @"appurl", allItem.isNewApp ? @"Y" : @"N", @"isnewapp", nil];
         [allData addObject:allDict];
     }
     
@@ -235,37 +239,46 @@
 #pragma mark - 判断是否登录，及跳转登录
 #pragma mark 判断是否登录了
 -(BOOL)isLogin{
+    
+    // 计算上次刷新与当前时间戳
+    NSTimeInterval timestamp = [[NSDate date] timeIntervalSince1970];
+    _currentTimestamp = floor(timestamp);
+    
     NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS];
     if(nil != userDict){
-        [[LoginUtil shareInstance] loginWithTokenSuccess:^{
-        } failed:^(NSString *error) {
-            [YZAlertView showAlertWith:self title:@"登录失效" message:@"您当前登录信息已失效，请重新登录！" callbackBlock:^(NSInteger btnIndex) {
-                // 注销方法
-                [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"注销中..."];
-                [[AccountUtil shareInstance] accountLogout:^{
-                    DLog(@"用户注销成功");
-                    [YZProgressHUD hiddenHUDForView:SELF_VIEW];
-                    
-                    LoginViewController *loginVC = [[LoginViewController alloc] init];
-                    loginVC.isLogin = YES;
-                    
-                    // 水波纹动画效果
-                    CATransition *animation = [CATransition animation];
-                    animation.duration = 1.0f;
-                    animation.timingFunction = UIViewAnimationCurveEaseInOut;
-                    animation.type = @"rippleEffect";
-                    //animation.type = kCATransitionMoveIn;
-                    animation.subtype = kCATransitionFromTop;
-                    [self.view.window.layer addAnimation:animation forKey:nil];
-                    
-                    [self presentViewController:loginVC animated:YES completion:nil];
-                } failed:^(NSString *error) {
-                    DLog(@"用户注销失败，error=%@", error);
-                    [YZProgressHUD hiddenHUDForView:SELF_VIEW];
-                    [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:error];
-                }];
-            } cancelButtonTitle:@"重新登录" destructiveButtonTitle:nil otherButtonTitles: nil];
-        }];
+        if(_currentTimestamp - _lastTimestamp > 60.0f){ // 时间戳大于一分钟进行处理
+            [[LoginUtil shareInstance] loginWithTokenSuccess:^{
+                _lastTimestamp = _currentTimestamp;
+            } failed:^(NSString *error) {
+                _lastTimestamp = _currentTimestamp;
+                [YZAlertView showAlertWith:self title:@"登录失效" message:@"您当前登录信息已失效，请重新登录！" callbackBlock:^(NSInteger btnIndex) {
+                    // 注销方法
+                    [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"注销中..."];
+                    [[AccountUtil shareInstance] accountLogout:^{
+                        DLog(@"用户注销成功");
+                        [YZProgressHUD hiddenHUDForView:SELF_VIEW];
+                        
+                        LoginViewController *loginVC = [[LoginViewController alloc] init];
+                        loginVC.isLogin = YES;
+                        
+                        // 水波纹动画效果
+                        CATransition *animation = [CATransition animation];
+                        animation.duration = 1.0f;
+                        animation.timingFunction = UIViewAnimationCurveEaseInOut;
+                        animation.type = @"rippleEffect";
+                        //animation.type = kCATransitionMoveIn;
+                        animation.subtype = kCATransitionFromTop;
+                        [self.view.window.layer addAnimation:animation forKey:nil];
+                        
+                        [self presentViewController:loginVC animated:YES completion:nil];
+                    } failed:^(NSString *error) {
+                        DLog(@"用户注销失败，error=%@", error);
+                        [YZProgressHUD hiddenHUDForView:SELF_VIEW];
+                        [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:error];
+                    }];
+                } cancelButtonTitle:@"重新登录" destructiveButtonTitle:nil otherButtonTitles: nil];
+            }];
+        }
         return YES;
     }else{
         return NO;
@@ -301,7 +314,7 @@
 - (UIImageView *)topLogoImageView {
     if (!_topLogoImageView) {
         _topLogoImageView = [[UIImageView alloc] init];
-        _topLogoImageView.image = [UIImage imageNamed:@"app_top_logo"];
+        _topLogoImageView.image = [UIImage imageNamed:@"app_common_top_logo"];
         _topLogoImageView.contentMode = UIViewContentModeScaleAspectFit;
         _topLogoImageView.backgroundColor = DEFAULT_BACKGROUND_COLOR;
     }
