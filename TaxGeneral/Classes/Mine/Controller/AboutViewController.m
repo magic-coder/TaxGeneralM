@@ -12,7 +12,7 @@
 #import "AboutHeaderView.h"
 #import "AboutFooterView.h"
 
-@interface AboutViewController () <NSURLConnectionDataDelegate>
+@interface AboutViewController ()
 
 @property (nonatomic, strong) NSArray *data;     // 数据列表
 
@@ -86,43 +86,42 @@ static NSString * const reuseIdentifier = @"aboutTableViewCell";
         [self.navigationController pushViewController:introduceVC animated:YES];
     }
     if(indexPath.row == 1){
-        NSString *urlStr = @"https://itunes.apple.com//lookup?id=1230863080";
-        NSURL *url = [NSURL URLWithString:urlStr];
-        NSURLRequest *req = [NSURLRequest requestWithURL:url];
-        [NSURLConnection connectionWithRequest:req delegate:self];
+        NSString *urlStr = @"https://itunes.apple.com/cn/lookup?id=1230863080";
+        
+        AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+        [manager POST:urlStr parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            NSArray *results = [responseObject objectForKey:@"results"];
+            if(results.count > 0){
+                // 最新版本号
+                NSString *version = [[results objectAtIndex:0] objectForKey:@"version"];
+                // 应用程序介绍网址（用户升级跳转URL）
+                //[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/app/1230863080"]];
+                NSString *trackViewUrl = [[results objectAtIndex:0] objectForKey:@"trackViewUrl"];
+                
+                // 当前版本号（本地）
+                NSDictionary *infoDic = [[NSBundle mainBundle] infoDictionary];
+                NSString *currentVersion = [infoDic objectForKey:@"CFBundleShortVersionString"];
+                
+                if (![version isEqualToString:currentVersion]) {
+                    
+                    [YZAlertView showAlertWith:self title:@"版本更新" message:[NSString stringWithFormat:@"发现新版本(%@)，是否更新",version] callbackBlock:^(NSInteger btnIndex) {
+                        if (btnIndex == 1) {
+                            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:trackViewUrl]];
+                        }
+                    } cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"更新", nil];
+                }else{
+                    [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:@"当前版本已是最新版本"];
+                }
+            }else{
+                [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:@"当前版本已是最新版本"];
+            }
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:@"版本检测失败，请稍后再试！"];
+        }];
     }
     if(indexPath.row == 2){
         [[UIApplication sharedApplication]openURL:[NSURL URLWithString:@"https://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=1230863080&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8"]];
-    }
-    
-}
-
-#pragma mark - <NSURLConnectionDataDelegate>代理方法
-- (void)connection:(NSURLConnection *)connection didReceiveData:(nonnull NSData *)data{
-    NSError *error; //解析
-    NSDictionary *appInfo = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
-    NSArray *results = [appInfo objectForKey:@"results"];
-    if(results.count > 0){
-        // 最新版本号
-        NSString *version = [[results objectAtIndex:0] objectForKey:@"version"];
-        // 应用程序介绍网址（用户升级跳转URL）
-        //[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/app/1230863080"]];
-        NSString *trackViewUrl = [[results objectAtIndex:0] objectForKey:@"trackViewUrl"];
-        
-        // 当前版本号
-        NSDictionary *infoDic = [[NSBundle mainBundle] infoDictionary];
-        NSString *currentVersion = [infoDic objectForKey:@"CFBundleShortVersionString"];
-        
-        if (![version isEqualToString:currentVersion]) {
-            
-            [YZAlertView showAlertWith:self title:@"版本更新" message:[NSString stringWithFormat:@"发现新版本(%@)，是否升级",version] callbackBlock:^(NSInteger btnIndex) {
-                if (btnIndex == 1) {
-                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:trackViewUrl]];
-                }
-            } cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"升级", nil];
-        }
-    }else{
-        [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:@"当前版本已是最新版本"];
     }
 }
 

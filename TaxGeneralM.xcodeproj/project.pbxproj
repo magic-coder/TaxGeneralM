@@ -185,7 +185,6 @@
 		18E00F071E2F0B7A009A609A /* TestWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E00F061E2F0B7A009A609A /* TestWebViewController.m */; };
 		18E00F301E2F5CC9009A609A /* BaseWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E00F2F1E2F5CC9009A609A /* BaseWebViewController.m */; };
 		18E9D4061E52E16200A46BCB /* MessageDetailModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E9D4051E52E16200A46BCB /* MessageDetailModel.m */; };
-		18EA03A51E34990B00393735 /* appsData.plist in Resources */ = {isa = PBXBuildFile; fileRef = 18EA03A41E34990B00393735 /* appsData.plist */; };
 		18EA03AE1E3607C100393735 /* BPushCerResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 18EA03AB1E3607C100393735 /* BPushCerResource.bundle */; };
 		18EA03AF1E3607C100393735 /* libBPush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 18EA03AC1E3607C100393735 /* libBPush.a */; };
 		18EA03B01E3607C100393735 /* test.caf in Resources */ = {isa = PBXBuildFile; fileRef = 18EA03AD1E3607C100393735 /* test.caf */; };
@@ -609,7 +608,6 @@
 		18E9D4041E52E16200A46BCB /* MessageDetailModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageDetailModel.h; path = Classes/Message/Model/MessageDetailModel.h; sourceTree = "<group>"; };
 		18E9D4051E52E16200A46BCB /* MessageDetailModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MessageDetailModel.m; path = Classes/Message/Model/MessageDetailModel.m; sourceTree = "<group>"; };
 		18EA03A01E34896600393735 /* TaxGeneral.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TaxGeneral.entitlements; sourceTree = "<group>"; };
-		18EA03A41E34990B00393735 /* appsData.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = appsData.plist; path = Resources/Plists/appsData.plist; sourceTree = "<group>"; };
 		18EA03AA1E3607C100393735 /* BPush.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BPush.h; sourceTree = "<group>"; };
 		18EA03AB1E3607C100393735 /* BPushCerResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = BPushCerResource.bundle; sourceTree = "<group>"; };
 		18EA03AC1E3607C100393735 /* libBPush.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libBPush.a; sourceTree = "<group>"; };
@@ -1197,7 +1195,6 @@
 		18AA31641D47376900862187 /* Plists */ = {
 			isa = PBXGroup;
 			children = (
-				18EA03A41E34990B00393735 /* appsData.plist */,
 			);
 			name = Plists;
 			sourceTree = "<group>";
@@ -2053,7 +2050,6 @@
 				1880522F1D3CBEC200C36F00 /* LaunchScreen.storyboard in Resources */,
 				18F788D11E5D5D4200EE35BE /* Common.xcassets in Resources */,
 				18A966D51D533C0D00A8E539 /* Mine.xcassets in Resources */,
-				18EA03A51E34990B00393735 /* appsData.plist in Resources */,
 				1880522C1D3CBEC200C36F00 /* Assets.xcassets in Resources */,
 				1822B31F1E5C6816008F1DB2 /* Map.xcassets in Resources */,
 				1880522A1D3CBEC200C36F00 /* Main.storyboard in Resources */,

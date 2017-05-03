@@ -101,7 +101,7 @@
     }
     
     // 在 App 启动时注册百度云推送服务，需要提供 Apikey
-    [BPush registerChannel:launchOptions apiKey:BPUSH_APIKEY pushMode:BPushModeDevelopment withFirstAction:@"打开" withSecondAction:@"关闭" withCategory:@"test" useBehaviorTextInput:YES isDebug:YES];
+    [BPush registerChannel:launchOptions apiKey:BPUSH_APIKEY pushMode:BPushModeProduction withFirstAction:@"打开" withSecondAction:@"关闭" withCategory:@"taxPush" useBehaviorTextInput:YES isDebug:YES];
     
     // 禁用地理位置推送 需要再绑定接口前调用。
     [BPush disableLbs];

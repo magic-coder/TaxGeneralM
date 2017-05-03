@@ -237,7 +237,11 @@
         BMKPointAnnotation* item = [[BMKPointAnnotation alloc] init];
         item.coordinate = result.location;
         //item.title = result.address;  // 百度地图反向定位地址
-        item.title = _model.name;       // 系统参数名称
+        if([_model.name isEqualToString:@"当前机构"]){
+            item.title = _model.deptName;
+        }else{
+            item.title = _model.name;
+        }
         [_mapView addAnnotation:item];
         _mapView.centerCoordinate = result.location;
         NSString* showmeg;

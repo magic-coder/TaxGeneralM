@@ -39,7 +39,9 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
 
 @property (nonatomic, strong) UITextField *usernameTextField;
 @property (nonatomic, strong) UITextField *passwordTextField;
+@property (nonatomic, strong) UITextField *authCodeTextField;
 
+@property (nonatomic,strong) UIButton *sendBtn;
 @property (nonatomic,strong) UIButton *loginBtn;
 @property (nonatomic,strong) UIButton *cancelBtn;
 
@@ -121,7 +123,7 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
     UIImageView* imgUser = [[UIImageView alloc] initWithFrame:CGRectMake(9, 9, 22, 22)];
     imgUser.image = [UIImage imageNamed:@"login_username"];
     [self.usernameTextField.leftView addSubview:imgUser];
-    //self.usernameTextField.text = @"26100010001";
+    self.usernameTextField.keyboardType = UIKeyboardTypeASCIICapable;   // 设置键盘类型
     [_smallView addSubview:self.usernameTextField];
     
     self.passwordTextField = [[UITextField alloc]initWithFrame:CGRectMake(CGRectGetMinX(self.usernameTextField.frame), CGRectGetMaxY(self.usernameTextField.frame)+10, CGRectGetWidth(self.usernameTextField.frame), CGRectGetHeight(self.usernameTextField.frame))];
@@ -137,18 +139,42 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
     UIImageView* imgPwd = [[UIImageView alloc] initWithFrame:CGRectMake(6, 6, 28, 28)];
     imgPwd.image = [UIImage imageNamed:@"login_password"];
     [self.passwordTextField.leftView addSubview:imgPwd];
-    //self.passwordTextField.text = @"111";
+    self.passwordTextField.keyboardType = UIKeyboardTypeASCIICapable;   // 设置键盘类型
     [_smallView addSubview:self.passwordTextField];
     
     
-    self.loginBtn = [[UIButton alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(self.passwordTextField.frame)+10, _smallView.frame.size.width-20, 40)];
+    self.authCodeTextField = [[UITextField alloc]initWithFrame:CGRectMake(20, CGRectGetMaxY(self.passwordTextField.frame)+10, CGRectGetWidth(self.passwordTextField.frame)-120, CGRectGetHeight(self.passwordTextField.frame))];
+    self.authCodeTextField.delegate = self;
+    self.authCodeTextField.layer.cornerRadius = 5;
+    self.authCodeTextField.layer.borderWidth = .5;
+    self.authCodeTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    self.authCodeTextField.layer.borderColor = [UIColor grayColor].CGColor;
+    self.authCodeTextField.placeholder = @"请输入验证码";
+    self.authCodeTextField.leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetHeight(self.usernameTextField.frame), CGRectGetHeight(self.usernameTextField.frame))];
+    self.authCodeTextField.leftViewMode = UITextFieldViewModeAlways;
+    UIImageView* imgAuth = [[UIImageView alloc] initWithFrame:CGRectMake(9, 9, 22, 22)];
+    imgAuth.image = [UIImage imageNamed:@"login_authcode"];
+    [self.authCodeTextField.leftView addSubview:imgAuth];
+    self.authCodeTextField.keyboardType = UIKeyboardTypeNumberPad;   // 设置键盘类型
+    [_smallView addSubview:self.authCodeTextField];
+    
+    self.sendBtn = [[UIButton alloc]initWithFrame:CGRectMake(_smallView.frameWidth-120, CGRectGetMaxY(self.passwordTextField.frame)+10, 100, 40)];
+    [self.sendBtn setTitle:@"获取验证码" forState:UIControlStateNormal];
+    self.sendBtn.layer.cornerRadius = 5;
+    [self.sendBtn setBackgroundColor:[UIColor colorWithRed:255/255.0 green:165/255.0 blue:0/255.0 alpha:0.7f]];
+    self.sendBtn.titleLabel.font = [UIFont systemFontOfSize:14.0f];
+    [self.sendBtn addTarget:self action:@selector(sendAction:) forControlEvents:UIControlEventTouchUpInside];
+    [_smallView addSubview:self.sendBtn];
+    
+    self.loginBtn = [[UIButton alloc]initWithFrame:CGRectMake(20, CGRectGetMaxY(self.authCodeTextField.frame)+10, (_smallView.frameWidth-60)/2, 40)];
     [self.loginBtn setTitle:@"登 录" forState:UIControlStateNormal];
     self.loginBtn.layer.cornerRadius = 5;
     [self.loginBtn setBackgroundColor:[UIColor colorWithRed:83/255.0 green:149/255.0 blue:232/255.0 alpha:1]];
     [self.loginBtn addTarget:self action:@selector(loginAction:) forControlEvents:UIControlEventTouchUpInside];
     [_smallView addSubview:self.loginBtn];
     
-    self.cancelBtn = [[UIButton alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(self.passwordTextField.frame)+60, _smallView.frame.size.width-20, 40)];
+    //self.cancelBtn = [[UIButton alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(self.passwordTextField.frame)+60, _smallView.frame.size.width-20, 40)];
+    self.cancelBtn = [[UIButton alloc]initWithFrame:CGRectMake(self.loginBtn.frameWidth+40, CGRectGetMaxY(self.authCodeTextField.frame)+10, (_smallView.frameWidth-60)/2, 40)];
     [self.cancelBtn setTitle:@"取 消" forState:UIControlStateNormal];
     self.cancelBtn.layer.cornerRadius = 5;
     [self.cancelBtn setBackgroundColor:[UIColor whiteColor]];
@@ -156,7 +182,7 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
     [self.cancelBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
     [_smallView addSubview:self.cancelBtn];
     
-    _smallView.frame = CGRectMake(20, 150, self.view.frame.size.width-40, CGRectGetMaxY(self.loginBtn.frame)+15+45);
+    _smallView.frame = CGRectMake(20, 150, self.view.frameWidth-40, CGRectGetMaxY(self.loginBtn.frame)+15);
 }
 
 #pragma mark - <UITextFieldDelegate>代理方法
@@ -257,19 +283,55 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
     [self.view endEditing:YES];
 }
 
+// 发送验证码方法
+-(void)sendAction:(UIButton *)sender{
+    NSString *userCode = _usernameTextField.text;
+    if(userCode.length > 0){
+        
+        NSString *url =@"account/getVerificationCode";
+        
+        NSDictionary *dict = @{@"userCode": userCode};
+        NSString *jsonString = [[BaseHandleUtil shareInstance] dataToJsonString:dict];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:jsonString, @"msg", nil];
+        
+        [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:parameters success:^(NSDictionary *responseDic) {
+            
+            // 获取请求状态值
+            DLog(@"statusCode = %@", [responseDic objectForKey:@"statusCode"]);
+            NSString *statusCode = [responseDic objectForKey:@"statusCode"];
+            if([statusCode isEqualToString:@"00"]){
+                //正常状态下的背景颜色
+                //UIColor *mainColor = [UIColor colorWithRed:84/255.0 green:180/255.0 blue:98/255.0 alpha:0.7f];
+                UIColor *mainColor = [UIColor colorWithRed:255/255.0 green:165/255.0 blue:0/255.0 alpha:0.7f];
+                //倒计时状态下的颜色
+                //UIColor *countColor = [UIColor lightGrayColor];
+                UIColor *countColor = [UIColor colorWithRed:169/255.0 green:183/255.0 blue:183/255.0 alpha:1.0f];
+                [self setTheCountdownButton:sender startWithTime:30 title:@"获取验证码" countDownTitle:@"秒后重试" mainColor:mainColor countColor:countColor];
+            }else{
+                [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:[responseDic objectForKey:@"msg"]];
+            }
+        } failure:^(NSString *error) {
+            [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:error];
+        }];
+    }else{
+        [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:@"请输入用户名，再获取验证码！"];
+    }
+}
 //登录方法
 -(void)loginAction:(UIButton *)sender{
-    
-    [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"登录中..."];
-    
+
     NSString *userCode = _usernameTextField.text;
     NSString *password = _passwordTextField.text;
+    NSString *authCode = _authCodeTextField.text;
     
-    if(userCode.length > 0 && password.length > 0){
+    if(userCode.length > 0 && password.length > 0 && authCode.length > 0){
+        
+        [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"登录中..."];
 
         NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
         [dict setObject:userCode forKey:@"userCode"];
         [dict setObject:password forKey:@"password"];
+        [dict setObject:authCode forKey:@"verificationCode"];
         
         [[LoginUtil shareInstance] loginWithAppDict:dict success:^{
             [YZProgressHUD hiddenHUDForView:self.view];
@@ -289,8 +351,15 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
             [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:error];
         }];
     }else{
-        [YZProgressHUD hiddenHUDForView:self.view];
-        [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:@"用户名、密码不能为空！"];
+        if(userCode.length <= 0){
+            [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:@"用户名不能为空！"];
+        }else if(password.length <= 0){
+            [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:@"密码不能为空！"];
+        }else if(authCode.length <= 0){
+            [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:@"验证码不能为空！"];
+        }else{
+            [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:@"未知错误！"];
+        }
     }
 
     [self.view endEditing:YES];
@@ -314,6 +383,36 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+#pragma mark - button倒计时
+- (void)setTheCountdownButton:(UIButton *)button startWithTime:(NSInteger)timeLine title:(NSString *)title countDownTitle:(NSString *)subTitle mainColor:(UIColor *)mColor countColor:(UIColor *)color{
+    //倒计时时间
+    __block NSInteger timeOut = timeLine;
+    dispatch_queue_t queue =dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0);
+    dispatch_source_t _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER,0, 0, queue);
+    //每秒执行一次
+    dispatch_source_set_timer(_timer,dispatch_walltime(NULL,0), 1.0 * NSEC_PER_SEC,0);
+    dispatch_source_set_event_handler(_timer, ^{
+        //倒计时结束，关闭
+        if (timeOut == 0) {
+            dispatch_source_cancel(_timer);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                button.backgroundColor = mColor;
+                [button setTitle:title forState:UIControlStateNormal];
+                button.userInteractionEnabled =YES;
+                });
+            } else {
+                int seconds = timeOut % 60;
+                NSString *timeStr = [NSString stringWithFormat:@"%0.1d", seconds];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    button.backgroundColor = color;
+                    [button setTitle:[NSString stringWithFormat:@"%@%@",timeStr,subTitle]forState:UIControlStateNormal];
+                    button.userInteractionEnabled =NO;
+                    });
+                timeOut--;
+                }
+        });
+    dispatch_resume(_timer);
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

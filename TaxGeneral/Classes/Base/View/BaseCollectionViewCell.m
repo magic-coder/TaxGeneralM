@@ -79,7 +79,7 @@
         [_bottomLine setBackgroundColor:DEFAULT_LINE_GRAY_COLOR];
         
         // 新角标
-        [_newsImageView setFrame:CGRectMake(0, 0, 30, 30)];
+        [_newsImageView setFrame:CGRectMake(self.frameWidth-30, 0, 30, 30)];
     }
     
     if(_cellStyle == CollectionCellStyleEdit){
@@ -152,7 +152,12 @@
     
     // 添加新角标
     if(item.isNewApp){
-        [_newsImageView setImage:[UIImage imageNamed:@"app_common_new_mark"]];
+        if(_cellStyle == CollectionCellStyleNone){
+            [_newsImageView setImage:[UIImage imageNamed:@"app_common_new_mark_right"]];
+        }
+        if(_cellStyle == CollectionCellStyleEdit){
+            [_newsImageView setImage:[UIImage imageNamed:@"app_common_new_mark_left"]];
+        }
     }else{
         [_newsImageView setImage:[UIImage imageNamed:@"none"]];
     }
