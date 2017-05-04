@@ -175,8 +175,9 @@ static int const pageSize = 5;
     }
     [param setObject:_pushOrgCode forKey:@"swjgdm"];
     
-    
+    [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"加载中..."];
     [[MessageDetailUtil shareInstance] loadMsgDataWithParam:param dataBlock:^(NSDictionary *dataDict) {
+        [YZProgressHUD hiddenHUDForView:SELF_VIEW];
         [self handleDataDict:dataDict];// 数据处理
         [self.tableView reloadData];
         [self reloadAfterMessage:NO];
@@ -185,6 +186,7 @@ static int const pageSize = 5;
             self.tableView.mj_header = [YZRefreshHeader headerWithRefreshingTarget:self refreshingAction:@selector(loadMoreData)];
         }
     } failed:^(NSString *error) {
+        [YZProgressHUD hiddenHUDForView:SELF_VIEW];
         if([error isEqualToString:@"510"]){
             [YZAlertView showAlertWith:self title:@"登录失效" message:@"您当前登录信息已失效，请重新登录！" callbackBlock:^(NSInteger btnIndex) {
                 // 注销方法

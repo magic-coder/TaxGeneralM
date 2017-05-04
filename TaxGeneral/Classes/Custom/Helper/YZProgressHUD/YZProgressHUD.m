@@ -24,12 +24,12 @@
     
     switch (mode) {
         case LOCKMODE:
-            //hh.dimBackground = YES;
+            //hud.dimBackground = YES;
             hud.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.1f];
             break;
         case SHOWMODE:
             hud.mode = MBProgressHUDModeText;
-            [hud hide:YES afterDelay:2.f];
+            [hud hide:YES afterDelay:1.2f];
             break;
         default:
             break;

@@ -117,7 +117,7 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
     self.usernameTextField.layer.borderWidth = .5;
     self.usernameTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.usernameTextField.layer.borderColor = [UIColor grayColor].CGColor;
-    self.usernameTextField.placeholder = @"请输入账号";
+    self.usernameTextField.placeholder = @"请输入用户名";
     self.usernameTextField.leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetHeight(self.usernameTextField.frame), CGRectGetHeight(self.usernameTextField.frame))];
     self.usernameTextField.leftViewMode = UITextFieldViewModeAlways;
     UIImageView* imgUser = [[UIImageView alloc] initWithFrame:CGRectMake(9, 9, 22, 22)];
@@ -166,7 +166,7 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
     [self.sendBtn addTarget:self action:@selector(sendAction:) forControlEvents:UIControlEventTouchUpInside];
     [_smallView addSubview:self.sendBtn];
     
-    self.loginBtn = [[UIButton alloc]initWithFrame:CGRectMake(20, CGRectGetMaxY(self.authCodeTextField.frame)+10, (_smallView.frameWidth-60)/2, 40)];
+    self.loginBtn = [[UIButton alloc]initWithFrame:CGRectMake(20, CGRectGetMaxY(self.authCodeTextField.frame)+10, _smallView.frameWidth-40, 40)];
     [self.loginBtn setTitle:@"登 录" forState:UIControlStateNormal];
     self.loginBtn.layer.cornerRadius = 5;
     [self.loginBtn setBackgroundColor:[UIColor colorWithRed:83/255.0 green:149/255.0 blue:232/255.0 alpha:1]];
@@ -174,6 +174,7 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
     [_smallView addSubview:self.loginBtn];
     
     //self.cancelBtn = [[UIButton alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(self.passwordTextField.frame)+60, _smallView.frame.size.width-20, 40)];
+    /*
     self.cancelBtn = [[UIButton alloc]initWithFrame:CGRectMake(self.loginBtn.frameWidth+40, CGRectGetMaxY(self.authCodeTextField.frame)+10, (_smallView.frameWidth-60)/2, 40)];
     [self.cancelBtn setTitle:@"取 消" forState:UIControlStateNormal];
     self.cancelBtn.layer.cornerRadius = 5;
@@ -181,8 +182,29 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
     [self.cancelBtn addTarget:self action:@selector(cancelAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.cancelBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
     [_smallView addSubview:self.cancelBtn];
+    */
+    
+    // 自定义左上角(返回按钮)
+    self.cancelBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.cancelBtn.frame = CGRectMake(5, 5, 50, 50);
+    [self.cancelBtn setImage:[UIImage imageNamed:@"login_cancel"] forState:UIControlStateNormal];
+    [self.cancelBtn setImage:[UIImage imageNamed:@"login_cancelHL"] forState:UIControlStateHighlighted];
+    [self.cancelBtn addTarget:self action:@selector(cancelAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.cancelBtn];
     
     _smallView.frame = CGRectMake(20, 150, self.view.frameWidth-40, CGRectGetMaxY(self.loginBtn.frame)+15);
+}
+
+#pragma mark - 视图已经展示方法，隐藏顶部状态栏
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    [UIApplication sharedApplication].statusBarHidden = YES;
+}
+
+#pragma mark - 视图已经销毁方法，显示顶部状态栏
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    [UIApplication sharedApplication].statusBarHidden = NO;
 }
 
 #pragma mark - <UITextFieldDelegate>代理方法

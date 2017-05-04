@@ -26,9 +26,9 @@
     
     NSString *userCode = [dict objectForKey:@"userCode"];
     BOOL isTest = NO;
-    if([userCode hasPrefix:@":test"]){
+    if([userCode hasPrefix:@":dev"]){
         isTest = YES;
-        [dict setObject:[userCode substringWithRange:NSMakeRange(5, 11)] forKey:@"userCode"];
+        [dict setObject:[userCode substringWithRange:NSMakeRange(4, 11)] forKey:@"userCode"];
     }
     
     NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:DEVICE_INFO];
