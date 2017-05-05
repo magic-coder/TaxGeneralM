@@ -46,7 +46,7 @@
     CGFloat height = self.frame.size.height;
     CGFloat width = self.frame.size.width;
     UIView *bgView = [[UIView alloc] initWithFrame:CGRectMake(0, height-PAGE_H, width, PAGE_H)];
-    bgView.backgroundColor = [UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:0.2];
+    bgView.backgroundColor = WBColor(0.3, 0.3, 0.3, 0.2f);
     
     UIPageControl *pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, 0, width, PAGE_H)];
     pageControl.numberOfPages = self.images.count; // 小圆点的个数

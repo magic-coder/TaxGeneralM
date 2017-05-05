@@ -9,6 +9,7 @@
  ************************************************************/
 
 #import "AppTopView.h"
+#import "SettingUtil.h"
 
 @implementation AppTopView
 
@@ -24,12 +25,54 @@
         //控制子视图不能超出父视图的范围
         self.clipsToBounds = YES;
         
-        UILabel *titleLabel = [[UILabel alloc] init];
-        titleLabel.frame = CGRectMake(WIDTH_SCREEN/2-50, HEIGHT_STATUS+5, 100, 30);
-        titleLabel.font = [UIFont boldSystemFontOfSize:16.0f];
-        titleLabel.textAlignment = NSTextAlignmentCenter;
-        titleLabel.text = @"应用";
-        titleLabel.textColor = [UIColor whiteColor];
+        // 读取系统设置文件内容(更新提醒)
+        NSDictionary *settingDict = [[SettingUtil shareInstance] loadSettingData];
+        BOOL forecastOn = [[settingDict objectForKey:@"forecast"] boolValue];
+        if(forecastOn){
+            CBAutoScrollLabel *autoScrollLabel = [[CBAutoScrollLabel alloc] initWithFrame:CGRectMake(10, HEIGHT_STATUS+5, WIDTH_SCREEN-60, 30)];
+            //autoScrollLabel.text = @"";
+            autoScrollLabel.textColor = [UIColor whiteColor];
+            autoScrollLabel.labelSpacing = 35; // 开始和结束标签之间的距离
+            autoScrollLabel.pauseInterval = 1.0; // 等待多少秒后开始滚动
+            autoScrollLabel.scrollSpeed = 30; // 每秒像素
+            autoScrollLabel.textAlignment = NSTextAlignmentLeft; // 不使用自动滚动时的中心文本
+            autoScrollLabel.fadeLength = 12.f; // length of the left and right edge fade, 0 to disable
+            autoScrollLabel.font = [UIFont systemFontOfSize:15.0f];
+            [self addSubview:autoScrollLabel];// 顶部天气预报提醒
+            
+            NSString *url = @"http://apis.baidu.com/tianyiweather/basicforecast/weatherapi?area=101110101";
+            [[YZNetworkingManager shareInstance] requestMethod:GET url:url parameters:nil success:^(NSDictionary *responseDic) {
+                DLog(@"%@", responseDic);
+                
+                NSArray *temperatures = [[[[responseDic objectForKey:@"forecast"] objectForKey:@"24h"] objectForKey:@"101110101"] objectForKey:@"1001001"];
+                NSString *temperatureRange = [NSString stringWithFormat:@"%@°~%@°", [temperatures[0] objectForKey:@"004"], [temperatures[0] objectForKey:@"003"]];
+                NSString *pmVal = [[[[responseDic objectForKey:@"air"] objectForKey:@"101110101"] objectForKey:@"2001006"] objectForKey:@"001"];
+                NSString *currentTemperature = [[[[responseDic objectForKey:@"observe"] objectForKey:@"101110101"] objectForKey:@"1001002"] objectForKey:@"002"];  // 当前温度
+                NSString *currentHumidity = [[[[responseDic objectForKey:@"observe"] objectForKey:@"101110101"] objectForKey:@"1001002"] objectForKey:@"005"];  // 当前湿度
+                NSString *currentRainfall = [[[[responseDic objectForKey:@"observe"] objectForKey:@"101110101"] objectForKey:@"1001002"] objectForKey:@"006"];  // 当前降水量
+                NSString *currentWind = [[[[responseDic objectForKey:@"observe"] objectForKey:@"101110101"] objectForKey:@"1001002"] objectForKey:@"003"];  // 当前风力
+                
+                NSDictionary *indexDict = [[[[responseDic objectForKey:@"index"] objectForKey:@"24h"] objectForKey:@"101110101"] objectForKey:@"1001004"][0];// 指数
+                
+                NSString *indexStr = [NSString stringWithFormat:@"%@：%@，%@：%@，%@：%@，%@：%@，%@：%@，%@：%@，%@：%@", [[indexDict objectForKey:@"001"] objectForKey:@"001001"], [[indexDict objectForKey:@"001"] objectForKey:@"001002"], [[indexDict objectForKey:@"002"] objectForKey:@"002001"], [[indexDict objectForKey:@"002"] objectForKey:@"002002"], [[indexDict objectForKey:@"004"] objectForKey:@"004001"], [[indexDict objectForKey:@"004"] objectForKey:@"004002"], [[indexDict objectForKey:@"005"] objectForKey:@"005001"], [[indexDict objectForKey:@"005"] objectForKey:@"005002"], [[indexDict objectForKey:@"007"] objectForKey:@"007001"], [[indexDict objectForKey:@"007"] objectForKey:@"007002"], [[indexDict objectForKey:@"009"] objectForKey:@"009001"], [[indexDict objectForKey:@"009"] objectForKey:@"009002"], [[indexDict objectForKey:@"010"] objectForKey:@"010001"], [[indexDict objectForKey:@"010"] objectForKey:@"010002"]];
+                
+                NSString *str = [NSString stringWithFormat:@"西安市今日气温：%@，PM2.5：%d，体感温度：%@°，湿度：%@%%，降水量：%@mm，风力：%@级，%@", temperatureRange, [pmVal intValue], currentTemperature, currentHumidity, currentRainfall, currentWind, indexStr];
+                
+                autoScrollLabel.text = str;
+                
+            } failure:^(NSString *error) {
+                RLog(@"%@", error);
+            }];
+            
+        }else{
+            UILabel *titleLabel = [[UILabel alloc] init];
+            titleLabel.frame = CGRectMake(WIDTH_SCREEN/2-50, HEIGHT_STATUS+5, 100, 30);
+            titleLabel.font = [UIFont boldSystemFontOfSize:16.0f];
+            titleLabel.textAlignment = NSTextAlignmentCenter;
+            titleLabel.text = @"应用";
+            titleLabel.textColor = [UIColor whiteColor];
+            [self addSubview:titleLabel];// 顶部标题
+        }
         
         UIButton *btn_edit = [UIButton buttonWithType:UIButtonTypeCustom];
         btn_edit.frame = CGRectMake(WIDTH_SCREEN-46, HEIGHT_STATUS, 46, 46);
@@ -91,7 +134,6 @@
         [btn_3 addTarget:self action:@selector(appBtnOnClick:) forControlEvents:UIControlEventTouchUpInside];
         [btn_4 addTarget:self action:@selector(appBtnOnClick:) forControlEvents:UIControlEventTouchUpInside];
         
-        [self addSubview:titleLabel];// 顶部标题
         [self addSubview:btn_edit];// 右侧编辑按钮
         [self addSubview:btn_1];
         [self addSubview:btn_2];

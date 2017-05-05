@@ -45,8 +45,8 @@
     return _title == nil ? @"" : _title;
 }
 -(NSString *)webImg{
-    //return _webImg == nil ? @"" : _webImg;
-    return @"";
+    //return @"";
+    return _webImg == nil ? @"" : _webImg;
 }
 -(NSString *)localImg{
     return _localImg == nil ? @"" : _localImg;

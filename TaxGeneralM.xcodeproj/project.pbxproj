@@ -20,7 +20,6 @@
 		1822B31F1E5C6816008F1DB2 /* Map.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1822B31E1E5C6816008F1DB2 /* Map.xcassets */; };
 		18237B6D1E49C21D00A5A9C4 /* ModifyPwdViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18237B6C1E49C21D00A5A9C4 /* ModifyPwdViewController.m */; };
 		18237B721E49D0BF00A5A9C4 /* TaxCalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18237B711E49D0BF00A5A9C4 /* TaxCalendarViewController.m */; };
-		18237B741E49D10400A5A9C4 /* tax_calendar.png in Resources */ = {isa = PBXBuildFile; fileRef = 18237B731E49D10400A5A9C4 /* tax_calendar.png */; };
 		182499D71E6506AE00D731B5 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 182499D61E6506AE00D731B5 /* MapKit.framework */; };
 		182499DB1E652C2700D731B5 /* YZLocationConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = 182499DA1E652C2700D731B5 /* YZLocationConverter.m */; };
 		18293CA51D6300D8008A4A8C /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18293CA41D6300D8008A4A8C /* ChatViewController.m */; };
@@ -81,6 +80,7 @@
 		188C75321E1653240056E40D /* AppEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 188C75311E1653240056E40D /* AppEditViewController.m */; };
 		188DC3D51E8FAE7F007F55E8 /* YZCookieSyncManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 188DC3D41E8FAE7F007F55E8 /* YZCookieSyncManager.m */; };
 		18933A891E8E37180062A85A /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 18933A881E8E37180062A85A /* Reachability.m */; };
+		1897F15A1EBC621B0070235F /* CBAutoScrollLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1897F1591EBC621B0070235F /* CBAutoScrollLabel.m */; };
 		18A08CCC1E80BB3C0027FF70 /* LoginUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A08CCB1E80BB3C0027FF70 /* LoginUtil.m */; };
 		18A08CCF1E80FD1E0027FF70 /* QuestionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A08CCE1E80FD1E0027FF70 /* QuestionViewController.m */; };
 		18A4F8111D4996230044734E /* MainNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A4F8101D4996230044734E /* MainNavigationController.m */; };
@@ -114,6 +114,7 @@
 		18AE22621D61B61C00C93890 /* MessageListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AE22611D61B61C00C93890 /* MessageListModel.m */; };
 		18AE22651D61B8F200C93890 /* MessageListViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AE22641D61B8F200C93890 /* MessageListViewCell.m */; };
 		18B2B9031D3E205E00250EA8 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B2B9021D3E205E00250EA8 /* LoginViewController.m */; };
+		18B39DF21EBB2BB0007EC998 /* loading.gif in Resources */ = {isa = PBXBuildFile; fileRef = 18B39DF11EBB2BB0007EC998 /* loading.gif */; };
 		18BBE35B1E4AFC8B00EF96D7 /* BaseTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BBE35A1E4AFC8B00EF96D7 /* BaseTextField.m */; };
 		18BC91721DF0039600AD6AA8 /* NewsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BC91711DF0039600AD6AA8 /* NewsListViewController.m */; };
 		18BC91751DF00E5300AD6AA8 /* NewsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BC91741DF00E5300AD6AA8 /* NewsViewController.m */; };
@@ -275,7 +276,6 @@
 		18237B6C1E49C21D00A5A9C4 /* ModifyPwdViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ModifyPwdViewController.m; path = Classes/Mine/Controller/ModifyPwdViewController.m; sourceTree = "<group>"; };
 		18237B701E49D0BF00A5A9C4 /* TaxCalendarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TaxCalendarViewController.h; path = Classes/Mine/Controller/TaxCalendarViewController.h; sourceTree = "<group>"; };
 		18237B711E49D0BF00A5A9C4 /* TaxCalendarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TaxCalendarViewController.m; path = Classes/Mine/Controller/TaxCalendarViewController.m; sourceTree = "<group>"; };
-		18237B731E49D10400A5A9C4 /* tax_calendar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tax_calendar.png; path = Resources/Images/tax_calendar.png; sourceTree = "<group>"; };
 		182499D61E6506AE00D731B5 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		182499D91E652C2700D731B5 /* YZLocationConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YZLocationConverter.h; path = Classes/Custom/Helper/YZLocationConverter/YZLocationConverter.h; sourceTree = "<group>"; };
 		182499DA1E652C2700D731B5 /* YZLocationConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YZLocationConverter.m; path = Classes/Custom/Helper/YZLocationConverter/YZLocationConverter.m; sourceTree = "<group>"; };
@@ -394,6 +394,8 @@
 		188DC3D41E8FAE7F007F55E8 /* YZCookieSyncManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YZCookieSyncManager.m; sourceTree = "<group>"; };
 		18933A871E8E37180062A85A /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		18933A881E8E37180062A85A /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		1897F1581EBC621B0070235F /* CBAutoScrollLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CBAutoScrollLabel.h; sourceTree = "<group>"; };
+		1897F1591EBC621B0070235F /* CBAutoScrollLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CBAutoScrollLabel.m; sourceTree = "<group>"; };
 		189899341D504B8900B3CF71 /* Marcos.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Marcos.h; path = Classes/Global/Marcos.h; sourceTree = "<group>"; };
 		18A08CCA1E80BB3C0027FF70 /* LoginUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginUtil.h; path = Classes/Login/Util/LoginUtil.h; sourceTree = "<group>"; };
 		18A08CCB1E80BB3C0027FF70 /* LoginUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginUtil.m; path = Classes/Login/Util/LoginUtil.m; sourceTree = "<group>"; };
@@ -466,6 +468,7 @@
 		18AE22641D61B8F200C93890 /* MessageListViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MessageListViewCell.m; path = Classes/Message/View/MessageListViewCell.m; sourceTree = "<group>"; };
 		18B2B9011D3E205E00250EA8 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginViewController.h; path = Classes/Login/Controller/LoginViewController.h; sourceTree = "<group>"; };
 		18B2B9021D3E205E00250EA8 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginViewController.m; path = Classes/Login/Controller/LoginViewController.m; sourceTree = "<group>"; };
+		18B39DF11EBB2BB0007EC998 /* loading.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = loading.gif; path = Resources/Images/loading.gif; sourceTree = "<group>"; };
 		18BBE3591E4AFC8B00EF96D7 /* BaseTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseTextField.h; path = Classes/Base/View/BaseTextField.h; sourceTree = "<group>"; };
 		18BBE35A1E4AFC8B00EF96D7 /* BaseTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BaseTextField.m; path = Classes/Base/View/BaseTextField.m; sourceTree = "<group>"; };
 		18BC91701DF0039600AD6AA8 /* NewsListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NewsListViewController.h; path = Classes/News/Controller/NewsListViewController.h; sourceTree = "<group>"; };
@@ -1061,6 +1064,16 @@
 			name = Base;
 			sourceTree = "<group>";
 		};
+		1897F1571EBC621B0070235F /* CBAutoScrollLabel */ = {
+			isa = PBXGroup;
+			children = (
+				1897F1581EBC621B0070235F /* CBAutoScrollLabel.h */,
+				1897F1591EBC621B0070235F /* CBAutoScrollLabel.m */,
+			);
+			name = CBAutoScrollLabel;
+			path = Venders/CBAutoScrollLabel;
+			sourceTree = "<group>";
+		};
 		189899331D504B6D00B3CF71 /* Global */ = {
 			isa = PBXGroup;
 			children = (
@@ -1202,12 +1215,12 @@
 		18AA31651D47377000862187 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				18B39DF11EBB2BB0007EC998 /* loading.gif */,
 				18F788D01E5D5D4200EE35BE /* Common.xcassets */,
 				18056BB51E31A43300BE041E /* App.xcassets */,
 				18F788D21E5D5D6600EE35BE /* Msg.xcassets */,
 				18A966D41D533C0D00A8E539 /* Mine.xcassets */,
 				1822B31E1E5C6816008F1DB2 /* Map.xcassets */,
-				18237B731E49D10400A5A9C4 /* tax_calendar.png */,
 				18F788CC1E5D5B6900EE35BE /* mapapi.bundle */,
 			);
 			name = Images;
@@ -1216,6 +1229,7 @@
 		18AA31661D4737AA00862187 /* Venders */ = {
 			isa = PBXGroup;
 			children = (
+				1897F1571EBC621B0070235F /* CBAutoScrollLabel */,
 				18933A861E8E37180062A85A /* Reachability */,
 				18D5B2221E6FD21E00F5F555 /* SDWebImage */,
 				183C19B31E69514100D7203F /* MJExtension */,
@@ -2057,9 +2071,9 @@
 				1880525C1D3CC07E00C36F00 /* config.xml in Resources */,
 				18056BB61E31A43300BE041E /* App.xcassets in Resources */,
 				18C737531E4C70C30058E7E4 /* WUGesturesUnlockViewController.xib in Resources */,
+				18B39DF21EBB2BB0007EC998 /* loading.gif in Resources */,
 				18DC62351E6417F7001834D1 /* YZWebView.bundle in Resources */,
 				18293D941D631A7F008A4A8C /* MJRefresh.bundle in Resources */,
-				18237B741E49D10400A5A9C4 /* tax_calendar.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2171,6 +2185,7 @@
 				18293D961D631A7F008A4A8C /* NSBundle+MJRefresh.m in Sources */,
 				18D5B2641E6FD21E00F5F555 /* UIImageView+WebCache.m in Sources */,
 				180D3B171E53F61B00440E99 /* MessageDetailUtil.m in Sources */,
+				1897F15A1EBC621B0070235F /* CBAutoScrollLabel.m in Sources */,
 				18C737451E4C5A560058E7E4 /* TouchIDViewController.m in Sources */,
 				18293D901D631A7F008A4A8C /* MJRefreshBackStateFooter.m in Sources */,
 				18293D991D631A7F008A4A8C /* UIView+MJExtension.m in Sources */,

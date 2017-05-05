@@ -355,33 +355,39 @@ static int const pageSize = 10;
         }
     }
     
-    // 效验应用版本是否可更新
-    NSString *urlStr = @"https://itunes.apple.com/cn/lookup?id=1230863080";
+    // 读取系统设置文件内容(更新提醒)
+    NSDictionary *settingDict = [[SettingUtil shareInstance] loadSettingData];
+    BOOL updateOn = [[settingDict objectForKey:@"update"] boolValue];
     
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    [manager POST:urlStr parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        NSArray *results = [responseObject objectForKey:@"results"];
-        if(results.count > 0){
-            // 最新版本号
-            NSString *version = [[results objectAtIndex:0] objectForKey:@"version"];
-            // 应用程序介绍网址（用户升级跳转URL）
-            //[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/app/1230863080"]];
-            NSString *trackViewUrl = [[results objectAtIndex:0] objectForKey:@"trackViewUrl"];
-            
-            // 当前版本号（本地）
-            NSDictionary *infoDic = [[NSBundle mainBundle] infoDictionary];
-            NSString *currentVersion = [infoDic objectForKey:@"CFBundleShortVersionString"];
-            
-            if (![version isEqualToString:currentVersion]) {
+    if(updateOn){
+        // 效验应用版本是否可更新
+        NSString *urlStr = @"https://itunes.apple.com/cn/lookup?id=1230863080";
+        
+        AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+        [manager POST:urlStr parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            NSArray *results = [responseObject objectForKey:@"results"];
+            if(results.count > 0){
+                // 最新版本号
+                NSString *version = [[results objectAtIndex:0] objectForKey:@"version"];
+                // 应用程序介绍网址（用户升级跳转URL）
+                //[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/app/1230863080"]];
+                NSString *trackViewUrl = [[results objectAtIndex:0] objectForKey:@"trackViewUrl"];
                 
-                [YZAlertView showAlertWith:self title:@"版本更新" message:[NSString stringWithFormat:@"发现新版本(%@)，是否更新",version] callbackBlock:^(NSInteger btnIndex) {
-                    if (btnIndex == 1) {
-                        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:trackViewUrl]];
-                    }
-                } cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"更新", nil];
+                // 当前版本号（本地）
+                NSString *currentVersion = [Variable shareInstance].appVersion;
+                
+                if (![version isEqualToString:currentVersion]) {
+                    
+                    [YZAlertView showAlertWith:self title:@"版本更新" message:[NSString stringWithFormat:@"发现新版本(%@)，是否更新",version] callbackBlock:^(NSInteger btnIndex) {
+                        if (btnIndex == 1) {
+                            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:trackViewUrl]];
+                        }
+                    } cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"更新", nil];
+                }
             }
-        }
-    } failure:nil];
+        } failure:nil];
+    }
+
 }
 
 - (void)didReceiveMemoryWarning {

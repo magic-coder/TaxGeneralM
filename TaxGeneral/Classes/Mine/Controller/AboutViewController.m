@@ -99,8 +99,7 @@ static NSString * const reuseIdentifier = @"aboutTableViewCell";
                 NSString *trackViewUrl = [[results objectAtIndex:0] objectForKey:@"trackViewUrl"];
                 
                 // 当前版本号（本地）
-                NSDictionary *infoDic = [[NSBundle mainBundle] infoDictionary];
-                NSString *currentVersion = [infoDic objectForKey:@"CFBundleShortVersionString"];
+                NSString *currentVersion = [Variable shareInstance].appVersion;
                 
                 if (![version isEqualToString:currentVersion]) {
                     

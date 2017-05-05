@@ -64,7 +64,7 @@
     if([item.title isEqualToString:@"我的日程"]){
         //ScheduleViewController *scheduleViewController = [[ScheduleViewController alloc] init];
         //viewController = scheduleViewController;
-        [YZAlertView showAlertWith:self title:@"我的日程" message:@"\"互联网+税务\"想要打开\"日历\"" callbackBlock:^(NSInteger btnIndex) {
+        [YZAlertView showAlertWith:self title:@"我的日程" message:[NSString stringWithFormat:@"\"%@\"想要打开\"日历\"", [Variable shareInstance].appName] callbackBlock:^(NSInteger btnIndex) {
             if(btnIndex == 1){
                 [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"calshow:"]];
             }

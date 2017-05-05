@@ -118,7 +118,9 @@
 - (void)setModel:(AppSubModel *)model{
     _model = model;
     
-    [_logoView setImage:[UIImage imageNamed:_model.localImg]];
+    // 从远程地址获取logo图
+    [_logoView sd_setImageWithURL:[NSURL URLWithString:_model.webImg] placeholderImage:[UIImage imageNamed:_model.localImg] options:SDWebImageAllowInvalidSSLCertificates completed:nil];
+    //[_logoView setImage:[UIImage imageNamed:_model.localImg]];
     [_titleLabel setText:_model.title];
     
     [self layoutSubviews];

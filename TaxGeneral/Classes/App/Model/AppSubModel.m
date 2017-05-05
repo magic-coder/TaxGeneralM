@@ -24,4 +24,28 @@
     return model;
 }
 
+#pragma mark - 重写属性的Getter方法
+-(NSString *)no{
+    return _no == nil ? @"" : _no;
+}
+-(NSString *)pno{
+    return _pno == nil ? @"" : _pno;
+}
+-(NSString *)level{
+    return _level == nil ? @"" : _level;
+}
+-(NSString *)title{
+    return _title == nil ? @"" : _title;
+}
+-(NSString *)webImg{
+    //return @"";
+    return _webImg == nil ? @"" : _webImg;
+}
+-(NSString *)localImg{
+    return _localImg == nil ? @"" : _localImg;
+}
+- (NSString *)url{
+    return _url == nil ? @"" : _url;
+}
+
 @end

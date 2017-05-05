@@ -113,7 +113,7 @@
     item3.type = BaseTableModelItemTypeSwitch;
     item3.tag = 423;
     item3.isOn = touchIDOn;
-    BaseTableModelGroup *group2 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:@"若要开启指纹解锁功能，请先在“设置”-“Touch ID 与密码”中添加指纹。" settingItems:item3, nil];
+    BaseTableModelGroup *group2 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:@"若要开启指纹解锁功能，请先在\"设置\"-\"Touch ID 与密码\"中添加指纹。" settingItems:item3, nil];
     [items addObject:group2];
     
     return items;
@@ -169,12 +169,14 @@
         subTitle = @"已关闭";
     }
     
+    NSString *appName = [Variable shareInstance].appName;
+    
     BaseTableModelItem *recNoti = [BaseTableModelItem createWithTitle:@"接收新消息通知" subTitle:subTitle];
     recNoti.accessoryType = UITableViewCellAccessoryNone;
-    BaseTableModelGroup *group1 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:@"如果你要关闭或开启“互联网+税务”的新消息通知，请在iPhone的“设置”-“通知”功能中，找到应用程序“互联网+税务”更改。" settingItems:recNoti, nil];
+    BaseTableModelGroup *group1 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:[NSString stringWithFormat:@"如果你要关闭或开启\"%@\"的新消息通知，请在iPhone的\"设置\"-\"通知\"功能中，找到应用程序\"%@\"更改。", appName, appName] settingItems:recNoti, nil];
     [items addObject:group1];
     
-    // 获取声音、震动值
+    // 获取声音、震动、更新、天气预报值
     NSDictionary *settingDict = [[SettingUtil shareInstance] loadSettingData];
     BOOL voiceOn = [[settingDict objectForKey:@"voice"] boolValue];
     BOOL shakeOn = [[settingDict objectForKey:@"shake"] boolValue];
@@ -187,15 +189,31 @@
     shake.type = BaseTableModelItemTypeSwitch;
     shake.tag = 453;
     shake.isOn = shakeOn;
-    BaseTableModelGroup *group2 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:@"当“互联网+税务”在运行时，你可以设置是否需要声音或者振动。" settingItems:voice, shake, nil];
+    BaseTableModelGroup *group2 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:[NSString stringWithFormat:@"当\"%@\"在运行时，你可以设置是否需要声音或者振动。", appName] settingItems:voice, shake, nil];
     [items addObject:group2];
+    
+    BOOL forecastOn = [[settingDict objectForKey:@"forecast"] boolValue];
+    BaseTableModelItem *forecast = [BaseTableModelItem createWithTitle:@"天气预报"];
+    forecast.type = BaseTableModelItemTypeSwitch;
+    forecast.tag = 454;
+    forecast.isOn = forecastOn;
+    BaseTableModelGroup *group3 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:[NSString stringWithFormat:@"当\"%@\"下次启动时，在应用界面顶部是否显示实时天气情况。", appName] settingItems: forecast, nil];
+    [items addObject:group3];
+    
+    BOOL updateOn = [[settingDict objectForKey:@"update"] boolValue];
+    BaseTableModelItem *update = [BaseTableModelItem createWithTitle:@"更新提醒"];
+    update.type = BaseTableModelItemTypeSwitch;
+    update.tag = 455;
+    update.isOn = updateOn;
+    BaseTableModelGroup *group4 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:[NSString stringWithFormat:@"当\"%@\"下次启动时，是否检查版本更新？若有新版本则提醒更新。", appName] settingItems: update, nil];
+    [items addObject:group4];
     
     float tempSize = [[SDImageCache sharedImageCache] getSize]/1024;
     NSString *cacheSize = tempSize >= 1024 ? [NSString stringWithFormat:@"%.1fMB",tempSize/1024] : [NSString stringWithFormat:@"%.1fKB",tempSize];
     BaseTableModelItem *clear = [BaseTableModelItem createWithTitle:@"清理缓存" subTitle:cacheSize];
     clear.accessoryType = UITableViewCellAccessoryNone;
-    BaseTableModelGroup *group3 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:nil settingItems: clear, nil];
-    [items addObject:group3];
+    BaseTableModelGroup *group5 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:nil settingItems: clear, nil];
+    [items addObject:group5];
     
     return items;
 }

@@ -22,22 +22,13 @@
         imageView.layer.cornerRadius = 12;// 将图层的边框设置为圆角
         [self addSubview:imageView];
         
-        
-        NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
-        // 当前应用名称
-        NSString *appName = [infoDictionary objectForKey:@"CFBundleDisplayName"];
-        // 当前应用软件版本  比如：1.0.1
-        NSString *appVersion = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
-        // 当前应用版本号码   int类型
-        // NSString *appVersionNum = [infoDictionary objectForKey:@"CFBundleVersion"];
-        
         UILabel *nameLabel = [self labelWithFrame:CGRectMake(0, 90, WIDTH_SCREEN, 20)];
         nameLabel.font = [UIFont boldSystemFontOfSize:14.0f];
-        nameLabel.text = appName;
+        nameLabel.text = [Variable shareInstance].appName;
         [self addSubview:nameLabel];
         
         UILabel *versionLabel = [self labelWithFrame:CGRectMake(0, 110, WIDTH_SCREEN, 20)];
-        versionLabel.text = [NSString stringWithFormat:@"v%@", appVersion];
+        versionLabel.text = [NSString stringWithFormat:@"v%@", [Variable shareInstance].appVersion];
         versionLabel.font = [UIFont systemFontOfSize:13.0f];
         versionLabel.textColor = [UIColor grayColor];
         [self addSubview:versionLabel];

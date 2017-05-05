@@ -51,6 +51,9 @@
 // 判断时间大小对比
 - (int)compareOneDay:(NSDate *)oneDay withAnotherDay:(NSDate *)anotherDay;
 
+// 将颜色转换为背景图
+- (UIImage *)imageWithColor:(UIColor *)color;
+
 // 组织拼接log
 - (void)organizeRuntimeLog:(NSString *)log;
 

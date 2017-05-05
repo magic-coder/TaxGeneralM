@@ -63,13 +63,13 @@ static const NSTimeInterval kAnimateDuration = 0.5f;
         
         _backgroundView = [[UIView alloc] initWithFrame:self.frame];
         _backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        _backgroundView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.4f];
+        _backgroundView.backgroundColor = WBColor(0, 0, 0, 0.4f);
         _backgroundView.alpha = 0;
         [self addSubview:_backgroundView];
         
         _actionSheetView = [[UIView alloc] initWithFrame:CGRectMake(0, self.frame.size.height, self.frame.size.width, 0)];
         _actionSheetView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
-        _actionSheetView.backgroundColor = [UIColor colorWithRed:238.0f/255.0f green:238.0f/255.0f blue:238.0f/255.0f alpha:1.0f];
+        _actionSheetView.backgroundColor = WBColor(238.0, 238.0, 238.0, 1.0f);
         [self addSubview:_actionSheetView];
         
         UIImage *normalImage = [self imageWithColor:[UIColor colorWithRed:255.0f/255.0f green:255.0f/255.0f blue:255.0f/255.0f alpha:1.0f]];

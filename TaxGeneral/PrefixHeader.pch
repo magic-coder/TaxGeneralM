@@ -21,6 +21,7 @@
 #import "YZProgressHUD.h"
 #import "YZAlertView.h"
 #import "YZActionSheet.h"
+#import "CBAutoScrollLabel.h"
 #import "YZMenu.h"
 #import "UIView+YZ.h"
 #import "UIImage+YZ.h"

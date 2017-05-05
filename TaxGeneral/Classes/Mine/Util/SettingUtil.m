@@ -26,12 +26,12 @@
 - (void)initSettingData{
     NSMutableDictionary *settingDict = [[BaseSandBoxUtil shareInstance] loadDataWithFileName:FILE_NAME];
     
-    // 初始化配置信息，包括指纹解锁、声音、震动
+    // 初始化配置信息，包括指纹解锁、声音、震动、是否检测更新、是否开启天气预报
     if(settingDict == nil){
         NSNumber *open = [NSNumber numberWithBool:YES];
         NSNumber *close = [NSNumber numberWithBool:NO];
         // 初始化默认值的设置数据
-        NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:close, @"touchID", open, @"voice", open, @"shake", nil];
+        NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:close, @"touchID", open, @"voice", open, @"shake", close, @"forecast", open, @"update", nil];
         [[BaseSandBoxUtil shareInstance] writeData:dict fileName:FILE_NAME];
     }
 }

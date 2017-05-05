@@ -13,6 +13,10 @@
 
 @interface BaseWebViewController () <UIWebViewDelegate, NSURLConnectionDataDelegate, UIGestureRecognizerDelegate>
 
+@property (nonatomic, strong) UIView *imagesViewBG;     // 等待界面视图
+@property (nonatomic, strong) UILabel *loadLabel;       // 加载等待文字
+@property (nonatomic, strong) UIWebView *webViewBG;     // 加载等待GIF图
+
 @property (nonatomic, strong) UIWebView *webView;
 @property (nonatomic, strong) JSContext *context;
 //判断是否是HTTPS的
@@ -22,9 +26,7 @@
 //关闭按钮
 @property (nonatomic, strong) UIBarButtonItem *closeItem;
 
-//下面的三个属性是添加展示进度条的
-@property (nonatomic, assign) BOOL theBool;
-@property (nonatomic, strong) UIProgressView *progressView;
+// 计算时间
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, assign) NSInteger timeLong;
 
@@ -61,9 +63,15 @@
     
     [self addLeftButton];
     
-    [self addProgressBar];
+    [self showLoadingView];
+}
+
+-(void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
     
-    [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"加载中..."];
+    [self.timer invalidate];
+    self.timer = nil;
+    _timeLong = 0;
 }
 
 #pragma mark - <UIWebViewDelegate> 代理方法
@@ -83,17 +91,21 @@
     return YES;
 }
 - (void)webViewDidStartLoad:(UIWebView *)webView{
-    self.theBool = NO;
-    self.progressView.hidden = NO;
-    
     //0.01667 is roughly 1/60, so it will update at 60 FPS
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.05 target:self selector:@selector(timerCallback) userInfo:nil repeats:YES];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(timerCallback) userInfo:nil repeats:YES];
 }
 #pragma mark 加载完执行方法（设置webView的title为导航栏的title）
 - (void)webViewDidFinishLoad:(UIWebView *)webView{
-    self.theBool = YES; //加载完毕后，进度条完成
-    //self.title = [webView stringByEvaluatingJavaScriptFromString:@"document.title"];
-    [YZProgressHUD hiddenHUDForView:SELF_VIEW];
+    
+    [self.timer invalidate];
+    self.timer = nil;
+    _timeLong = 0;
+    
+    [_imagesViewBG removeFromSuperview];
+    
+    if(self.title == nil || [self.title isEqualToString:@""]){
+        self.title = [webView stringByEvaluatingJavaScriptFromString:@"document.title"];
+    }
     
     //判断是否有上一层H5页面
     if ([self.webView canGoBack]) {
@@ -124,8 +136,8 @@
     }
 }
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error{
-    [YZProgressHUD hiddenHUDForView:SELF_VIEW];
-    [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:[NSString stringWithFormat:@"网络连接异常！error.code=%ld", error.code]];
+    [self showLoadingFailedView];
+    //[YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:[NSString stringWithFormat:@"网络连接异常！error.code=%ld", error.code]];
 }
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response{
     self.isAuthed = YES;
@@ -136,7 +148,6 @@
         [[LoginUtil shareInstance] loginWithTokenSuccess:^{
             [self.webView loadRequest:self.request];
         } failed:^(NSString *error) {
-            [YZProgressHUD hiddenHUDForView:SELF_VIEW];
             [YZAlertView showAlertWith:self title:@"登录失效" message:@"您当前登录信息已失效，请重新登录！" callbackBlock:^(NSInteger btnIndex) {
                 // 注销方法
                 [YZProgressHUD showHUDView:SELF_VIEW Mode:LOCKMODE Text:@"注销中..."];
@@ -172,58 +183,86 @@
     
 }
 
+#pragma mark - 设置加载等待动画界面
+- (void)showLoadingView{
+    // 添加等待背景视
+    /*
+    NSMutableArray *imagesArray = [[NSMutableArray alloc] initWithObjects:[UIImage imageNamed:@"dropdown_loading_01"], [UIImage imageNamed:@"dropdown_loading_02"], [UIImage imageNamed:@"dropdown_loading_03"], nil];
+    
+    _imagesView = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frameWidth/2-50, 30, 100, 100)];
+    _imagesView.animationImages = imagesArray; //动画图片数组
+    _imagesView.animationDuration = 0.5; //执行一次完整动画所需的时长
+    // _imagesView.animationRepeatCount = 0;  //动画重复次数 0表示无限次，默认为0
+    [_imagesView startAnimating];
+    */
+    
+    _imagesViewBG = [[UIView alloc] initWithFrame:self.view.frame];
+    _imagesViewBG.backgroundColor = [UIColor whiteColor];
+    _imagesViewBG.userInteractionEnabled = NO;
+    
+    // 提示文字
+    _loadLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, self.view.frameHeight/2-104, self.view.frameWidth, 20)];
+    _loadLabel.textAlignment = NSTextAlignmentCenter;
+    _loadLabel.textColor = WBColor(169.0, 183.0, 183.0, 1.0f);
+    _loadLabel.font = [UIFont systemFontOfSize:14.0f];
+    _loadLabel.numberOfLines = 0;
+    _loadLabel.text = @"努力加载中...";
+    [_imagesViewBG addSubview:_loadLabel];
+    
+    // 添加加载等待图
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"loading" ofType:@"gif"];
+    NSData *gifData = [NSData dataWithContentsOfFile:filePath];
+    _webViewBG = [[UIWebView alloc] initWithFrame:CGRectMake(self.view.frameWidth/2-50, self.view.frameHeight/2-74, 100, 20)];
+    NSURL *baseUrl = nil;
+    [_webViewBG loadData:gifData MIMEType:@"image/gif" textEncodingName:@"UTF-8" baseURL:baseUrl];
+    _webViewBG.userInteractionEnabled = NO;
+    [_imagesViewBG addSubview:_webViewBG];
+    
+    [self.view addSubview:_imagesViewBG];
+}
+
+#pragma mark - 设置加载失败界面
+- (void)showLoadingFailedView{
+    // 移除现有组件
+    [_loadLabel removeFromSuperview];
+    [_webViewBG removeFromSuperview];
+    
+    // 重置背景颜色
+    _imagesViewBG.backgroundColor = DEFAULT_BACKGROUND_COLOR;
+    
+    // 加载失败图片
+    UIImageView *imagesView = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frameWidth/2-40, 100, 80, 80)];
+    imagesView.image = [UIImage imageNamed:@"loading_failed"];
+    [_imagesViewBG addSubview:imagesView];
+    
+    // 提示文字
+    UILabel *failedLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(imagesView.frame)+10, self.view.frameWidth, 40)];
+    failedLabel.textAlignment = NSTextAlignmentCenter;
+    failedLabel.textColor = [UIColor lightGrayColor];
+    failedLabel.font = [UIFont systemFontOfSize:15.0f];
+    failedLabel.numberOfLines = 0;
+    failedLabel.text = @"呃，页面加载失败了！\n 请检查网络是否正常，并退出后重新尝试！";
+    [_imagesViewBG addSubview:failedLabel];
+    
+    [self.view addSubview:_imagesViewBG];
+    
+}
+
 #pragma mark - 添加关闭按钮
 - (void)addLeftButton{
     self.navigationItem.leftBarButtonItem = self.backItem;
-}
-#pragma mark - 添加进度条
-- (void)addProgressBar{
-    // 顶部进度条
-    CGFloat progressBarHeight = 0.f;
-    CGRect navigationBarBounds = self.navigationController.navigationBar.bounds;
-    CGRect barFrame = CGRectMake(0, navigationBarBounds.size.height - progressBarHeight, navigationBarBounds.size.width, progressBarHeight);
-    self.progressView = [[UIProgressView alloc] initWithFrame:barFrame];
-    self.progressView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-    self.progressView.trackTintColor = [UIColor clearColor]; //背景色
-    self.progressView.progressTintColor = [UIColor orangeColor]; //进度色
-    [self.navigationController.navigationBar addSubview:self.progressView];
-    
-    self.progressView.progress = 0.05f;
-    
-    self.theBool = NO;
-}
-
-- (void)viewWillDisappear:(BOOL)animated{
-    [super viewWillDisappear:animated];
-    //移除progressView  because UINavigationBar is shared with other ViewControllers
-    [self.progressView removeFromSuperview];
 }
 
 - (void)timerCallback{
     _timeLong ++;
     DLog(@"进入Timer - > 次数:%ld",_timeLong);
-    if(_timeLong == 1000){
-        [YZProgressHUD hiddenHUDForView:SELF_VIEW];
-        [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:@"加载失败，请重新加载"];
-        self.progressView.hidden = YES;
+    if(_timeLong == 100){
+        
+        [self showLoadingFailedView];
+        
         [self.timer invalidate];
         self.timer = nil;
         _timeLong = 0;
-    }
-    if (self.theBool) {
-        if (self.progressView.progress >= 1) {
-            self.progressView.hidden = YES;
-            [self.timer invalidate];
-            self.timer = nil;
-            _timeLong = 0;
-        } else {
-            self.progressView.progress += 0.02;
-        }
-    } else {
-        self.progressView.progress += 0.02;
-        if (self.progressView.progress >= 0.9) {
-            self.progressView.progress = 0.9;
-        }
     }
 }
 

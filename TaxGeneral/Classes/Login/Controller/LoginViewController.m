@@ -160,16 +160,20 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
     
     self.sendBtn = [[UIButton alloc]initWithFrame:CGRectMake(_smallView.frameWidth-120, CGRectGetMaxY(self.passwordTextField.frame)+10, 100, 40)];
     [self.sendBtn setTitle:@"获取验证码" forState:UIControlStateNormal];
-    self.sendBtn.layer.cornerRadius = 5;
-    [self.sendBtn setBackgroundColor:[UIColor colorWithRed:255/255.0 green:165/255.0 blue:0/255.0 alpha:0.7f]];
     self.sendBtn.titleLabel.font = [UIFont systemFontOfSize:14.0f];
+    [self.sendBtn setBackgroundImage:[[BaseHandleUtil shareInstance] imageWithColor:WBColor(255.0, 170.0, 0.0, 1.0f)] forState:UIControlStateNormal];
+    [self.sendBtn setBackgroundImage:[[BaseHandleUtil shareInstance] imageWithColor:WBColor(255.0, 190.0, 20.0, 1.0f)] forState:UIControlStateHighlighted];
+    self.sendBtn.layer.masksToBounds = YES;
+    self.sendBtn.layer.cornerRadius = 5;
     [self.sendBtn addTarget:self action:@selector(sendAction:) forControlEvents:UIControlEventTouchUpInside];
     [_smallView addSubview:self.sendBtn];
     
     self.loginBtn = [[UIButton alloc]initWithFrame:CGRectMake(20, CGRectGetMaxY(self.authCodeTextField.frame)+10, _smallView.frameWidth-40, 40)];
     [self.loginBtn setTitle:@"登 录" forState:UIControlStateNormal];
+    [self.loginBtn setBackgroundImage:[[BaseHandleUtil shareInstance] imageWithColor:WBColor(80.0, 150.0, 230.0, 1.0f)] forState:UIControlStateNormal];
+    [self.loginBtn setBackgroundImage:[[BaseHandleUtil shareInstance] imageWithColor:WBColor(120.0, 180.0, 230.0, 1.0f)] forState:UIControlStateHighlighted];
+    self.loginBtn.layer.masksToBounds = YES;
     self.loginBtn.layer.cornerRadius = 5;
-    [self.loginBtn setBackgroundColor:[UIColor colorWithRed:83/255.0 green:149/255.0 blue:232/255.0 alpha:1]];
     [self.loginBtn addTarget:self action:@selector(loginAction:) forControlEvents:UIControlEventTouchUpInside];
     [_smallView addSubview:self.loginBtn];
     
@@ -307,6 +311,7 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
 
 // 发送验证码方法
 -(void)sendAction:(UIButton *)sender{
+
     NSString *userCode = _usernameTextField.text;
     if(userCode.length > 0){
         
@@ -322,13 +327,12 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
             DLog(@"statusCode = %@", [responseDic objectForKey:@"statusCode"]);
             NSString *statusCode = [responseDic objectForKey:@"statusCode"];
             if([statusCode isEqualToString:@"00"]){
+                [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:[responseDic objectForKey:@"msg"]];
                 //正常状态下的背景颜色
-                //UIColor *mainColor = [UIColor colorWithRed:84/255.0 green:180/255.0 blue:98/255.0 alpha:0.7f];
-                UIColor *mainColor = [UIColor colorWithRed:255/255.0 green:165/255.0 blue:0/255.0 alpha:0.7f];
+                UIColor *mainColor = WBColor(255.0, 170.0, 0.0, 1.0f);
                 //倒计时状态下的颜色
-                //UIColor *countColor = [UIColor lightGrayColor];
-                UIColor *countColor = [UIColor colorWithRed:169/255.0 green:183/255.0 blue:183/255.0 alpha:1.0f];
-                [self setTheCountdownButton:sender startWithTime:30 title:@"获取验证码" countDownTitle:@"秒后重试" mainColor:mainColor countColor:countColor];
+                UIColor *countColor = WBColor(188.0, 188.0, 188.0, 0.9f);
+                [self setTheCountdownButton:sender startWithTime:59 title:@"获取验证码" countDownTitle:@"秒后重试" mainColor:mainColor countColor:countColor];
             }else{
                 [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:[responseDic objectForKey:@"msg"]];
             }
@@ -418,7 +422,8 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
         if (timeOut == 0) {
             dispatch_source_cancel(_timer);
             dispatch_async(dispatch_get_main_queue(), ^{
-                button.backgroundColor = mColor;
+                //button.backgroundColor = mColor;
+                [button setBackgroundImage:[[BaseHandleUtil shareInstance] imageWithColor:mColor] forState:UIControlStateNormal];
                 [button setTitle:title forState:UIControlStateNormal];
                 button.userInteractionEnabled =YES;
                 });
@@ -426,7 +431,8 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
                 int seconds = timeOut % 60;
                 NSString *timeStr = [NSString stringWithFormat:@"%0.1d", seconds];
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    button.backgroundColor = color;
+                    //button.backgroundColor = color;
+                    [button setBackgroundImage:[[BaseHandleUtil shareInstance] imageWithColor:color] forState:UIControlStateNormal];
                     [button setTitle:[NSString stringWithFormat:@"%@%@",timeStr,subTitle]forState:UIControlStateNormal];
                     button.userInteractionEnabled =NO;
                     });

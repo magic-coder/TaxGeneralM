@@ -120,8 +120,6 @@
     BaseCollectionViewCell *cell = (BaseCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
     UIViewController *viewController = nil;
     
-    DLog(@"%@", cell.item.no);
-    
     if([cell.item.title isEqualToString:@"办税地图"]){
         viewController = [[MapListViewController alloc] init];
         

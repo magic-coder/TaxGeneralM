@@ -32,7 +32,7 @@
     
     UIViewController *viewController = nil;
     if ([item.title isEqualToString:@"日程提醒管理"]) {
-        [YZAlertView showAlertWith:self title:nil message:@"“互联网+税务”想要打开“日历”" callbackBlock:^(NSInteger btnIndex) {
+        [YZAlertView showAlertWith:self title:nil message:[NSString stringWithFormat:@"\"%@\"想要打开\"日历\"", [Variable shareInstance].appName] callbackBlock:^(NSInteger btnIndex) {
             if(btnIndex == 1){
                 [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"calshow:"]];
             }

@@ -56,7 +56,7 @@
     
     _confirmBtn = [UIButton buttonWithType:UIButtonTypeSystem];
     _confirmBtn.frame = CGRectMake(15, 255, WIDTH_SCREEN-30, 40);
-    _confirmBtn.backgroundColor = [UIColor colorWithRed:83/255.0 green:149/255.0 blue:232/255.0 alpha:1];
+    _confirmBtn.backgroundColor = WBColor(83.0, 149.0, 232.0, 1.0f);
     [_confirmBtn setTitle:@"确  定" forState:UIControlStateNormal];
     [_confirmBtn setTintColor:[UIColor whiteColor]];
     _confirmBtn.layer.cornerRadius = 5;// 圆角处理

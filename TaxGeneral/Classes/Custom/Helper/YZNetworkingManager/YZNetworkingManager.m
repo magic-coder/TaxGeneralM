@@ -48,6 +48,9 @@
     manager.requestSerializer = [AFHTTPRequestSerializer serializer];
     
     [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    if([url hasPrefix:@"http://apis.baidu.com"]){
+        [manager.requestSerializer setValue:@"84618d71962a2c37f2e6da208656df15" forHTTPHeaderField:@"apikey"];// 添加百度apikey
+    }
     //[manager.requestSerializer setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
     //[manager.requestSerializer setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
     //[manager.requestSerializer setValue:@"gizp" forHTTPHeaderField:@"Content-Encoding"];

@@ -121,7 +121,7 @@
                     block(@"不允许使用日历,请在设置中允许此App使用日历！");
                 }else{
                     EKEvent *event = [EKEvent eventWithEventStore:eventStore];
-                    event.title = [NSString stringWithFormat:@"互联网+税务：%@", title];
+                    event.title = [NSString stringWithFormat:@"%@：%@", [Variable shareInstance].appName, title];
                     event.location = location;
                     
                     NSDateFormatter *tempFormatter = [[NSDateFormatter alloc] init];
@@ -178,7 +178,21 @@
     }
     DLog(@"oneDay is EQ anotherDay (等于)");
     return 0;
+}
+
+//  颜色转换为背景图片
+- (UIImage *)imageWithColor:(UIColor *)color{
+    CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
     
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, rect);
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return image;
 }
 
 - (void)organizeRuntimeLog:(NSString *)log{
