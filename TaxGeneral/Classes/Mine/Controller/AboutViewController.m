@@ -92,16 +92,19 @@ static NSString * const reuseIdentifier = @"aboutTableViewCell";
         [manager POST:urlStr parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
             NSArray *results = [responseObject objectForKey:@"results"];
             if(results.count > 0){
-                // 最新版本号
+                
+                // 服务器版本号
                 NSString *version = [[results objectAtIndex:0] objectForKey:@"version"];
+                NSArray *serverVers = [version componentsSeparatedByString:@"."];
                 // 应用程序介绍网址（用户升级跳转URL）
                 //[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/app/1230863080"]];
                 NSString *trackViewUrl = [[results objectAtIndex:0] objectForKey:@"trackViewUrl"];
                 
                 // 当前版本号（本地）
                 NSString *currentVersion = [Variable shareInstance].appVersion;
+                NSArray *currentVers = [currentVersion componentsSeparatedByString:@"."];
                 
-                if (![version isEqualToString:currentVersion]) {
+                if ([serverVers[0] intValue] > [currentVers[0] intValue] || [serverVers[1] intValue] > [currentVers[1] intValue] || [serverVers[2] intValue] > [currentVers[2] intValue]) {
                     
                     [YZAlertView showAlertWith:self title:@"版本更新" message:[NSString stringWithFormat:@"发现新版本(%@)，是否更新",version] callbackBlock:^(NSInteger btnIndex) {
                         if (btnIndex == 1) {

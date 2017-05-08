@@ -114,11 +114,11 @@
 		18AE22621D61B61C00C93890 /* MessageListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AE22611D61B61C00C93890 /* MessageListModel.m */; };
 		18AE22651D61B8F200C93890 /* MessageListViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AE22641D61B8F200C93890 /* MessageListViewCell.m */; };
 		18B2B9031D3E205E00250EA8 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B2B9021D3E205E00250EA8 /* LoginViewController.m */; };
-		18B39DF21EBB2BB0007EC998 /* loading.gif in Resources */ = {isa = PBXBuildFile; fileRef = 18B39DF11EBB2BB0007EC998 /* loading.gif */; };
 		18BBE35B1E4AFC8B00EF96D7 /* BaseTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BBE35A1E4AFC8B00EF96D7 /* BaseTextField.m */; };
 		18BC91721DF0039600AD6AA8 /* NewsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BC91711DF0039600AD6AA8 /* NewsListViewController.m */; };
 		18BC91751DF00E5300AD6AA8 /* NewsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BC91741DF00E5300AD6AA8 /* NewsViewController.m */; };
 		18BF04921D5478B4000650ED /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BF04911D5478B4000650ED /* SettingViewController.m */; };
+		18C4B6381EC0238F005E2039 /* loading_wait.gif in Resources */ = {isa = PBXBuildFile; fileRef = 18C4B6371EC0238F005E2039 /* loading_wait.gif */; };
 		18C7373F1E4C1C070058E7E4 /* SettingUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C7373E1E4C1C070058E7E4 /* SettingUtil.m */; };
 		18C737451E4C5A560058E7E4 /* TouchIDViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C737441E4C5A560058E7E4 /* TouchIDViewController.m */; };
 		18C737501E4C70C30058E7E4 /* WUGesturesUnlockIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C7374A1E4C70C30058E7E4 /* WUGesturesUnlockIndicator.m */; };
@@ -468,7 +468,6 @@
 		18AE22641D61B8F200C93890 /* MessageListViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MessageListViewCell.m; path = Classes/Message/View/MessageListViewCell.m; sourceTree = "<group>"; };
 		18B2B9011D3E205E00250EA8 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginViewController.h; path = Classes/Login/Controller/LoginViewController.h; sourceTree = "<group>"; };
 		18B2B9021D3E205E00250EA8 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginViewController.m; path = Classes/Login/Controller/LoginViewController.m; sourceTree = "<group>"; };
-		18B39DF11EBB2BB0007EC998 /* loading.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = loading.gif; path = Resources/Images/loading.gif; sourceTree = "<group>"; };
 		18BBE3591E4AFC8B00EF96D7 /* BaseTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseTextField.h; path = Classes/Base/View/BaseTextField.h; sourceTree = "<group>"; };
 		18BBE35A1E4AFC8B00EF96D7 /* BaseTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BaseTextField.m; path = Classes/Base/View/BaseTextField.m; sourceTree = "<group>"; };
 		18BC91701DF0039600AD6AA8 /* NewsListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NewsListViewController.h; path = Classes/News/Controller/NewsListViewController.h; sourceTree = "<group>"; };
@@ -477,6 +476,7 @@
 		18BC91741DF00E5300AD6AA8 /* NewsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NewsViewController.m; path = Classes/News/Controller/NewsViewController.m; sourceTree = "<group>"; };
 		18BF04901D5478B4000650ED /* SettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingViewController.h; path = Classes/Mine/Controller/SettingViewController.h; sourceTree = "<group>"; };
 		18BF04911D5478B4000650ED /* SettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SettingViewController.m; path = Classes/Mine/Controller/SettingViewController.m; sourceTree = "<group>"; };
+		18C4B6371EC0238F005E2039 /* loading_wait.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = loading_wait.gif; sourceTree = "<group>"; };
 		18C7373D1E4C1C070058E7E4 /* SettingUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingUtil.h; path = Classes/Mine/Util/SettingUtil.h; sourceTree = "<group>"; };
 		18C7373E1E4C1C070058E7E4 /* SettingUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SettingUtil.m; path = Classes/Mine/Util/SettingUtil.m; sourceTree = "<group>"; };
 		18C737431E4C5A560058E7E4 /* TouchIDViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TouchIDViewController.h; path = Classes/TouchID/Controller/TouchIDViewController.h; sourceTree = "<group>"; };
@@ -1215,7 +1215,7 @@
 		18AA31651D47377000862187 /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				18B39DF11EBB2BB0007EC998 /* loading.gif */,
+				18C4B6371EC0238F005E2039 /* loading_wait.gif */,
 				18F788D01E5D5D4200EE35BE /* Common.xcassets */,
 				18056BB51E31A43300BE041E /* App.xcassets */,
 				18F788D21E5D5D6600EE35BE /* Msg.xcassets */,
@@ -2066,12 +2066,12 @@
 				18A966D51D533C0D00A8E539 /* Mine.xcassets in Resources */,
 				1880522C1D3CBEC200C36F00 /* Assets.xcassets in Resources */,
 				1822B31F1E5C6816008F1DB2 /* Map.xcassets in Resources */,
+				18C4B6381EC0238F005E2039 /* loading_wait.gif in Resources */,
 				1880522A1D3CBEC200C36F00 /* Main.storyboard in Resources */,
 				18EA03AE1E3607C100393735 /* BPushCerResource.bundle in Resources */,
 				1880525C1D3CC07E00C36F00 /* config.xml in Resources */,
 				18056BB61E31A43300BE041E /* App.xcassets in Resources */,
 				18C737531E4C70C30058E7E4 /* WUGesturesUnlockViewController.xib in Resources */,
-				18B39DF21EBB2BB0007EC998 /* loading.gif in Resources */,
 				18DC62351E6417F7001834D1 /* YZWebView.bundle in Resources */,
 				18293D941D631A7F008A4A8C /* MJRefresh.bundle in Resources */,
 			);

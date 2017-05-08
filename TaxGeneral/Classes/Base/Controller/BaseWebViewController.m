@@ -14,7 +14,6 @@
 @interface BaseWebViewController () <UIWebViewDelegate, NSURLConnectionDataDelegate, UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) UIView *imagesViewBG;     // 等待界面视图
-@property (nonatomic, strong) UILabel *loadLabel;       // 加载等待文字
 @property (nonatomic, strong) UIWebView *webViewBG;     // 加载等待GIF图
 
 @property (nonatomic, strong) UIWebView *webView;
@@ -136,7 +135,7 @@
     }
 }
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error{
-    [self showLoadingFailedView];
+    [self showLoadingFailedView:0];
     //[YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:[NSString stringWithFormat:@"网络连接异常！error.code=%ld", error.code]];
 }
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response{
@@ -200,19 +199,10 @@
     _imagesViewBG.backgroundColor = [UIColor whiteColor];
     _imagesViewBG.userInteractionEnabled = NO;
     
-    // 提示文字
-    _loadLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, self.view.frameHeight/2-104, self.view.frameWidth, 20)];
-    _loadLabel.textAlignment = NSTextAlignmentCenter;
-    _loadLabel.textColor = WBColor(169.0, 183.0, 183.0, 1.0f);
-    _loadLabel.font = [UIFont systemFontOfSize:14.0f];
-    _loadLabel.numberOfLines = 0;
-    _loadLabel.text = @"努力加载中...";
-    [_imagesViewBG addSubview:_loadLabel];
-    
     // 添加加载等待图
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"loading" ofType:@"gif"];
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"loading_wait" ofType:@"gif"];
     NSData *gifData = [NSData dataWithContentsOfFile:filePath];
-    _webViewBG = [[UIWebView alloc] initWithFrame:CGRectMake(self.view.frameWidth/2-50, self.view.frameHeight/2-74, 100, 20)];
+    _webViewBG = [[UIWebView alloc] initWithFrame:CGRectMake(self.view.frameWidth/2-160, self.view.frameHeight/2-150, 320, 200)];
     NSURL *baseUrl = nil;
     [_webViewBG loadData:gifData MIMEType:@"image/gif" textEncodingName:@"UTF-8" baseURL:baseUrl];
     _webViewBG.userInteractionEnabled = NO;
@@ -222,9 +212,14 @@
 }
 
 #pragma mark - 设置加载失败界面
-- (void)showLoadingFailedView{
+- (void)showLoadingFailedView:(int)flag{
+    
+    [self.timer invalidate];
+    self.timer = nil;
+    _timeLong = 0;
+    
+    [self.webView stopLoading];// 停止加载
     // 移除现有组件
-    [_loadLabel removeFromSuperview];
     [_webViewBG removeFromSuperview];
     
     // 重置背景颜色
@@ -241,7 +236,11 @@
     failedLabel.textColor = [UIColor lightGrayColor];
     failedLabel.font = [UIFont systemFontOfSize:15.0f];
     failedLabel.numberOfLines = 0;
-    failedLabel.text = @"呃，页面加载失败了！\n 请检查网络是否正常，并退出后重新尝试！";
+    if(flag == 0){
+        failedLabel.text = @"呃，页面加载失败了！\n 请检查网络是否正常，并退出后重新尝试！";
+    }else{
+        failedLabel.text = @"呃，请求服务超时！\n 请检查网络是否正常，并退出后重新尝试！";
+    }
     [_imagesViewBG addSubview:failedLabel];
     
     [self.view addSubview:_imagesViewBG];
@@ -257,12 +256,7 @@
     _timeLong ++;
     DLog(@"进入Timer - > 次数:%ld",_timeLong);
     if(_timeLong == 100){
-        
-        [self showLoadingFailedView];
-        
-        [self.timer invalidate];
-        self.timer = nil;
-        _timeLong = 0;
+        [self showLoadingFailedView:1];
     }
 }
 

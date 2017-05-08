@@ -149,7 +149,7 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
     self.authCodeTextField.layer.borderWidth = .5;
     self.authCodeTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.authCodeTextField.layer.borderColor = [UIColor grayColor].CGColor;
-    self.authCodeTextField.placeholder = @"请输入验证码";
+    self.authCodeTextField.placeholder = @"验证码";
     self.authCodeTextField.leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetHeight(self.usernameTextField.frame), CGRectGetHeight(self.usernameTextField.frame))];
     self.authCodeTextField.leftViewMode = UITextFieldViewModeAlways;
     UIImageView* imgAuth = [[UIImageView alloc] initWithFrame:CGRectMake(9, 9, 22, 22)];

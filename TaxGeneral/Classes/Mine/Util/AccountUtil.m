@@ -56,37 +56,32 @@
 
 - (void)accountLogout:(void (^)())success failed:(void (^)(NSString *))failed{
     
-    [[LoginUtil shareInstance] loginWithTokenSuccess:^{
-        NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-        [dict setObject:@"app" forKey:@"loginType"];
-        
-        NSString *jsonString = [[BaseHandleUtil shareInstance] dataToJsonString:dict];
-        
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:jsonString, @"msg", nil];
-        NSString *url = @"account/loginout";
-        [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:parameters success:^(NSDictionary *responseDic) {
-            // 获取请求状态值
-            DLog(@"statusCode = %@", [responseDic objectForKey:@"statusCode"]);
-            NSString *statusCode = [responseDic objectForKey:@"statusCode"];
-            if([statusCode isEqualToString:@"00"]){
-                
-                [self dropUserInfo];// 删除用户信息
-                
-                success();
-            }else{
-                failed([responseDic objectForKey:@"msg"]);
-            }
-        } failure:^(NSString *error) {
-            failed(error);
-        }];
-    } failed:^(NSString *error) {
-        if([error isEqualToString:@"510"]){
-            [self dropUserInfo];
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    [dict setObject:@"app" forKey:@"loginType"];
+    
+    NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS];
+    [dict setObject:[userDict objectForKey:@"userCode"] forKey:@"userCode"];
+    
+    NSString *jsonString = [[BaseHandleUtil shareInstance] dataToJsonString:dict];
+    
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:jsonString, @"msg", nil];
+    NSString *url = @"account/loginout";
+    [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:parameters success:^(NSDictionary *responseDic) {
+        // 获取请求状态值
+        DLog(@"statusCode = %@", [responseDic objectForKey:@"statusCode"]);
+        NSString *statusCode = [responseDic objectForKey:@"statusCode"];
+        if([statusCode isEqualToString:@"00"]){
+            
+            [self dropUserInfo];// 删除用户信息
+            
             success();
         }else{
-            failed(error);
+            failed([responseDic objectForKey:@"msg"]);
         }
+    } failure:^(NSString *error) {
+        failed(error);
     }];
+    
 }
 
 // 删除用户信息

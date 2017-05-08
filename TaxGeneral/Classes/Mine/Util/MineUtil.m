@@ -197,7 +197,7 @@
     forecast.type = BaseTableModelItemTypeSwitch;
     forecast.tag = 454;
     forecast.isOn = forecastOn;
-    BaseTableModelGroup *group3 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:[NSString stringWithFormat:@"当\"%@\"下次启动时，在应用界面顶部是否显示实时天气情况。", appName] settingItems: forecast, nil];
+    BaseTableModelGroup *group3 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:@"设置在\"应用\"列表顶部是否当展示实时天气情况，重启App后生效。" settingItems: forecast, nil];
     [items addObject:group3];
     
     BOOL updateOn = [[settingDict objectForKey:@"update"] boolValue];
@@ -205,7 +205,7 @@
     update.type = BaseTableModelItemTypeSwitch;
     update.tag = 455;
     update.isOn = updateOn;
-    BaseTableModelGroup *group4 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:[NSString stringWithFormat:@"当\"%@\"下次启动时，是否检查版本更新？若有新版本则提醒更新。", appName] settingItems: update, nil];
+    BaseTableModelGroup *group4 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:[NSString stringWithFormat:@"设置\"%@\"启动时，自动检测版本信息，若有新版本则提醒更新。", appName] settingItems: update, nil];
     [items addObject:group4];
     
     float tempSize = [[SDImageCache sharedImageCache] getSize]/1024;
