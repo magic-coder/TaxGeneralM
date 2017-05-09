@@ -68,7 +68,7 @@
                 
                 NSString *indexStr = [NSString stringWithFormat:@"%@：%@，%@：%@，%@：%@，%@：%@，%@：%@，%@：%@，%@：%@", [[indexDict objectForKey:@"001"] objectForKey:@"001001"], [[indexDict objectForKey:@"001"] objectForKey:@"001002"], [[indexDict objectForKey:@"002"] objectForKey:@"002001"], [[indexDict objectForKey:@"002"] objectForKey:@"002002"], [[indexDict objectForKey:@"004"] objectForKey:@"004001"], [[indexDict objectForKey:@"004"] objectForKey:@"004002"], [[indexDict objectForKey:@"005"] objectForKey:@"005001"], [[indexDict objectForKey:@"005"] objectForKey:@"005002"], [[indexDict objectForKey:@"007"] objectForKey:@"007001"], [[indexDict objectForKey:@"007"] objectForKey:@"007002"], [[indexDict objectForKey:@"009"] objectForKey:@"009001"], [[indexDict objectForKey:@"009"] objectForKey:@"009002"], [[indexDict objectForKey:@"010"] objectForKey:@"010001"], [[indexDict objectForKey:@"010"] objectForKey:@"010002"]];
                 
-                NSString *str = [NSString stringWithFormat:@"西安市当前温度：%@℃，PM2.5：%d，湿度：%@%%，降水量：%@mm，风力：%@级，%@", currentTemperature, [pmVal intValue], currentHumidity, currentRainfall, currentWind, indexStr];
+                NSString *str = [NSString stringWithFormat:@"西安市当前气温：%@℃，PM2.5：%d，湿度：%@%%，降水量：%@mm，风力：%@级，%@", currentTemperature, [pmVal intValue], currentHumidity, currentRainfall, currentWind, indexStr];
                 
                 autoScrollLabel.text = str;
                 

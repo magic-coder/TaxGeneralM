@@ -55,6 +55,7 @@
 #pragma mark Activity
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     [self initialize];
     [self layout];
 }

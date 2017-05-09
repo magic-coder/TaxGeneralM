@@ -28,7 +28,7 @@ static NSString * const reuseIdentifier = @"aboutTableViewCell";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _data = @[@"功能介绍", @"检测更新", @"去评分"];
+    _data = @[@"功能介绍", @"检测更新", @"去App Store评分"];
     
     [self.view setBackgroundColor:DEFAULT_BACKGROUND_COLOR];
     [self.tableView setBackgroundColor:[UIColor whiteColor]];

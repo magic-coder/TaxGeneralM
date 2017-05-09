@@ -98,9 +98,13 @@
     [[BaseSandBoxUtil shareInstance] removeFileName:@"appData.plist"];
     // 删除msg列表信息
     [[BaseSandBoxUtil shareInstance] removeFileName:@"msgData.plist"];
-    // 删除设置信息、并重置设置
-    [[SettingUtil shareInstance] removeSettingData];
-    [[SettingUtil shareInstance] initSettingData];
+    // 将用户TouchID设置信息删除
+    NSMutableDictionary *settingDict = [[SettingUtil shareInstance] loadSettingData];
+    [settingDict setValue:[NSNumber numberWithBool:NO] forKey:@"touchID"];
+    [[SettingUtil shareInstance] writeSettingData:settingDict];
+    //[[SettingUtil shareInstance] removeSettingData];
+    //[[SettingUtil shareInstance] initSettingData];
+    
     // 清除应用提醒角标
     [[BaseHandleUtil shareInstance] setBadge:0];
     

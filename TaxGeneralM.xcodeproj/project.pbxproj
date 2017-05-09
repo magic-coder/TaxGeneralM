@@ -71,6 +71,8 @@
 		1880525C1D3CC07E00C36F00 /* config.xml in Resources */ = {isa = PBXBuildFile; fileRef = 1880525B1D3CC07E00C36F00 /* config.xml */; };
 		1880525F1D3CC0FC00C36F00 /* libCordova.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 188052581D3CC04100C36F00 /* libCordova.a */; };
 		188052641D3CC3D000C36F00 /* YZTestPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 188052631D3CC3D000C36F00 /* YZTestPlugin.m */; };
+		1880E1551EC15CA200A5C8C2 /* loading_wait.gif in Resources */ = {isa = PBXBuildFile; fileRef = 1880E1541EC15CA200A5C8C2 /* loading_wait.gif */; };
+		1880E15A1EC1A96800A5C8C2 /* AccountHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1880E1591EC1A96800A5C8C2 /* AccountHeaderView.m */; };
 		1884826C1D51EC0D00A6A3AC /* MineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1884826B1D51EC0D00A6A3AC /* MineViewController.m */; };
 		188692261E9DFBC30043FBFA /* BaseHandleUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 188692251E9DFBC30043FBFA /* BaseHandleUtil.m */; };
 		188C751B1E14C84D0056E40D /* AppViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 188C751A1E14C84D0056E40D /* AppViewController.m */; };
@@ -118,7 +120,6 @@
 		18BC91721DF0039600AD6AA8 /* NewsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BC91711DF0039600AD6AA8 /* NewsListViewController.m */; };
 		18BC91751DF00E5300AD6AA8 /* NewsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BC91741DF00E5300AD6AA8 /* NewsViewController.m */; };
 		18BF04921D5478B4000650ED /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BF04911D5478B4000650ED /* SettingViewController.m */; };
-		18C4B6381EC0238F005E2039 /* loading_wait.gif in Resources */ = {isa = PBXBuildFile; fileRef = 18C4B6371EC0238F005E2039 /* loading_wait.gif */; };
 		18C7373F1E4C1C070058E7E4 /* SettingUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C7373E1E4C1C070058E7E4 /* SettingUtil.m */; };
 		18C737451E4C5A560058E7E4 /* TouchIDViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C737441E4C5A560058E7E4 /* TouchIDViewController.m */; };
 		18C737501E4C70C30058E7E4 /* WUGesturesUnlockIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C7374A1E4C70C30058E7E4 /* WUGesturesUnlockIndicator.m */; };
@@ -376,6 +377,9 @@
 		1880525B1D3CC07E00C36F00 /* config.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = config.xml; path = TaxGeneral/config.xml; sourceTree = "<group>"; };
 		188052621D3CC3D000C36F00 /* YZTestPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YZTestPlugin.h; path = Plugins/YZTestPlugin.h; sourceTree = "<group>"; };
 		188052631D3CC3D000C36F00 /* YZTestPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YZTestPlugin.m; path = Plugins/YZTestPlugin.m; sourceTree = "<group>"; };
+		1880E1541EC15CA200A5C8C2 /* loading_wait.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = loading_wait.gif; path = Resources/Images/loading_wait.gif; sourceTree = "<group>"; };
+		1880E1581EC1A96800A5C8C2 /* AccountHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AccountHeaderView.h; path = Classes/Mine/View/Account/AccountHeaderView.h; sourceTree = "<group>"; };
+		1880E1591EC1A96800A5C8C2 /* AccountHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AccountHeaderView.m; path = Classes/Mine/View/Account/AccountHeaderView.m; sourceTree = "<group>"; };
 		1884826A1D51EC0D00A6A3AC /* MineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MineViewController.h; path = Classes/Mine/Controller/MineViewController.h; sourceTree = "<group>"; };
 		1884826B1D51EC0D00A6A3AC /* MineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MineViewController.m; path = Classes/Mine/Controller/MineViewController.m; sourceTree = "<group>"; };
 		188692241E9DFBC30043FBFA /* BaseHandleUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseHandleUtil.h; path = Classes/Base/Util/BaseHandleUtil.h; sourceTree = "<group>"; };
@@ -476,7 +480,6 @@
 		18BC91741DF00E5300AD6AA8 /* NewsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NewsViewController.m; path = Classes/News/Controller/NewsViewController.m; sourceTree = "<group>"; };
 		18BF04901D5478B4000650ED /* SettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingViewController.h; path = Classes/Mine/Controller/SettingViewController.h; sourceTree = "<group>"; };
 		18BF04911D5478B4000650ED /* SettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SettingViewController.m; path = Classes/Mine/Controller/SettingViewController.m; sourceTree = "<group>"; };
-		18C4B6371EC0238F005E2039 /* loading_wait.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = loading_wait.gif; sourceTree = "<group>"; };
 		18C7373D1E4C1C070058E7E4 /* SettingUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingUtil.h; path = Classes/Mine/Util/SettingUtil.h; sourceTree = "<group>"; };
 		18C7373E1E4C1C070058E7E4 /* SettingUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SettingUtil.m; path = Classes/Mine/Util/SettingUtil.m; sourceTree = "<group>"; };
 		18C737431E4C5A560058E7E4 /* TouchIDViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TouchIDViewController.h; path = Classes/TouchID/Controller/TouchIDViewController.h; sourceTree = "<group>"; };
@@ -1043,6 +1046,15 @@
 			name = Classes;
 			sourceTree = "<group>";
 		};
+		1880E1571EC1A86500A5C8C2 /* Account */ = {
+			isa = PBXGroup;
+			children = (
+				1880E1581EC1A96800A5C8C2 /* AccountHeaderView.h */,
+				1880E1591EC1A96800A5C8C2 /* AccountHeaderView.m */,
+			);
+			name = Account;
+			sourceTree = "<group>";
+		};
 		18933A861E8E37180062A85A /* Reachability */ = {
 			isa = PBXGroup;
 			children = (
@@ -1215,7 +1227,7 @@
 		18AA31651D47377000862187 /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				18C4B6371EC0238F005E2039 /* loading_wait.gif */,
+				1880E1541EC15CA200A5C8C2 /* loading_wait.gif */,
 				18F788D01E5D5D4200EE35BE /* Common.xcassets */,
 				18056BB51E31A43300BE041E /* App.xcassets */,
 				18F788D21E5D5D6600EE35BE /* Msg.xcassets */,
@@ -1835,6 +1847,7 @@
 		18F122AA1E7BB2E400E12175 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				1880E1571EC1A86500A5C8C2 /* Account */,
 				18F122AB1E7BB2EA00E12175 /* About */,
 			);
 			name = View;
@@ -2066,7 +2079,7 @@
 				18A966D51D533C0D00A8E539 /* Mine.xcassets in Resources */,
 				1880522C1D3CBEC200C36F00 /* Assets.xcassets in Resources */,
 				1822B31F1E5C6816008F1DB2 /* Map.xcassets in Resources */,
-				18C4B6381EC0238F005E2039 /* loading_wait.gif in Resources */,
+				1880E1551EC15CA200A5C8C2 /* loading_wait.gif in Resources */,
 				1880522A1D3CBEC200C36F00 /* Main.storyboard in Resources */,
 				18EA03AE1E3607C100393735 /* BPushCerResource.bundle in Resources */,
 				1880525C1D3CC07E00C36F00 /* config.xml in Resources */,
@@ -2227,6 +2240,7 @@
 				18F3C3761E0D010500F2B046 /* MapViewController.mm in Sources */,
 				18AA317B1D4737B400862187 /* AFURLRequestSerialization.m in Sources */,
 				18D5B2541E6FD21E00F5F555 /* MKAnnotationView+WebCache.m in Sources */,
+				1880E15A1EC1A96800A5C8C2 /* AccountHeaderView.m in Sources */,
 				18DC62341E6417F7001834D1 /* YZWebViewProress.m in Sources */,
 				188052641D3CC3D000C36F00 /* YZTestPlugin.m in Sources */,
 				18293D891D631A7F008A4A8C /* MJRefreshFooter.m in Sources */,

@@ -21,8 +21,13 @@
     // Do any additional setup after loading the view.
     
     self.navigationBar.translucent = NO;                    // 设置顶部导航栏不透明
-    self.navigationBar.barTintColor = DEFAULT_BLUE_COLOR;   // 设置导航栏的颜色
+    //self.navigationBar.barTintColor = DEFAULT_BLUE_COLOR;   // 设置导航栏的颜色
     self.navigationBar.tintColor = [UIColor whiteColor];    // 设置导航栏ItemBar字体为白色
+    //[self.navigationBar setBackgroundImage:[[BaseHandleUtil shareInstance] imageWithColor:DEFAULT_BLUE_COLOR] forBarMetrics:UIBarMetricsDefault];// 设置导航栏背景图
+    [self.navigationBar setBackgroundImage:[UIImage imageNamed:@"common_navigation_bg" scaleToSize:CGSizeMake(WIDTH_SCREEN, 64)] forBarMetrics:UIBarMetricsDefault];
+    //[self.navigationBar setBackgroundImage:[[BaseHandleUtil shareInstance] imageWithColor:DEFAULT_BLUE_COLOR] forBarMetrics:UIBarMetricsDefault];
+    
+
     // 设置导航栏标题颜色
     NSDictionary *dict = [NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName];
     self.navigationBar.titleTextAttributes = dict;

@@ -104,11 +104,9 @@
         
         // ps:以上的状态处理并没有写完全!
         // 在使用中你需要根据回调的状态进行处理,需要处理什么就处理什么
-        
-        SettingUtil *settingUtil = [[SettingUtil shareInstance] init];
-        NSMutableDictionary *settingDict = [settingUtil loadSettingData];
+        NSMutableDictionary *settingDict = [[SettingUtil shareInstance] loadSettingData];
         [settingDict setValue:[NSNumber numberWithBool:sender.isOn] forKey:@"touchID"];
-        BOOL res = [settingUtil writeSettingData:settingDict];
+        BOOL res = [[SettingUtil shareInstance] writeSettingData:settingDict];
         if(!res){
             [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:@"设置异常！"];
         }

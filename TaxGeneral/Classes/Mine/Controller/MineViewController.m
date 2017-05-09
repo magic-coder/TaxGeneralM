@@ -19,9 +19,12 @@
 #import "AboutViewController.h"
 #import "LogViewController.h"
 
-@interface MineViewController ()
+#import "AccountHeaderView.h"
+
+@interface MineViewController () <UINavigationControllerDelegate, AccountHeaderViewDelegate>
 
 @property (nonatomic, strong) BaseWebViewController *webViewController;
+@property (nonatomic, strong) AccountHeaderView *headerView;
 
 @end
 
@@ -29,12 +32,30 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-        
+    
     //self.data = [[MineUtil shareInstance] getMineItems];
+    
+    // 设置导航控制器的代理为self
+    self.navigationController.delegate = self;
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    
+    //self.navigationController.navigationBar.shadowImage = [[UIImage alloc] init];// 去除导航栏底部黑线
+    _headerView = [[AccountHeaderView alloc] initWithFrame:CGRectMake(0, 0, WIDTH_SCREEN, 160)];
+    _headerView.delegate = self;
+    
+    self.tableView.tableHeaderView = _headerView;
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    
+    // 获取用户名
+    NSString *nameText = [[[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS] objectForKey:@"userName"];
+    if(nameText.length <= 0){
+        _headerView.nameText = @"未登录";
+    }else{
+        _headerView.nameText = [NSString stringWithFormat:@"您好，%@", nameText];
+    }
     
     self.data = [[MineUtil shareInstance] getMineItems];
     [self.tableView reloadData];
@@ -45,6 +66,7 @@
     BaseTableModelItem *item = [group itemAtIndex:indexPath.row];
     
     UIViewController *viewController = nil;
+    /*
     if ([item.title isEqualToString:@"账户管理"]) {
         if([self isLogin]){
             AccountViewController *accountViewController = [[AccountViewController alloc] init];
@@ -53,6 +75,7 @@
             [self goToLogin];
         }
     }
+    */
     if([item.title isEqualToString:@"安全中心"]){
         if([self isLogin]){
             SafeViewController *safeViewController = [[SafeViewController alloc] init];
@@ -109,6 +132,28 @@
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
 }
 
+#pragma mark - <AccountHeaderViewDelegate>代理方法
+- (void)accountHeaderViewDidSelectedInfo{
+    if([self isLogin]){
+        AccountViewController *accountViewController = [[AccountViewController alloc] init];
+        accountViewController.title = @"账户管理";
+        [self.navigationController pushViewController:accountViewController animated:YES];
+    }else{
+        [self goToLogin];
+    }
+}
+
+#pragma mark - UIScrollViewDelegate
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    CGPoint offset = scrollView.contentOffset;
+    if (offset.y < 0) {
+        CGRect rect = _headerView.imageView.frame;
+        rect.origin.y = offset.y;
+        rect.size.height = 160 - offset.y;
+        _headerView.imageView.frame = rect;
+    }
+}
+
 #pragma mark - 判断是否登录，及跳转登录
 #pragma mark 判断是否登录了
 -(BOOL)isLogin{
@@ -132,6 +177,14 @@
     [self.view.window.layer addAnimation:animation forKey:nil];
     
     [self presentViewController:loginVC animated:YES completion:nil];
+}
+
+#pragma mark - <UINavigationControllerDelegate>代理方法（隐藏导航栏）
+-(void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated{
+    // 判断要显示的控制器是否是自己
+    BOOL isShowPage = [viewController isKindOfClass:[self class]];
+    
+    [self.navigationController setNavigationBarHidden:isShowPage animated:YES];
 }
 
 - (void)didReceiveMemoryWarning {

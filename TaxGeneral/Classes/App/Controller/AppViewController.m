@@ -47,7 +47,7 @@
     
     self.collectionStyle = CollectionStyleNone;
     
-    _topView = [[AppTopView alloc] initWithFrame:CGRectMake(0.f, 0.f, WIDTH_SCREEN, 160.f)];
+    _topView = [[AppTopView alloc] initWithFrame:CGRectMake(0, 0, WIDTH_SCREEN, 160)];
     _topView.delegate = self;
     [self.view addSubview:_topView];
     

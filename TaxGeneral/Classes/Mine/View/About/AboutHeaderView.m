@@ -32,9 +32,7 @@
         versionLabel.font = [UIFont systemFontOfSize:13.0f];
         versionLabel.textColor = [UIColor grayColor];
         [self addSubview:versionLabel];
-        
-    }
-    
+    }    
     return self;
 }
 

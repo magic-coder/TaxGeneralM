@@ -45,6 +45,8 @@ static int const pageSize = 10;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    //self.automaticallyAdjustsScrollViewInsets = NO;
+    
     [self initializeHandle];
     
     _pageNo = 1;

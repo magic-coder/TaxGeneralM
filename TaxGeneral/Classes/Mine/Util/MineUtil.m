@@ -24,9 +24,11 @@
 
 - (NSMutableArray *)getMineItems{
     NSMutableArray *items = [[NSMutableArray alloc] init];
+    /*
     BaseTableModelItem *mineInfo = [BaseTableModelItem createWithImageName:@"mine_account" title:@"账户管理"];
     BaseTableModelGroup *group1 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:nil settingItems:mineInfo, nil];
     [items addObject:group1];
+    */
     
     BaseTableModelItem *safe = [BaseTableModelItem createWithImageName:@"mine_safe" title:@"安全中心"];
     BaseTableModelItem *schedule = [BaseTableModelItem createWithImageName:@"mine_schedule" title:@"我的日程"];
