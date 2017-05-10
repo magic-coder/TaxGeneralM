@@ -404,7 +404,8 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
     
     if(self.isLogin){
         MainTabBarController *mainTabBarController = [MainTabBarController shareInstance];
-        mainTabBarController.selectedIndex = [Variable shareInstance].lastSelectedIds;
+        //mainTabBarController.selectedIndex = [Variable shareInstance].lastSelectedIds;
+        mainTabBarController.selectedIndex = 3;
     }
     [self dismissViewControllerAnimated:YES completion:nil];
 }

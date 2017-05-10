@@ -19,8 +19,6 @@
 
 @property (nonatomic, strong) UILabel *titleLabel;      // 标签
 
-@property (nonatomic, assign) int rdNum;                // 随机标志
-
 @end
 
 @implementation BaseCollectionReusableView
@@ -34,8 +32,6 @@
 
 #pragma mark - 初始化方法
 - (void)loadInit{
-    
-    self.rdNum = [[BaseHandleUtil shareInstance] getRandomNumber:0 to:1];   // 获取随机数
     
     self.backgroundColor = [UIColor whiteColor];
     
@@ -66,11 +62,7 @@
         
         // 左侧标记红线
         [_leftView setFrame:CGRectMake(0, 0, 4.0f, self.frameHeight-0.5f)];
-        if(self.rdNum == 0){
-            [_leftView setBackgroundColor:[UIColor redColor]];
-        }else{
-            [_leftView setBackgroundColor:[UIColor orangeColor]];
-        }
+        [_leftView setBackgroundColor:[UIColor orangeColor]];
         [_leftView setAlpha:0.7f];
         
         // 底部边线样式

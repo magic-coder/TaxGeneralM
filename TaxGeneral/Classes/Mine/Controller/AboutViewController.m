@@ -28,7 +28,11 @@ static NSString * const reuseIdentifier = @"aboutTableViewCell";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _data = @[@"功能介绍", @"检测更新", @"去App Store评分"];
+    if([Variable shareInstance].isUpdates){
+        _data = @[@"功能介绍", @"检测更新", @"去App Store评分"];
+    }else{
+        _data = @[@"功能介绍", @"去App Store评分"];
+    }
     
     [self.view setBackgroundColor:DEFAULT_BACKGROUND_COLOR];
     [self.tableView setBackgroundColor:[UIColor whiteColor]];
@@ -79,13 +83,14 @@ static NSString * const reuseIdentifier = @"aboutTableViewCell";
     // 点击后将颜色变回来
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    if(indexPath.row == 0){
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    if([cell.textLabel.text isEqualToString:@"功能介绍"]){
         NSString *urlStr = [NSString stringWithFormat:@"%@taxnews/public/introductionIOS.htm", SERVER_URL];
         YZWebViewController *introduceVC = [[YZWebViewController alloc] initWithURL:urlStr];
-        introduceVC.title = @"功能介绍";
+        introduceVC.title = cell.textLabel.text;
         [self.navigationController pushViewController:introduceVC animated:YES];
     }
-    if(indexPath.row == 1){
+    if([cell.textLabel.text isEqualToString:@"检测更新"]){
         NSString *urlStr = @"https://itunes.apple.com/cn/lookup?id=1230863080";
         
         AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
@@ -110,7 +115,7 @@ static NSString * const reuseIdentifier = @"aboutTableViewCell";
                         if (btnIndex == 1) {
                             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:trackViewUrl]];
                         }
-                    } cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"更新", nil];
+                    } cancelButtonTitle:@"以后" destructiveButtonTitle:nil otherButtonTitles:@"更新", nil];
                 }else{
                     [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:@"当前版本已是最新版本"];
                 }
@@ -122,7 +127,7 @@ static NSString * const reuseIdentifier = @"aboutTableViewCell";
             [YZProgressHUD showHUDView:SELF_VIEW Mode:SHOWMODE Text:@"版本检测失败，请稍后再试！"];
         }];
     }
-    if(indexPath.row == 2){
+    if([cell.textLabel.text isEqualToString:@"去App Store评分"]){
         [[UIApplication sharedApplication]openURL:[NSURL URLWithString:@"https://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=1230863080&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8"]];
     }
 }

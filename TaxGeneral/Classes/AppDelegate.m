@@ -117,10 +117,12 @@
 #endif
     // 角标清0
     //[[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
-
+    
+    [self checkUpdates];    // 获取服务器版本信息
     [self deviceInfo];  // 获取设备基本信息
     [[SettingUtil shareInstance] initSettingData];// 初始化默认值的setting数据(写入SandBox)
     [self inspectPermission];// 获取权限（网络访问、定位）
+    [Variable shareInstance].brightness = [UIScreen mainScreen].brightness; // 获取系统屏幕亮度值
     
     // 初始化地图数据结构，写入SandBox
     [[MapListUtil shareInstance] loadMapDataBlock:^(NSMutableArray *dataArray) {
@@ -154,13 +156,18 @@
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-    
+    // 进入后台
     //[self register3DTouch];// 注册3DTouch方法
     
     NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS];
     if( nil == userDict){
         // 清除应用角标
         [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+    }
+    
+    NSMutableDictionary *settingDict = [[SettingUtil shareInstance] loadSettingData];
+    if(![[settingDict objectForKey:@"night"] boolValue]){
+        [[UIScreen mainScreen] setBrightness:[Variable shareInstance].brightness];
     }
     
 }
@@ -172,6 +179,7 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    // 应用激活
     
     [self saveCookies];// 写入cookie
     
@@ -180,6 +188,11 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    
+    NSMutableDictionary *settingDict = [[SettingUtil shareInstance] loadSettingData];
+    if(![[settingDict objectForKey:@"night"] boolValue]){
+        [[UIScreen mainScreen] setBrightness:0];
+    }
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
@@ -483,6 +496,25 @@
  }
  */
 
+#pragma mark - 获取是否更新标志
+- (void)checkUpdates{
+
+    NSString *jsonString = [[BaseHandleUtil shareInstance] dataToJsonString:@{@"deviceType" : @"4"}];
+    
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:jsonString, @"msg", nil];
+    
+    NSString *url = @"appManager/getVersion";
+    [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:parameters success:^(NSDictionary *responseDic) {
+        if([[responseDic objectForKey:@"CHECKUPDATES"] isEqualToString:@"Y"]){
+            [Variable shareInstance].isUpdates = YES;
+        }else{
+            [Variable shareInstance].isUpdates = NO;
+        }
+    } failure:^(NSString *error) {
+        RLog(@"Yan -> 获取检测标志失败 error : %@", error);
+    }];
+}
+
 #pragma mark - 登录用户初始化数据
 - (void)loginInitialize{
     // 加载完毕写入加载标志
@@ -581,7 +613,6 @@
     } completion:^(BOOL finished) {
         // 完成后执行code
         [NSThread sleepForTimeInterval:1.0f];
-        [UIApplication sharedApplication].statusBarHidden = NO;
         _mainTabBarController.view.userInteractionEnabled = YES;    // 动画加载完毕视图可以进行交互
         [_splashView removeFromSuperview];
     }];

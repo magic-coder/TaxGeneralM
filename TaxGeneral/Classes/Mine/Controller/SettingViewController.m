@@ -115,10 +115,6 @@
         if(tag == 454){
             [settingDict setObject:open forKey:@"forecast"];
         }
-        // 更新提醒
-        if(tag == 455){
-            [settingDict setObject:open forKey:@"update"];
-        }
     }else{
         // 声音
         if(tag == 452){
@@ -131,10 +127,6 @@
         // 天气预报
         if(tag == 454){
             [settingDict setObject:close forKey:@"forecast"];
-        }
-        // 更新提醒
-        if(tag == 455){
-            [settingDict setObject:close forKey:@"update"];
         }
     }
     

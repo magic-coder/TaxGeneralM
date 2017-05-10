@@ -52,10 +52,9 @@
     // 获取用户名
     NSString *nameText = [[[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS] objectForKey:@"userName"];
     if(nameText.length <= 0){
-        _headerView.nameText = @"未登录";
-    }else{
-        _headerView.nameText = [NSString stringWithFormat:@"您好，%@", nameText];
+        nameText = @"未登录";
     }
+    _headerView.nameText = nameText;
     
     self.data = [[MineUtil shareInstance] getMineItems];
     [self.tableView reloadData];
@@ -98,8 +97,12 @@
         viewController = serviceViewController;
     }
     if ([item.title isEqualToString:@"设置"]) {
-        SettingViewController *settingViewController = [[SettingViewController alloc] init];
-        viewController = settingViewController;
+        if([self isLogin]){
+            SettingViewController *settingViewController = [[SettingViewController alloc] init];
+            viewController = settingViewController;
+        }else{
+            [self goToLogin];
+        }
     }
     if ([item.title isEqualToString:@"关于"]) {
         AboutViewController *aboutViewController = [[AboutViewController alloc] init];

@@ -63,14 +63,23 @@ static int const pageSize = 10;
     // 设置下拉刷新
     self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(loadNewData)];
     
-    // 获取数据
-    NSMutableDictionary *dataDict = [_newsUtil loadData];
-    if(dataDict != nil){
-        [self handleDataDict:dataDict];// sandBox存在则进行处理加工数据
-    }else{
-        [self.tableView.mj_header beginRefreshing];// 进行查询数据
-    }
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
     
+    if([self isLogin]){
+        [UIApplication sharedApplication].statusBarHidden = NO;
+        // 获取数据
+        NSMutableDictionary *dataDict = [_newsUtil loadData];
+        if(dataDict != nil){
+            [self handleDataDict:dataDict];// sandBox存在则进行处理加工数据
+        }else{
+            [self.tableView.mj_header beginRefreshing];// 进行查询数据
+        }
+    }else{
+        [self goToLogin];
+    }
 }
 
 #pragma mark - 处理数据
@@ -334,10 +343,8 @@ static int const pageSize = 10;
     _mainTabBarController = (MainTabBarController *)self.tabBarController;
     _mainTabBarController.customDelegate = self;
     
-    // 校验用户是否开启了指纹、手势密码，并进行相应跳转
-    // 获取单例模式中的用户信息自动登录
-    NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS];
-    if(nil != userDict){
+    if([self isLogin]){
+        // 校验用户是否开启了指纹、手势密码，并进行相应跳转
         // 获取首次加载标志
         NSString *isLoad = [[NSUserDefaults standardUserDefaults] stringForKey:LOAD_FINISH];
         if(isLoad){
@@ -356,43 +363,33 @@ static int const pageSize = 10;
             }
         }
     }
-    
-    // 读取系统设置文件内容(更新提醒)
-    NSDictionary *settingDict = [[SettingUtil shareInstance] loadSettingData];
-    BOOL updateOn = [[settingDict objectForKey:@"update"] boolValue];
-    
-    if(updateOn){
-        // 效验应用版本是否可更新
-        NSString *urlStr = @"https://itunes.apple.com/cn/lookup?id=1230863080";
-        
-        AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-        [manager POST:urlStr parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-            NSArray *results = [responseObject objectForKey:@"results"];
-            if(results.count > 0){
-                // 服务器版本号
-                NSString *version = [[results objectAtIndex:0] objectForKey:@"version"];
-                NSArray *serverVers = [version componentsSeparatedByString:@"."];
-                // 应用程序介绍网址（用户升级跳转URL）
-                //[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/app/1230863080"]];
-                NSString *trackViewUrl = [[results objectAtIndex:0] objectForKey:@"trackViewUrl"];
+}
 
-                // 当前版本号（本地）
-                NSString *currentVersion = [Variable shareInstance].appVersion;
-                NSArray *currentVers = [currentVersion componentsSeparatedByString:@"."];
-                
-                if([serverVers[0] intValue] > [currentVers[0] intValue] || [serverVers[1] intValue] > [currentVers[1] intValue] || [serverVers[2] intValue] > [currentVers[2] intValue]){
-                    [YZAlertView showAlertWith:self title:@"版本更新" message:[NSString stringWithFormat:@"发现新版本(%@)，是否更新",version] callbackBlock:^(NSInteger btnIndex) {
-                        if (btnIndex == 1) {
-                            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:trackViewUrl]];
-                        }
-                    } cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"更新", nil];
-                }
-            }
-        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-            RLog(@"Yan -> 版本检测失败error : %@", error);
-        }];
+#pragma mark - 判断是否登录，及跳转登录
+#pragma mark 判断是否登录了
+-(BOOL)isLogin{
+    NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS];
+    if(nil != userDict){
+        return YES;
+    }else{
+        return NO;
     }
+}
 
+#pragma mark 跳转登录页面
+-(void)goToLogin{
+    
+    CATransition *animation = [CATransition animation];
+    animation.duration = 1.0f;
+    animation.timingFunction = UIViewAnimationCurveEaseInOut;
+    animation.type = @"rippleEffect";
+    //animation.type = kCATransitionMoveIn;
+    animation.subtype = kCATransitionFromTop;
+    [self.navigationController.tabBarController.view.window.layer addAnimation:animation forKey:nil];
+    
+    LoginViewController *loginVC = [[LoginViewController alloc] init];
+    loginVC.isLogin = YES;
+    [self presentViewController:loginVC animated:YES completion:nil];
 }
 
 - (void)didReceiveMemoryWarning {

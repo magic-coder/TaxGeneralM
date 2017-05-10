@@ -20,6 +20,8 @@
 @property (nonatomic, assign) int unReadCount;              // 未读消息条数
 @property (nonatomic, strong) NSString *runtimeLog;         // 运行日志
 @property (nonatomic, strong) NSString *crashLog;           // 崩溃日志
+@property (nonatomic, assign) float brightness;             // 系统屏幕亮度
+@property (nonatomic, assign) BOOL isUpdates;               // 是开启检测更新
 
 /**
  * @breif 实现声明单例方法 GCD

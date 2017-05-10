@@ -9,9 +9,11 @@
  ************************************************************/
 
 #import "AccountHeaderView.h"
+#import "SettingUtil.h"
 
 @interface AccountHeaderView()
 
+@property(nonatomic, strong) UIButton *nightBtn;
 @property(nonatomic, strong) UIButton *accountBtn;
 @property(nonatomic, strong) UILabel *nameLabel;
 
@@ -38,10 +40,22 @@
         _imageView.contentMode = UIViewContentModeScaleAspectFill;
         [self addSubview:_imageView];
         
+        _nightBtn = [[UIButton alloc] init];
+        NSMutableDictionary *settingDict = [[SettingUtil shareInstance] loadSettingData];
+        if([[settingDict objectForKey:@"night"] boolValue]){
+            [_nightBtn setBackgroundImage:[UIImage imageNamed:@"mine_account_moon"] forState:UIControlStateNormal];
+            [_nightBtn setBackgroundImage:[UIImage imageNamed:@"mine_account_moonHL"] forState:UIControlStateHighlighted];
+        }else{
+            [_nightBtn setBackgroundImage:[UIImage imageNamed:@"mine_account_sun"] forState:UIControlStateNormal];
+            [_nightBtn setBackgroundImage:[UIImage imageNamed:@"mine_account_sunHL"] forState:UIControlStateHighlighted];
+        }
+        
+        [_nightBtn addTarget:self action:@selector(nightAction:) forControlEvents:UIControlEventTouchUpInside];
+        _nightBtn.frame = CGRectMake(WIDTH_SCREEN-35, 30, 20, 20);
+        [self addSubview:_nightBtn];
+        
         _accountBtn = [[UIButton alloc] init];
-        [_accountBtn setBackgroundImage:[UIImage imageNamed:@"finger_headIcon"] forState:UIControlStateNormal];
-        [_accountBtn setBackgroundImage:[UIImage imageNamed:@"finger_headIcon"] forState:UIControlStateHighlighted];
-        [_accountBtn addTarget:self action:@selector(accountInfoAction:) forControlEvents:UIControlEventTouchDown];
+        [_accountBtn addTarget:self action:@selector(accountInfoAction:) forControlEvents:UIControlEventTouchUpInside];
         _accountBtn.frame = CGRectMake(WIDTH_SCREEN/2-35, 40, 70, 70);
         [self addSubview:_accountBtn];
         
@@ -67,6 +81,21 @@
 }
 
 // 点击方法
+- (void)nightAction:(UIButton *)sender{
+    NSMutableDictionary *settingDict = [[SettingUtil shareInstance] loadSettingData];
+    if([[settingDict objectForKey:@"night"] boolValue]){
+        [sender setBackgroundImage:[UIImage imageNamed:@"mine_account_sun"] forState:UIControlStateNormal];
+        [sender setBackgroundImage:[UIImage imageNamed:@"mine_account_sunHL"] forState:UIControlStateHighlighted];
+        [[UIScreen mainScreen] setBrightness:0];
+        [settingDict setObject:[NSNumber numberWithBool:NO] forKey:@"night"];
+    }else{
+        [sender setBackgroundImage:[UIImage imageNamed:@"mine_account_moon"] forState:UIControlStateNormal];
+        [sender setBackgroundImage:[UIImage imageNamed:@"mine_account_moonHL"] forState:UIControlStateHighlighted];
+        [[UIScreen mainScreen] setBrightness:[Variable shareInstance].brightness];
+        [settingDict setObject:[NSNumber numberWithBool:YES] forKey:@"night"];
+    }
+    [[SettingUtil shareInstance] writeSettingData:settingDict];
+}
 - (void)accountInfoAction:(UIButton *)sender{
     if ([self.delegate respondsToSelector:@selector(accountHeaderViewDidSelectedInfo)]) {
         [self.delegate accountHeaderViewDidSelectedInfo];
@@ -75,8 +104,14 @@
 
 // 重写Setter 方法
 - (void)setNameText:(NSString *)nameText{
-    _nameText = nameText;
-    _nameLabel.text = _nameText;
+    _nameLabel.text = nameText;
+    if([nameText isEqualToString:@"未登录"]){
+        [_accountBtn setBackgroundImage:[UIImage imageNamed:@"mine_account_header_grey"] forState:UIControlStateNormal];
+        [_accountBtn setBackgroundImage:[UIImage imageNamed:@"mine_account_header_grey"] forState:UIControlStateHighlighted];
+    }else{
+        [_accountBtn setBackgroundImage:[UIImage imageNamed:@"mine_account_header_color"] forState:UIControlStateNormal];
+        [_accountBtn setBackgroundImage:[UIImage imageNamed:@"mine_account_header_color"] forState:UIControlStateHighlighted];
+    }
 }
 
 @end

@@ -202,20 +202,12 @@
     BaseTableModelGroup *group3 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:@"设置在\"应用\"列表顶部是否当展示实时天气情况，重启App后生效。" settingItems: forecast, nil];
     [items addObject:group3];
     
-    BOOL updateOn = [[settingDict objectForKey:@"update"] boolValue];
-    BaseTableModelItem *update = [BaseTableModelItem createWithTitle:@"更新提醒"];
-    update.type = BaseTableModelItemTypeSwitch;
-    update.tag = 455;
-    update.isOn = updateOn;
-    BaseTableModelGroup *group4 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:[NSString stringWithFormat:@"设置\"%@\"启动时，自动检测版本信息，若有新版本则提醒更新。", appName] settingItems: update, nil];
-    [items addObject:group4];
-    
     float tempSize = [[SDImageCache sharedImageCache] getSize]/1024;
     NSString *cacheSize = tempSize >= 1024 ? [NSString stringWithFormat:@"%.1fMB",tempSize/1024] : [NSString stringWithFormat:@"%.1fKB",tempSize];
     BaseTableModelItem *clear = [BaseTableModelItem createWithTitle:@"清理缓存" subTitle:cacheSize];
     clear.accessoryType = UITableViewCellAccessoryNone;
-    BaseTableModelGroup *group5 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:nil settingItems: clear, nil];
-    [items addObject:group5];
+    BaseTableModelGroup *group4 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:nil settingItems: clear, nil];
+    [items addObject:group4];
     
     return items;
 }

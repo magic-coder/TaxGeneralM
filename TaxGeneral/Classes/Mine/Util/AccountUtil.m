@@ -94,6 +94,8 @@
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:GESTURES_PASSWORD];
     // 删除绑定注册推送设备信息
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:REGISTER_PUSH];
+    // 删除税闻列表信息
+    [[BaseSandBoxUtil shareInstance] removeFileName:@"newsData.plist"];
     // 删除app列表信息
     [[BaseSandBoxUtil shareInstance] removeFileName:@"appData.plist"];
     // 删除msg列表信息
@@ -104,6 +106,10 @@
     [[SettingUtil shareInstance] writeSettingData:settingDict];
     //[[SettingUtil shareInstance] removeSettingData];
     //[[SettingUtil shareInstance] initSettingData];
+    
+    // 清理缓存
+    [[SDImageCache sharedImageCache] clearDiskOnCompletion:nil];
+    [[SDImageCache sharedImageCache] clearMemory];
     
     // 清除应用提醒角标
     [[BaseHandleUtil shareInstance] setBadge:0];

@@ -68,6 +68,7 @@
 #define LOAD_FINISH         @"loadFinish"
 #define REGISTER_PUSH       @"registerPush"
 #define IS_TEST             @"isTest"
+#define ICON_VERSION        @"iconVersion"
 
 #pragma mark - Common View
 #define SELF_VIEW self.view

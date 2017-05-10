@@ -31,7 +31,7 @@
         NSNumber *open = [NSNumber numberWithBool:YES];
         NSNumber *close = [NSNumber numberWithBool:NO];
         // 初始化默认值的设置数据
-        NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:close, @"touchID", open, @"voice", open, @"shake", close, @"forecast", open, @"update", nil];
+        NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:close, @"touchID", open, @"voice", open, @"shake", close, @"forecast", close, @"night", nil];
         [[BaseSandBoxUtil shareInstance] writeData:dict fileName:FILE_NAME];
     }
 }

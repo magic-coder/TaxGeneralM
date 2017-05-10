@@ -16,20 +16,25 @@
     if(self = [super initWithFrame:frame]){
         self.backgroundColor = DEFAULT_BACKGROUND_COLOR;
         
-        UILabel *taxLabel = [self labelWithFrame:CGRectMake(0, frame.size.height-80, WIDTH_SCREEN, 20)];
+        float bottomH = 0.f;
+        if(![Variable shareInstance].isUpdates){
+            bottomH = 43.0f;
+        }
+        
+        UILabel *taxLabel = [self labelWithFrame:CGRectMake(0, frame.size.height-80+bottomH, WIDTH_SCREEN, 20)];
         taxLabel.font = [UIFont systemFontOfSize:13.0f];
         taxLabel.text = @"西安市地方税务局";
         [self addSubview:taxLabel];
         
-        UILabel *techLabel = [self labelWithFrame:CGRectMake((WIDTH_SCREEN-240)/2+5, frame.size.height-60, 60, 20)];
+        UILabel *techLabel = [self labelWithFrame:CGRectMake((WIDTH_SCREEN-240)/2+5, frame.size.height-60+bottomH, 60, 20)];
         techLabel.text = @"技术支持：";
         [self addSubview:techLabel];
         
-        UIButton *techBtn = [self buttonWithFrame:CGRectMake((WIDTH_SCREEN-240)/2+60, frame.size.height-60, 180, 20) title:@"蓬天信息系统（北京）有限公司"];
+        UIButton *techBtn = [self buttonWithFrame:CGRectMake((WIDTH_SCREEN-240)/2+60, frame.size.height-60+bottomH, 180, 20) title:@"蓬天信息系统（北京）有限公司"];
         [techBtn addTarget:self action:@selector(onClickTechBtn:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:techBtn];
         
-        UILabel *statementLabel = [self labelWithFrame:CGRectMake(0, frame.size.height-25, WIDTH_SCREEN, 20)];
+        UILabel *statementLabel = [self labelWithFrame:CGRectMake(0, frame.size.height-25+bottomH, WIDTH_SCREEN, 20)];
         statementLabel.text = @"Copyright © 2000-2017 Prient. All rights reserved.";
         [self addSubview:statementLabel];
         

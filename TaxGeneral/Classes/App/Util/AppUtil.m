@@ -59,7 +59,20 @@
         // 获取请求状态值
         DLog(@"statusCode = %@", [responseDic objectForKey:@"statusCode"]);
         NSString *statusCode = [responseDic objectForKey:@"statusCode"];
+        
         if([statusCode isEqualToString:@"00"]){
+            
+            int serverIconVer = [[[[responseDic objectForKey:@"businessData"] objectForKey:@"iconVersion"] objectForKey:@"iconVersionNo"] intValue];// 服务端图标版本号
+            int nativeIconVer = [[[NSUserDefaults standardUserDefaults] objectForKey:ICON_VERSION] intValue];// 本地图标版本号
+            if(serverIconVer != nativeIconVer){
+                // 重写本地图标版本号、清图片缓存
+                [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%d", serverIconVer] forKey:ICON_VERSION];
+                [[NSUserDefaults standardUserDefaults] synchronize]; // 强制写入
+                // 清理缓存
+                [[SDImageCache sharedImageCache] clearDiskOnCompletion:nil];
+                [[SDImageCache sharedImageCache] clearMemory];
+            }
+            
             DLog(@"请求报文成功，开始进行处理...");
             NSMutableArray *mineData = [[NSMutableArray alloc] init];
             NSMutableArray *otherData = [[NSMutableArray alloc] init];
