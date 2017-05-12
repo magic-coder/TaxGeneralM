@@ -24,6 +24,8 @@
 
 - (NSString *)getCurrentDate;                   // 获取当前时间
 
+- (NSString *)formatDate:(NSString *)date pattern:(NSString *)pattern;      // 格式化日期
+
 /**
  *  将App事件添加到系统日历提醒事项，实现闹铃提醒的功能
  *

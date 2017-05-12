@@ -154,6 +154,16 @@
         rect.origin.y = offset.y;
         rect.size.height = 160 - offset.y;
         _headerView.imageView.frame = rect;
+        
+        _headerView.nightBtn.frame = CGRectMake(WIDTH_SCREEN-35, offset.y + 30, 20, 20);
+        float accountBtnX = WIDTH_SCREEN/2-35 + offset.y;
+        if(accountBtnX <= 40){
+            accountBtnX = 40;
+        }
+        _headerView.accountBtn.frame = CGRectMake(accountBtnX, 40, 70, 70);
+        _headerView.nameLabel.alpha = 1 + offset.y/50;
+        _headerView.bigNameLabel.alpha = -0.4-offset.y/120;
+        _headerView.orgNameLabel.alpha = -0.4-offset.y/120;
     }
 }
 

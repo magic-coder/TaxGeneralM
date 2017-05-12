@@ -74,7 +74,7 @@
     float dateX = self.frameWidth - space - dateWidth;
     [_dateLabel setFrame:CGRectMake(dateX, labelY * 0.7, dateWidth, dateHeight)];
     
-    float usernameLabelWidth = self.frameWidth - labelX - dateWidth - space * 2;
+    float usernameLabelWidth = self.frameWidth - labelX - dateWidth - space;
     [_nameLabel setFrame:CGRectMake(labelX, labelY, usernameLabelWidth, labelHeight)];
     
     labelY = self.frameHeight * 0.91 - labelHeight;

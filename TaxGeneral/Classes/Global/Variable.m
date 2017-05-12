@@ -35,4 +35,12 @@
     return [infoDictionary objectForKey:@"CFBundleShortVersionString"];
 }
 
+- (NSString *)buildVersion{
+    NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+    // 当前应用版本号码   int类型
+    // NSString *appVersionNum = [infoDictionary objectForKey:@"CFBundleVersion"];
+    // 当前应用软件版本  比如：1.0.1
+    return [infoDictionary objectForKey:@"CFBundleVersion"];
+}
+
 @end

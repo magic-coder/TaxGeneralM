@@ -27,9 +27,9 @@
         nameLabel.text = [Variable shareInstance].appName;
         [self addSubview:nameLabel];
         
-        UILabel *versionLabel = [self labelWithFrame:CGRectMake(0, 110, WIDTH_SCREEN, 20)];
-        versionLabel.text = [NSString stringWithFormat:@"v%@", [Variable shareInstance].appVersion];
-        versionLabel.font = [UIFont systemFontOfSize:13.0f];
+        UILabel *versionLabel = [self labelWithFrame:CGRectMake(0, 112, WIDTH_SCREEN, 20)];
+        versionLabel.text = [NSString stringWithFormat:@"For iPhone V%@ build%@", [Variable shareInstance].appVersion, [Variable shareInstance].buildVersion];
+        versionLabel.font = [UIFont systemFontOfSize:12.0f];
         versionLabel.textColor = [UIColor grayColor];
         [self addSubview:versionLabel];
     }    

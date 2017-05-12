@@ -100,6 +100,16 @@
     return [formatter stringFromDate:[NSDate date]];
 }
 
+- (NSString *)formatDate:(NSString *)date pattern:(NSString *)pattern{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    
+    NSDateFormatter *newFormatter = [[NSDateFormatter alloc] init];
+    [newFormatter setDateFormat:pattern];
+    
+    return [newFormatter stringFromDate:[formatter dateFromString:date]];
+}
+
 - (void)createEventCalendarTitle:(NSString *)title location:(NSString *)location startDate:(NSDate *)startDate endDate:(NSDate *)endDate notes:(NSString *)notes allDay:(BOOL)allDay alarmArray:(NSArray *)alarmArray block:(void (^)(NSString *))block{
     
     EKEventStore *eventStore = [[EKEventStore alloc] init];

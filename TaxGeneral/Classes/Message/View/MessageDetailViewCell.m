@@ -24,9 +24,16 @@
 @property (nonatomic, strong) UIView *secondLine;           // 第二条分割线
 
 @property (nonatomic, strong) UILabel *titleLabel;          // 标题
+@property (nonatomic, strong) UIImageView *userImg;         // 推送人图标
+@property (nonatomic, strong) UILabel *pushUserLabel;       // 推送人
+@property (nonatomic, strong) UILabel *userLabel;           // 人名
+@property (nonatomic, strong) UIImageView *pushDateImg;     // 推送时间图标
+@property (nonatomic, strong) UILabel *pushDateLabel;       // 推送时间
 @property (nonatomic, strong) UILabel *dateLabel;           // 时间
+@property (nonatomic, strong) UIImageView *abstractImg;     // 摘要图标
 @property (nonatomic, strong) UILabel *abstractLabel;       // 摘要
 @property (nonatomic, strong) UILabel *contentLabel;        // 内容
+@property (nonatomic, strong) UIImageView *linkImg;         // 链接图标
 @property (nonatomic, strong) UILabel *detailLabel;         // 详细
 
 @property (nonatomic, strong) UIImageView *arrowImageView;  // 底部右侧箭头
@@ -102,8 +109,9 @@
     _messageDetailModel = messageDetailModel;
     
     [_titleLabel setText:_messageDetailModel.title];
-    [_contentLabel setText:_messageDetailModel.content];
+    [_userLabel setText:_messageDetailModel.user];
     [_dateLabel setText:_messageDetailModel.date];
+    [_contentLabel setText:_messageDetailModel.content];
     
     [self layoutSubviews];
 }
@@ -125,29 +133,82 @@
     float titleLabelH = titleSize.height;
     [_titleLabel setFrame:CGRectMake(titleLabelX, titleLabelY, titleLabelW, titleLabelH)];
     
-    // 时间
-    float dateLabelX = _baseSpace;
-    float dateLabelY = titleLabelY + titleLabelH + 5.0f;
-    float dateLabelW = frameWidth;
-    float dateLabelH = 13.0f;
-    [_dateLabel setFrame:CGRectMake(dateLabelX, dateLabelY, dateLabelW, dateLabelH)];
-    
     // 第一条分割线
     float firstLineX = _baseSpace;
-    float firstLineY = dateLabelY + dateLabelH + _baseSpace;
+    float firstLineY = titleLabelY + titleLabelH + _baseSpace;
     float firstLineW = frameWidth;
     float firstLineH = 0.5f;
     [_firstLine setFrame:CGRectMake(firstLineX, firstLineY, firstLineW, firstLineH)];
     
+    // 推送人员
+    float pushUserLabelX = _baseSpace + 17;
+    float pushUserLabelY = firstLineY + firstLineH + _baseSpace;
+    float pushUserLabelW = 72.0f;
+    float pushUserLabelH = 17.0f;
+    [_pushUserLabel setFrame:CGRectMake(pushUserLabelX, pushUserLabelY, pushUserLabelW, pushUserLabelH)];
+    
+    // 人名
+    float userLabelX = _baseSpace + 17 + pushUserLabelW;
+    float userLabelY = pushUserLabelY;
+    float userLabelW = frameWidth - pushUserLabelW - _baseSpace * 2;
+    float userLabelH = 17.0f;
+    [_userLabel setFrame:CGRectMake(userLabelX, userLabelY, userLabelW, userLabelH)];
+    
+    // 推送时间
+    float pushDateLabelX = _baseSpace + 17;
+    float pushDateLabelY = userLabelY + userLabelH + _baseSpace;
+    float pushDateLabelW = 72.0f;
+    float pushDateLabelH = 17.0f;
+    if([_messageDetailModel.user isEqualToString:@"系统推送"]){
+        _userImg.hidden = YES;
+        _pushUserLabel.hidden = YES;
+        _userLabel.hidden = YES;
+        
+        pushDateLabelY = firstLineY + firstLineH + _baseSpace;
+    }else{
+        _userImg.hidden = NO;
+        _pushUserLabel.hidden = NO;
+        _userLabel.hidden = NO;
+        
+        // 用户图标
+        float userImgX = _baseSpace;
+        float userImgY = pushUserLabelY+2;
+        float userImgW = 13.0f;
+        float userImgH = 13.0f;
+        [_userImg setFrame:CGRectMake(userImgX, userImgY, userImgW, userImgH)];
+    }
+    [_pushDateLabel setFrame:CGRectMake(pushDateLabelX, pushDateLabelY, pushDateLabelW, pushDateLabelH)];
+    
+    // 推送时间图标
+    float pushDateImgX = _baseSpace;
+    float pushDateImgY = pushDateLabelY+2;
+    float pushDateImgW = 13.0f;
+    float pushDateImgH = 13.0f;
+    [_pushDateImg setFrame:CGRectMake(pushDateImgX, pushDateImgY, pushDateImgW, pushDateImgH)];
+    
+    // 时间
+    float dateLabelX = _baseSpace + 17 + pushDateLabelW;
+    float dateLabelY = pushDateLabelY;
+    float dateLabelW = frameWidth - pushDateLabelW - _baseSpace * 2;
+    float dateLabelH = 17.0f;
+    [_dateLabel setFrame:CGRectMake(dateLabelX, dateLabelY, dateLabelW, dateLabelH)];
+    
     // 摘要
-    float abstractLabelX = _baseSpace;
-    float abstractLabelY = firstLineY + firstLineH + _baseSpace;
+    float abstractLabelX = _baseSpace + 17;
+    float abstractLabelY = dateLabelY + dateLabelH + _baseSpace;
     float abstractLabelW = 72.0f;
-    float abstractLabelH = 16.0f;
+    float abstractLabelH = 17.0f;
     [_abstractLabel setFrame:CGRectMake(abstractLabelX, abstractLabelY, abstractLabelW, abstractLabelH)];
     
-    // 内容
-    float contentLabelX = _baseSpace + abstractLabelW;
+    // 摘要图标
+    float abstractImgX = _baseSpace;
+    float abstractImgY = abstractLabelY+2;
+    float abstractImgW = 13.0f;
+    float abstractImgH = 13.0f;
+    [_abstractImg setFrame:CGRectMake(abstractImgX, abstractImgY, abstractImgW, abstractImgH)];
+    
+    // 摘要内容
+    float contentLabelX = _baseSpace + 17 + abstractLabelW;
     float contentLabelY = abstractLabelY;
     CGSize contentSize = [[BaseHandleUtil shareInstance] sizeWithString:_messageDetailModel.content font:CONTENT_FONT maxSize:CGSizeMake(frameWidth - abstractLabelW, MAXFLOAT)];
     float contentLabelW = contentSize.width;
@@ -169,11 +230,19 @@
         
         // 查看详情
         _detailLabel.hidden = NO;
-        float detailLabelX = _baseSpace;
+        float detailLabelX = _baseSpace + 17;
         float detailLabelY = secondLineY + secondLineH + _baseSpace;
         float detailLabelW = frameWidth;
-        float detailLabelH = 16.0f;
+        float detailLabelH = 17.0f;
         [_detailLabel setFrame:CGRectMake(detailLabelX, detailLabelY, detailLabelW, detailLabelH)];
+        
+        // 链接图标
+        _linkImg.hidden = NO;
+        float linkImgX = _baseSpace;
+        float linkImgY = detailLabelY+2;
+        float linkImgW = 13.0f;
+        float linkImgH = 13.0f;
+        [_linkImg setFrame:CGRectMake(linkImgX, linkImgY, linkImgW, linkImgH)];
         
         // 详情右侧箭头
         _arrowImageView.hidden = NO;
@@ -188,6 +257,7 @@
     }else{
         _secondLine.hidden = YES;
         _detailLabel.hidden = YES;
+        _linkImg.hidden = YES;
         _arrowImageView.hidden = YES;
         
         self.selected = UITableViewCellSelectionStyleNone; // 点击不变色
@@ -213,28 +283,6 @@
 }
 
 #pragma mark - Common Getter and Setter
-/*
-- (UIView *)baseView{
-    if(_baseView == nil){
-        _baseView = [[UIView alloc] init];
-        _baseView.backgroundColor = [UIColor whiteColor];
-        _baseView.layer.masksToBounds = YES;
-        [_baseView.layer setCornerRadius:5.0f];
-        
-        [_baseView addSubview:self.titleLabel];
-        [_baseView addSubview:self.dateLabel];
-        [_baseView addSubview:self.firstLine];
-        [_baseView addSubview:self.abstractLabel];
-        [_baseView addSubview:self.contentLabel];
-        [_baseView addSubview:self.secondLine];
-        [_baseView addSubview:self.detailLabel];
-        [_baseView addSubview:self.arrowImageView];
-    }
-    
-    return _baseView;
-}
-*/
-
 -(UIImageView *)baseView{
     if(_baseView == nil){
         _baseView = [[UIImageView alloc] init];
@@ -242,11 +290,18 @@
         [_baseView.layer setCornerRadius:5.0f];
         
         [_baseView addSubview:self.titleLabel];
+        [_baseView addSubview:self.userImg];
+        [_baseView addSubview:self.pushUserLabel];
+        [_baseView addSubview:self.userLabel];
+        [_baseView addSubview:self.pushDateImg];
+        [_baseView addSubview:self.pushDateLabel];
         [_baseView addSubview:self.dateLabel];
         [_baseView addSubview:self.firstLine];
+        [_baseView addSubview:self.abstractImg];
         [_baseView addSubview:self.abstractLabel];
         [_baseView addSubview:self.contentLabel];
         [_baseView addSubview:self.secondLine];
+        [_baseView addSubview:self.linkImg];
         [_baseView addSubview:self.detailLabel];
         [_baseView addSubview:self.arrowImageView];
     }
@@ -282,6 +337,56 @@
     return _titleLabel;
 }
 
+- (UIImageView *)userImg{
+    if(_userImg == nil){
+        _userImg = [[UIImageView alloc] init];
+        _userImg.hidden = YES;
+        [_userImg setImage:[UIImage imageNamed:@"msg_user"]];
+    }
+    return _userImg;
+}
+
+- (UILabel *)pushUserLabel{
+    if(_pushUserLabel == nil){
+        _pushUserLabel = [[UILabel alloc] init];
+        _pushUserLabel.text = @"推送人员：";
+        [_pushUserLabel setFont:CONTENT_FONT];
+        [_pushUserLabel setTextAlignment:NSTextAlignmentLeft];
+        [_pushUserLabel setTextColor:[UIColor blackColor]];
+    }
+    return _pushUserLabel;
+}
+
+- (UILabel *)userLabel{
+    if(_userLabel == nil){
+        _userLabel = [[UILabel alloc] init];
+        [_userLabel setFont:CONTENT_FONT];
+        [_userLabel setAlpha:0.8f];
+        [_userLabel setTextAlignment:NSTextAlignmentLeft];
+        [_userLabel setTextColor:[UIColor grayColor]];
+    }
+    return _userLabel;
+}
+
+- (UIImageView *)pushDateImg{
+    if(_pushDateImg == nil){
+        _pushDateImg = [[UIImageView alloc] init];
+        [_pushDateImg setImage:[UIImage imageNamed:@"msg_date"]];
+    }
+    return _pushDateImg;
+}
+
+- (UILabel *)pushDateLabel{
+    if(_pushDateLabel == nil){
+        _pushDateLabel = [[UILabel alloc] init];
+        _pushDateLabel.text = @"推送时间：";
+        [_pushDateLabel setFont:CONTENT_FONT];
+        [_pushDateLabel setTextAlignment:NSTextAlignmentLeft];
+        [_pushDateLabel setTextColor:[UIColor blackColor]];
+    }
+    return _pushDateLabel;
+}
+
 - (UILabel *)dateLabel{
     if(_dateLabel == nil){
         _dateLabel = [[UILabel alloc] init];
@@ -291,6 +396,14 @@
         [_dateLabel setTextColor:[UIColor grayColor]];
     }
     return _dateLabel;
+}
+
+- (UIImageView *)abstractImg{
+    if(_abstractImg == nil){
+        _abstractImg = [[UIImageView alloc] init];
+        [_abstractImg setImage:[UIImage imageNamed:@"msg_abstract"]];
+    }
+    return _abstractImg;
 }
 
 - (UILabel *)abstractLabel{
@@ -313,6 +426,15 @@
         [_contentLabel setTextColor:[UIColor grayColor]];
     }
     return _contentLabel;
+}
+
+- (UIImageView *)linkImg{
+    if(_linkImg == nil){
+        _linkImg = [[UIImageView alloc] init];
+        _linkImg.hidden = YES;
+        [_linkImg setImage:[UIImage imageNamed:@"msg_link"]];
+    }
+    return _linkImg;
 }
 
 -(UILabel *)detailLabel{

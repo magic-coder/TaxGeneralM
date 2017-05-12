@@ -91,7 +91,7 @@
 }
 - (void)webViewDidStartLoad:(UIWebView *)webView{
     //0.01667 is roughly 1/60, so it will update at 60 FPS
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(timerCallback) userInfo:nil repeats:YES];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.6 target:self selector:@selector(timerCallback) userInfo:nil repeats:YES];
 }
 #pragma mark 加载完执行方法（设置webView的title为导航栏的title）
 - (void)webViewDidFinishLoad:(UIWebView *)webView{

@@ -69,7 +69,6 @@ static int const pageSize = 10;
     [super viewWillAppear:animated];
     
     if([self isLogin]){
-        [UIApplication sharedApplication].statusBarHidden = NO;
         // 获取数据
         NSMutableDictionary *dataDict = [_newsUtil loadData];
         if(dataDict != nil){

@@ -16,7 +16,8 @@
     MessageDetailModel *model = [[MessageDetailModel alloc] init];
     model.uuid = [dict objectForKey:@"pushdetailuuid"];
     model.title = [dict objectForKey:@"pushtitle"];
-    model.date = [[dict objectForKey:@"pushdate"] substringWithRange:NSMakeRange(0, 19)];
+    model.user = [dict objectForKey:@"taxofficialname"];
+    model.date = [[BaseHandleUtil shareInstance] formatDate:[[dict objectForKey:@"pushdate"] substringWithRange:NSMakeRange(0, 19)] pattern:@"yyyy年MM月dd日 HH:mm"];
     model.content = [dict objectForKey:@"pushcontent"];
     model.url = [dict objectForKey:@"detailurl"];
     

@@ -21,6 +21,12 @@
 @interface AccountHeaderView : UIView
 
 @property (nonatomic, strong) UIImageView *imageView;   // 背景图
+@property (nonatomic, strong) UIButton *nightBtn;       // 夜间模式按钮
+@property (nonatomic, strong) UIButton *accountBtn;     // 用户头像按钮
+@property (nonatomic, strong) UILabel *nameLabel;       // 用户名称
+@property (nonatomic, strong) UILabel *bigNameLabel;    // 用户名称放大
+@property (nonatomic, strong) UILabel *orgNameLabel;    // 机构名称
+
 @property (nonatomic, strong) NSString *nameText;
 
 @property (nonatomic, weak) id<AccountHeaderViewDelegate> delegate;

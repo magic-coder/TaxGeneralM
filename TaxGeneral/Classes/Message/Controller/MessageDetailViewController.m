@@ -130,7 +130,11 @@ static int const pageSize = 5;
     }
     if(type == MsgDetailViewCellMenuTypeCopy){
         UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard]; // 黏贴板
-        NSString *pasteString = [NSString stringWithFormat:@"标题：%@\n时间：%@\n摘要：%@", model.title, model.date, model.content];
+        NSString *pasteString = [NSString stringWithFormat:@"标题：%@", model.title];
+        if(![model.user isEqualToString:@"系统推送"]){
+            pasteString = [NSString stringWithFormat:@"%@\n推送人：%@", pasteString, model.user];
+        }
+        pasteString = [NSString stringWithFormat:@"%@\n时间：%@\n摘要：%@", pasteString, model.date, model.content];
         if(model.url.length > 0){
             pasteString = [NSString stringWithFormat:@"%@\n链接：%@", pasteString, model.url];
         }

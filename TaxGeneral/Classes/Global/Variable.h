@@ -14,6 +14,7 @@
 
 @property (nonatomic, strong) NSString *appName;            // 应用名称
 @property (nonatomic, strong) NSString *appVersion;         // 应用版本号
+@property (nonatomic, strong) NSString *buildVersion;         // 编译版本号
 
 @property (nonatomic, assign) NSInteger lastSelectedIds;    // TabBar记录最近一次选中的视图
 @property (nonatomic, assign) BOOL msgRefresh;              // 标记视图是否刷新

@@ -1950,6 +1950,7 @@
 				188052191D3CBEC200C36F00 /* Frameworks */,
 				1880521A1D3CBEC200C36F00 /* Resources */,
 				188052601D3CC10600C36F00 /* Copy www directory */,
+				18A8CC571EC54A56000D35A5 /* Build Number */,
 			);
 			buildRules = (
 			);
@@ -2121,6 +2122,20 @@
 			shellPath = /bin/sh;
 			shellScript = "NODEJS_PATH=/usr/local/bin; NVM_NODE_PATH=~/.nvm/versions/node/`nvm version 2>/dev/null`/bin; N_NODE_PATH=`find /usr/local/n/versions/node/* -maxdepth 0 -type d 2>/dev/null | tail -1`/bin; XCODE_NODE_PATH=`xcode-select --print-path`/usr/share/xcs/Node/bin; PATH=$NODEJS_PATH:$NVM_NODE_PATH:$N_NODE_PATH:$XCODE_NODE_PATH:$PATH && node cordova/lib/copy-www-build-step.js";
 			showEnvVarsInLog = 0;
+		};
+		18A8CC571EC54A56000D35A5 /* Build Number */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Build Number";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "echo $CONFIGURATION\nif [ \"Release\" == \"${CONFIGURATION}\" ]\nthen\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\necho \"build number increase\"\nfi";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -2456,6 +2471,7 @@
 				CODE_SIGN_ENTITLEMENTS = TaxGeneral/TaxGeneral.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = "";
 				DEVELOPMENT_TEAM = 28MS2284NQ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2482,6 +2498,7 @@
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "$(OBJROOT)/UninstalledProducts/$(PLATFORM_NAME)/include";
+				VERSIONING_SYSTEM = "";
 			};
 			name = Debug;
 		};
@@ -2492,6 +2509,7 @@
 				CODE_SIGN_ENTITLEMENTS = TaxGeneral/TaxGeneral.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = "";
 				DEVELOPMENT_TEAM = 28MS2284NQ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2518,6 +2536,7 @@
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "$(OBJROOT)/UninstalledProducts/$(PLATFORM_NAME)/include";
+				VERSIONING_SYSTEM = "";
 			};
 			name = Release;
 		};

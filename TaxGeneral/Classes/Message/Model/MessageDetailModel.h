@@ -15,6 +15,7 @@
 /************************ 属性 ************************/
 @property (nonatomic, strong) NSString *uuid;       // 消息主键
 @property (nonatomic, strong) NSString *title;      // 标题
+@property (nonatomic, strong) NSString *user;       // 标题
 @property (nonatomic, strong) NSString *date;       // 时间
 @property (nonatomic, strong) NSString *content;    // 内容
 @property (nonatomic, strong) NSString *url;        // 详情页

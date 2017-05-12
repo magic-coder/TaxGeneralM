@@ -22,38 +22,6 @@
     return accountUtil;
 }
 
-/*
-- (void)accountLogout{
-    // 删除用户登录信息
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:LOGIN_SUCCESS];
-    // 删除是否为开发者信息
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:IS_TEST];
-    // 删除用户手势密码信息
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:GESTURES_PASSWORD];
-    // 删除app列表信息
-    [[BaseSandBoxUtil shareInstance] removeFileName:@"appData.plist"];
-    // 删除msg列表信息
-    [[BaseSandBoxUtil shareInstance] removeFileName:@"msgData.plist"];
-    // 删除设置信息、并重置设置
-    [[SettingUtil shareInstance] removeSettingData];
-    [[SettingUtil shareInstance] initSettingData];
-    // 清除应用提醒角标
-    [[BaseHandleUtil shareInstance] setBadge:0];
-    
-    // 清空Cookie
-    NSHTTPCookieStorage * loginCookie = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-    for (NSHTTPCookie * cookie in [loginCookie cookies]){
-        [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
-    }
-    
-    // 删除沙盒自动生成的Cookies.binarycookies文件
-    NSString * path = NSHomeDirectory();
-    NSString * filePath = [path stringByAppendingPathComponent:@"/Library/Cookies/Cookies.binarycookies"];
-    NSFileManager * manager = [NSFileManager defaultManager];
-    [manager removeItemAtPath:filePath error:nil];
-}
-*/
-
 - (void)accountLogout:(void (^)())success failed:(void (^)(NSString *))failed{
     
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];

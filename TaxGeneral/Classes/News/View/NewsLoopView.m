@@ -110,12 +110,13 @@
         
         // 从远程URL获取图片
         //[imageView sd_setImageWithURL:[NSURL URLWithString:self.currentImages[i]] placeholderImage:[UIImage imageNamed:@"common_news_placeholder"] options:SDWebImageAllowInvalidSSLCertificates completed:nil];
+        
+        // 从远程获取图片并裁剪
         [imageView sd_setImageWithURL:[NSURL URLWithString:self.currentImages[i]] placeholderImage:[UIImage imageNamed:@"common_news_placeholder"] options:SDWebImageAllowInvalidSSLCertificates completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
             // 在回调block中进行图片裁剪处理（去除一圈白边）
             CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], CGRectMake(20, 20, image.size.width-40, image.size.height-40));
             imageView.image =[UIImage imageWithCGImage:imageRef];
         }];
-        
         [scrollView addSubview:imageView];
     }
     scrollView.scrollsToTop = NO;
@@ -142,6 +143,8 @@
         
         // 从远程URL获取图片
         //[imageView sd_setImageWithURL:[NSURL URLWithString:self.currentImages[i]] placeholderImage:[UIImage imageNamed:@"common_news_placeholder"] options:SDWebImageAllowInvalidSSLCertificates completed:nil];
+        
+        // 从远程获取图片并裁剪
         [imageView sd_setImageWithURL:[NSURL URLWithString:self.currentImages[i]] placeholderImage:[UIImage imageNamed:@"common_news_placeholder"] options:SDWebImageAllowInvalidSSLCertificates completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
             // 在回调block中进行图片裁剪处理（去除一圈白边）
             CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], CGRectMake(20, 20, image.size.width-40, image.size.height-40));

@@ -122,7 +122,6 @@
     [self deviceInfo];  // 获取设备基本信息
     [[SettingUtil shareInstance] initSettingData];// 初始化默认值的setting数据(写入SandBox)
     [self inspectPermission];// 获取权限（网络访问、定位）
-    [Variable shareInstance].brightness = [UIScreen mainScreen].brightness; // 获取系统屏幕亮度值
     
     // 初始化地图数据结构，写入SandBox
     [[MapListUtil shareInstance] loadMapDataBlock:^(NSMutableArray *dataArray) {
@@ -166,7 +165,7 @@
     }
     
     NSMutableDictionary *settingDict = [[SettingUtil shareInstance] loadSettingData];
-    if(![[settingDict objectForKey:@"night"] boolValue]){
+    if([[settingDict objectForKey:@"night"] boolValue]){
         [[UIScreen mainScreen] setBrightness:[Variable shareInstance].brightness];
     }
     
@@ -188,17 +187,24 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    // 进入前台
     
     NSMutableDictionary *settingDict = [[SettingUtil shareInstance] loadSettingData];
-    if(![[settingDict objectForKey:@"night"] boolValue]){
+    if([[settingDict objectForKey:@"night"] boolValue]){
         [[UIScreen mainScreen] setBrightness:0];
     }
+
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    // 即将杀掉进程
     
     [[BaseHandleUtil shareInstance] writeLogsToFile];
+    // 写入夜间(护眼)模式为NO
+    NSMutableDictionary *settingDict = [[SettingUtil shareInstance] loadSettingData];
+    [settingDict setObject:[NSNumber numberWithBool:NO] forKey:@"night"];
+    [[SettingUtil shareInstance] writeSettingData:settingDict];
 }
 
 #pragma mark - Baidu Map SDK
@@ -614,6 +620,11 @@
         // 完成后执行code
         [NSThread sleepForTimeInterval:1.0f];
         _mainTabBarController.view.userInteractionEnabled = YES;    // 动画加载完毕视图可以进行交互
+        
+        NSDictionary *userDict = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS];
+        if(nil != userDict){
+            [UIApplication sharedApplication].statusBarHidden = NO;
+        }
         [_splashView removeFromSuperview];
     }];
 }
