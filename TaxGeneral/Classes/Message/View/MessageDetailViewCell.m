@@ -210,7 +210,7 @@
     // 摘要内容
     float contentLabelX = _baseSpace + 17 + abstractLabelW;
     float contentLabelY = abstractLabelY;
-    CGSize contentSize = [[BaseHandleUtil shareInstance] sizeWithString:_messageDetailModel.content font:CONTENT_FONT maxSize:CGSizeMake(frameWidth - abstractLabelW, MAXFLOAT)];
+    CGSize contentSize = [[BaseHandleUtil shareInstance] sizeWithString:_messageDetailModel.content font:CONTENT_FONT maxSize:CGSizeMake(frameWidth - abstractLabelW - abstractImgW, MAXFLOAT)];
     float contentLabelW = contentSize.width;
     float contentLabelH = contentSize.height;
     [_contentLabel setFrame:CGRectMake(contentLabelX, contentLabelY, contentLabelW, contentLabelH)];
