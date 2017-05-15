@@ -106,7 +106,7 @@
     _nameLabel.text = nameText;
     _bigNameLabel.text = nameText;
     if([nameText isEqualToString:@"未登录"]){
-        _orgNameLabel.text = @"登录后，即可解锁更多功能！";
+        _orgNameLabel.text = @"登录后，即可享用更多功能！";
         
         [_accountBtn setBackgroundImage:[UIImage imageNamed:@"mine_account_header_grey"] forState:UIControlStateNormal];
         [_accountBtn setBackgroundImage:[UIImage imageNamed:@"mine_account_header_grey"] forState:UIControlStateHighlighted];

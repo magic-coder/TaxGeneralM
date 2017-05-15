@@ -68,9 +68,7 @@
 -(void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
     
-    [self.timer invalidate];
-    self.timer = nil;
-    _timeLong = 0;
+    [self destroyTimer];
 }
 
 #pragma mark - <UIWebViewDelegate> 代理方法
@@ -96,9 +94,7 @@
 #pragma mark 加载完执行方法（设置webView的title为导航栏的title）
 - (void)webViewDidFinishLoad:(UIWebView *)webView{
     
-    [self.timer invalidate];
-    self.timer = nil;
-    _timeLong = 0;
+    [self destroyTimer];
     
     [_imagesViewBG removeFromSuperview];
     
@@ -214,9 +210,7 @@
 #pragma mark - 设置加载失败界面
 - (void)showLoadingFailedView:(int)flag{
     
-    [self.timer invalidate];
-    self.timer = nil;
-    _timeLong = 0;
+    [self destroyTimer];
     
     [self.webView stopLoading];// 停止加载
     // 移除现有组件
@@ -335,6 +329,15 @@
         _closeItem.tintColor = [UIColor whiteColor];
     }
     return _closeItem;
+}
+
+// 销毁timer
+- (void)destroyTimer{
+    if([self.timer isValid]){
+        [self.timer invalidate];
+        self.timer = nil;
+        _timeLong = 0;
+    }
 }
 
 - (void)didReceiveMemoryWarning {

@@ -60,6 +60,15 @@
     [self.tableView reloadData];
 }
 
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    
+    _headerView.accountBtn.frame = CGRectMake(WIDTH_SCREEN/2-35, 40, 70, 70);
+    _headerView.nameLabel.alpha = 1.0f;
+    _headerView.bigNameLabel.alpha = 0.0f;
+    _headerView.orgNameLabel.alpha = 0.0f;
+}
+
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     BaseTableModelGroup *group = [self.data objectAtIndex:indexPath.section];
     BaseTableModelItem *item = [group itemAtIndex:indexPath.row];

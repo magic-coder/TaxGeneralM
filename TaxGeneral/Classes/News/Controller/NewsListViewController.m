@@ -33,6 +33,7 @@
 @property (nonatomic, assign) int pageNo;               // 页码值
 @property (nonatomic, assign) int totalPage;            // 最大页
 @property (nonatomic, assign) int refreshCount;         // 刷新条数
+@property (nonatomic, assign) BOOL isInitialize;        // 是否初始化
 @property (nonatomic, strong) NewsUtil *newsUtil;
 
 @end
@@ -46,6 +47,8 @@ static int const pageSize = 10;
     [super viewDidLoad];
     
     //self.automaticallyAdjustsScrollViewInsets = NO;
+    
+    _isInitialize = YES;    // 初始化标志设为YES
     
     [self initializeHandle];
     
@@ -69,12 +72,15 @@ static int const pageSize = 10;
     [super viewWillAppear:animated];
     
     if([self isLogin]){
-        // 获取数据
-        NSMutableDictionary *dataDict = [_newsUtil loadData];
-        if(dataDict != nil){
-            [self handleDataDict:dataDict];// sandBox存在则进行处理加工数据
-        }else{
-            [self.tableView.mj_header beginRefreshing];// 进行查询数据
+        if(_isInitialize){
+            // 获取数据
+            NSMutableDictionary *dataDict = [_newsUtil loadData];
+            if(dataDict != nil){
+                [self handleDataDict:dataDict];// sandBox存在则进行处理加工数据
+            }else{
+                [self.tableView.mj_header beginRefreshing];// 进行查询数据
+            }
+            _isInitialize = NO;    // 初始化标志设为NO
         }
     }else{
         [self goToLogin];
@@ -244,7 +250,9 @@ static int const pageSize = 10;
     NewsTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
     DLog(@"Yan -> 标题为：%@", cell.newsModel.title);
     
-    YZWebViewController *webVC = [[YZWebViewController alloc] initWithURL:cell.newsModel.url];
+    //YZWebViewController *webVC = [[YZWebViewController alloc] initWithURL:cell.newsModel.url];
+    //webVC.title = @"税闻详情";
+    BaseWebViewController *webVC = [[BaseWebViewController alloc] initWithURL:cell.newsModel.url];
     webVC.title = @"税闻详情";
     [self.navigationController pushViewController:webVC animated:YES];
     
@@ -268,8 +276,10 @@ static int const pageSize = 10;
 #pragma mark - 顶部loop的点击代理方法
 - (void)loopViewDidSelectedImage:(NewsLoopView *)loopView index:(int)index{
     DLog(@"Yan -> 点击了第%d个loop视图，其中标题为：%@", index, [loopView.urls objectAtIndex:index]);
-    YZWebViewController *webVC = [[YZWebViewController alloc] initWithURL:[loopView.urls objectAtIndex:index]];
-    webVC.title = @"税闻详情";
+    //YZWebViewController *webVC = [[YZWebViewController alloc] initWithURL:[loopView.urls objectAtIndex:index]];
+    BaseWebViewController *webVC = [[BaseWebViewController alloc] initWithURL:[loopView.urls objectAtIndex:index]];
+    //webVC.title = @"税闻详情";
+    webVC.title = [loopView.titles objectAtIndex:index];
     [self.navigationController pushViewController:webVC animated:YES];
 }
 

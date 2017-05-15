@@ -45,6 +45,8 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
 @property (nonatomic,strong) UIButton *loginBtn;
 @property (nonatomic,strong) UIButton *cancelBtn;
 
+@property (nonatomic,assign) BOOL isMove;  // 是否移动
+
 @end
 
 @implementation LoginViewController
@@ -52,6 +54,8 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    self.view.backgroundColor = DEFAULT_BACKGROUND_COLOR;
     
     // 背景
     _imageView = [[UIImageView alloc] initWithFrame:self.view.bounds];
@@ -71,7 +75,7 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
     
     // head (猫头/人头)
     //UIImageView* imgLogin = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 211 / 2, 150-99, 211, 108)];
-    UIImageView* imgLogin = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 211 / 2, 150-109, 211, 108)];
+    UIImageView* imgLogin = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frameWidth / 2 - 211 / 2, 150-109, 211, 108)];
     imgLogin.image = [UIImage imageNamed:@"login_head"];
     imgLogin.layer.masksToBounds = YES;
     [self.view addSubview:imgLogin];
@@ -190,7 +194,7 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
     
     // 自定义左上角(返回按钮)
     self.cancelBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.cancelBtn.frame = CGRectMake(5, 5, 50, 50);
+    self.cancelBtn.frame = CGRectMake(5, 5, 45, 45);
     [self.cancelBtn setImage:[UIImage imageNamed:@"login_cancel"] forState:UIControlStateNormal];
     [self.cancelBtn setImage:[UIImage imageNamed:@"login_cancelHL"] forState:UIControlStateHighlighted];
     [self.cancelBtn addTarget:self action:@selector(cancelAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -225,6 +229,20 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
         _imgRightHandGone.frame = CGRectMake(_imgRightHandGone.frame.origin.x - 30, _imgRightHandGone.frame.origin.y, 0, 0);
         
     } completion:^(BOOL b) {
+        if(!_isMove){
+            CGFloat rects = self.view.frameHeight - (self.smallView.frameHeight + 216 + 149);
+            if (rects <= 0) {
+                [UIView animateWithDuration:0.3 animations:^{
+                    CGRect frame = self.view.frame;
+                    frame.origin.y = rects;
+                    self.view.frame = frame;
+                }];
+            }
+            _isMove = YES;
+        }else{
+            _isMove = NO;
+        }
+        
     }];
     /*
     if ([textField isEqual:self.usernameTextField]) {
@@ -282,6 +300,16 @@ typedef NS_ENUM(NSInteger, LoginShowType) {
         _imgRightHandGone.frame = CGRectMake(_imgRightHandGone.frame.origin.x + 30, _imgRightHandGone.frame.origin.y, 40, 40);
         
     } completion:^(BOOL b) {
+        if(_isMove){
+            [UIView animateWithDuration:0.3 animations:^{
+                CGRect frame = self.view.frame;
+                frame.origin.y = 0.0f;
+                self.view.frame = frame;
+            }];
+            _isMove = NO;
+        }else{
+            _isMove = YES;
+        }
     }];
     /*
     if ([textField isEqual:self.passwordTextField]) {
