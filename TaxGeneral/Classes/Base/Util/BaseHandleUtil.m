@@ -110,6 +110,26 @@
     return [newFormatter stringFromDate:[formatter dateFromString:date]];
 }
 
+- (NSString *)transform:(NSString *)chinese{
+    
+    //转成了可变字符串
+    NSMutableString *str = [NSMutableString stringWithString:chinese];
+    //先转换为带声调的拼音
+    CFStringTransform((CFMutableStringRef)str,NULL, kCFStringTransformMandarinLatin,NO);
+    //再转换为不带声调的拼音
+    CFStringTransform((CFMutableStringRef)str,NULL, kCFStringTransformStripDiacritics,NO);
+    //转化为大写拼音
+    NSString *pinYin = [str capitalizedString];
+    NSArray *pinYins = [pinYin componentsSeparatedByString:@" "];
+    NSString *initial = @"";
+    for(NSString *letter in pinYins){
+        initial = [NSString stringWithFormat:@"%@%@", initial, [letter substringToIndex:1]];
+    }
+    
+    //获取并返回首字母
+    return initial;
+}
+
 - (void)createEventCalendarTitle:(NSString *)title location:(NSString *)location startDate:(NSDate *)startDate endDate:(NSDate *)endDate notes:(NSString *)notes allDay:(BOOL)allDay alarmArray:(NSArray *)alarmArray block:(void (^)(NSString *))block{
     
     EKEventStore *eventStore = [[EKEventStore alloc] init];

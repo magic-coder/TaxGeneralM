@@ -26,6 +26,8 @@
 
 - (NSString *)formatDate:(NSString *)date pattern:(NSString *)pattern;      // 格式化日期
 
+- (NSString *)transform:(NSString *)chinese;    // 中文转换拼音
+
 /**
  *  将App事件添加到系统日历提醒事项，实现闹铃提醒的功能
  *

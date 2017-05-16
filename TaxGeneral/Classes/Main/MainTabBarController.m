@@ -47,7 +47,7 @@
                                //CLASSNAME        :   @"HomeViewController",
                                //CLASSNAME        :   @"NewsViewController",
                                CLASSNAME        :   @"NewsListViewController",
-                               TITLE            :   @"税闻",
+                               TITLE            :   @"首页",
                                IMAGE            :   @"tabbar_news",
                                SELECTEDIMAGE    :   @"tabbar_newsHL"
                                },

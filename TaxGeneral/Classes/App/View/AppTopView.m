@@ -43,7 +43,7 @@
         NSDictionary *settingDict = [[SettingUtil shareInstance] loadSettingData];
         BOOL forecastOn = [[settingDict objectForKey:@"forecast"] boolValue];
         if(forecastOn){
-            CBAutoScrollLabel *autoScrollLabel = [[CBAutoScrollLabel alloc] initWithFrame:CGRectMake(10, HEIGHT_STATUS+5, WIDTH_SCREEN-60, 30)];
+            CBAutoScrollLabel *autoScrollLabel = [[CBAutoScrollLabel alloc] initWithFrame:CGRectMake(10, HEIGHT_STATUS+5, WIDTH_SCREEN-100, 30)];
             //autoScrollLabel.text = @"";
             autoScrollLabel.textColor = [UIColor whiteColor];
             autoScrollLabel.labelSpacing = 35; // 开始和结束标签之间的距离
@@ -74,22 +74,62 @@
                 
             } failure:^(NSString *error) {
                 RLog(@"%@", error);
+                UILabel *titleLabel = [[UILabel alloc] init];
+                titleLabel.frame = CGRectMake(WIDTH_SCREEN/2-50, HEIGHT_STATUS+5, 100, 30);
+                titleLabel.font = [UIFont boldSystemFontOfSize:16.0f];
+                titleLabel.textAlignment = NSTextAlignmentCenter;
+                titleLabel.text = @"应用";
+                titleLabel.textColor = [UIColor whiteColor];
+                [self addSubview:titleLabel];// 顶部标题
             }];
             
+            // 添加搜索按钮
+            UIButton *btn_search = [UIButton buttonWithType:UIButtonTypeCustom];
+            btn_search.frame = CGRectMake(WIDTH_SCREEN-85, HEIGHT_STATUS, 46, 46);
+            [btn_search setImage:[UIImage imageNamed:@"baritem_app_search"] forState:UIControlStateNormal];
+            [btn_search setImage:[UIImage imageNamed:@"baritem_app_searchHL"] forState:UIControlStateHighlighted];
+            btn_search.tag = 1;
+            [btn_search addTarget:self action:@selector(appBtnOnClick:) forControlEvents:UIControlEventTouchUpInside];
+            [self addSubview:btn_search];   // 搜索按钮
+            
         }else{
-            UILabel *titleLabel = [[UILabel alloc] init];
-            titleLabel.frame = CGRectMake(WIDTH_SCREEN/2-50, HEIGHT_STATUS+5, 100, 30);
-            titleLabel.font = [UIFont boldSystemFontOfSize:16.0f];
-            titleLabel.textAlignment = NSTextAlignmentCenter;
-            titleLabel.text = @"应用";
-            titleLabel.textColor = [UIColor whiteColor];
-            [self addSubview:titleLabel];// 顶部标题
+            
+            // 添加搜索框
+            UITextField *searchTextField = [[UITextField alloc] initWithFrame:CGRectMake(20, HEIGHT_STATUS + 8, WIDTH_SCREEN - 15 - 60, 26)];
+            searchTextField.layer.cornerRadius = 5;
+            searchTextField.layer.borderWidth = .5;
+            searchTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+            searchTextField.layer.borderColor = DEFAULT_BACKGROUND_COLOR.CGColor;
+            searchTextField.font = [UIFont systemFontOfSize:14.0f];
+            searchTextField.backgroundColor = DEFAULT_BACKGROUND_COLOR;
+            //searchTextField.placeholder = @"应用搜索";
+            //searchTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"应用搜索" attributes:@{NSForegroundColorAttributeName: [UIColor lightGrayColor]}];
+            searchTextField.alpha = 0.5f;
+            [self addSubview:searchTextField];
+            
+            UIImageView *imgSearch = [[UIImageView alloc] initWithFrame:CGRectMake(searchTextField.originX+2, searchTextField.originY+1, 24, 24)];
+            imgSearch.image = [UIImage imageNamed:@"app_common_searchHL"];
+            [self addSubview:imgSearch];
+            
+            UILabel *searchLabel = [[UILabel alloc] initWithFrame:CGRectMake(searchTextField.originX+28, searchTextField.originY, 100, 26)];
+            searchLabel.textColor = [UIColor whiteColor];
+            searchLabel.font = [UIFont systemFontOfSize:14.0f];
+            searchLabel.text = @"应用搜索";
+            [self addSubview:searchLabel];
+            
+            UIButton *btn_search_frame = [UIButton buttonWithType:UIButtonTypeCustom];
+            btn_search_frame.frame = searchTextField.frame;
+            btn_search_frame.tag = 1;
+            [btn_search_frame addTarget:self action:@selector(appBtnOnClick:) forControlEvents:UIControlEventTouchUpInside];
+            [self addSubview:btn_search_frame];   // 搜索按钮
+            
         }
         
         UIButton *btn_edit = [UIButton buttonWithType:UIButtonTypeCustom];
         btn_edit.frame = CGRectMake(WIDTH_SCREEN-46, HEIGHT_STATUS, 46, 46);
         [btn_edit setImage:[UIImage imageNamed:@"baritem_app_edit"] forState:UIControlStateNormal];
         [btn_edit setImage:[UIImage imageNamed:@"baritem_app_editHL"] forState:UIControlStateHighlighted];
+        btn_edit.tag = 0;
         
         CGFloat btnW = (WIDTH_SCREEN - 50)/4;
         
@@ -146,7 +186,7 @@
         [btn_3 addTarget:self action:@selector(appBtnOnClick:) forControlEvents:UIControlEventTouchUpInside];
         [btn_4 addTarget:self action:@selector(appBtnOnClick:) forControlEvents:UIControlEventTouchUpInside];
         
-        [self addSubview:btn_edit];// 右侧编辑按钮
+        [self addSubview:btn_edit];     // 右侧编辑按钮
         [self addSubview:btn_1];
         [self addSubview:btn_2];
         [self addSubview:btn_3];

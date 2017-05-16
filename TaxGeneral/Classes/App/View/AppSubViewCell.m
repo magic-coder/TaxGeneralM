@@ -18,7 +18,6 @@
 @property (nonatomic, strong) UIView *bottomLine;   // 底部线条
 
 @property (nonatomic, strong) UIImageView *logoView; // 图标
-@property (nonatomic, strong) UILabel *titleLabel;   // 名称
 
 @end
 

@@ -21,6 +21,7 @@
 
 #import "AppSubViewController.h"
 #import "AppEditViewController.h"
+#import "AppSearchViewController.h"
 
 @interface AppViewController () <UINavigationControllerDelegate, AppTopViewDelegate>
 
@@ -145,8 +146,13 @@
     UIViewController *viewController= nil;
     NSString *url = nil;
     
-    if(sender.titleLabel.text == nil){// 进入应用管理器
-        viewController = [[AppEditViewController alloc] init];
+    if(sender.titleLabel.text == nil){
+        if(sender.tag == 0){    // 进入应用管理器
+            viewController = [[AppEditViewController alloc] init];
+        }
+        if(sender.tag == 1){    // 进入应用搜索
+            [self.navigationController pushViewController:[[AppSearchViewController alloc] init] animated:NO];
+        }
     }
     if([sender.titleLabel.text isEqualToString:@"通知公告"]){
         //url = [NSString stringWithFormat:@"%@public/notice/index", SERVER_URL];
@@ -302,7 +308,7 @@
 #pragma mark - <UINavigationControllerDelegate>代理方法（隐藏导航栏）
 -(void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated{
     // 判断要显示的控制器是否是自己
-    BOOL isShowPage = [viewController isKindOfClass:[self class]] || [viewController isKindOfClass:[MapViewController class]];
+    BOOL isShowPage = [viewController isKindOfClass:[self class]] || [viewController isKindOfClass:[MapViewController class]] || [viewController isKindOfClass:[AppSearchViewController class]];
     
     [self.navigationController setNavigationBarHidden:isShowPage animated:YES];
 }

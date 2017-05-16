@@ -1,15 +1,18 @@
-//
-//  AppSubUtil.m
-//  TaxGeneralM
-//
-//  Created by Apple on 2017/3/30.
-//  Copyright © 2017年 Yanzheng. All rights reserved.
-//
+/************************************************************
+ Class    : AppSubUtil.m
+ Describe : 应用程序子界面
+ Company  : Prient
+ Author   : Yanzheng
+ Date     : 2016-03-30
+ Version  : 1.0
+ Declare  : Copyright © 2016 Yanzheng. All rights reserved.
+ ************************************************************/
 
 #import "AppSubUtil.h"
 #import "AppSubModel.h"
 
 #define SUB_FILE_NAME @"appSubData.plist"
+#define SEARCH_FILE_NAME @"appSearchData.plist"
 
 @implementation AppSubUtil
 
@@ -33,6 +36,19 @@
             AppSubModel *model = [AppSubModel createWithDict:dict];
             [mutableArray addObject:model];
         }
+    }
+    
+    return mutableArray;
+}
+
+// 搜索应用数据
+- (NSMutableArray *)loadSearchData{
+    NSMutableArray *mutableArray = [[NSMutableArray alloc] init];
+    NSMutableDictionary *searchAppDict = [[BaseSandBoxUtil shareInstance] loadDataWithFileName:SEARCH_FILE_NAME];
+    NSArray *searchAppData = [searchAppDict objectForKey:@"searchAppData"];
+    for(NSDictionary *dict in searchAppData){
+        AppSubModel *model = [AppSubModel createWithDict:dict];
+        [mutableArray addObject:model];
     }
     
     return mutableArray;

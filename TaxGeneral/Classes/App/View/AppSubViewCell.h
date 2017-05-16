@@ -23,5 +23,6 @@ typedef NS_ENUM(NSInteger, AppSubViewCellLineStyle) {
 @property (nonatomic, assign) AppSubViewCellLineStyle topLineStyle;
 
 @property (nonatomic, strong) AppSubModel *model;
+@property (nonatomic, strong) UILabel *titleLabel;   // 名称
 
 @end

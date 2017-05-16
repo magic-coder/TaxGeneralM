@@ -13,6 +13,7 @@
 
 #define FILE_NAME @"appData.plist"
 #define SUB_FILE_NAME @"appSubData.plist"
+#define SEARCH_FILE_NAME @"appSearchData.plist"
 
 @implementation AppUtil
 
@@ -77,6 +78,8 @@
             NSMutableArray *mineData = [[NSMutableArray alloc] init];
             NSMutableArray *otherData = [[NSMutableArray alloc] init];
             NSMutableArray *allData = [[NSMutableArray alloc] init];
+            // 搜索的数据(全部数据各level的)
+            NSMutableArray *searchData = [[NSMutableArray alloc] init];
             
             // 子类数据
             NSMutableArray *subData = [[NSMutableArray alloc] init];
@@ -97,6 +100,7 @@
                 }else{
                     [subData addObject:dict];
                 }
+                [searchData addObject:dict];
             }
             
             // 对我的应用进行排序
@@ -114,8 +118,11 @@
             
             // 最终数据（写入SandBox的数据）[子类应用]
             NSMutableDictionary *subDataDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:subData, @"subAppData", nil];
-            [self writeNewAppSubData:subDataDict];
+            [self writeAppSubData:subDataDict];
             
+            // 最终数据（写入SandBox的数据）[搜索应用]
+            NSMutableDictionary *searchDataDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:searchData, @"searchAppData", nil];
+            [self writeAppSearchData:searchDataDict];
             
             dataBlock([self handleData:dataDict WithType:type]);
         }else{
@@ -225,9 +232,13 @@
 }
 
 // 子类信息写入应用数据到本地SandBox中
-- (BOOL)writeNewAppSubData:(NSDictionary *)appData{
-    
+- (BOOL)writeAppSubData:(NSDictionary *)appData{
     return [[BaseSandBoxUtil shareInstance] writeData:appData fileName:SUB_FILE_NAME];
+}
+
+// 应用搜索信息写入本地SandBox中
+- (BOOL)writeAppSearchData:(NSDictionary *)appData{
+    return [[BaseSandBoxUtil shareInstance] writeData:appData fileName:SEARCH_FILE_NAME];
 }
 
 // 私有为NSMutableArray排序方法

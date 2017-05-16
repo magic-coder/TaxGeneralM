@@ -213,6 +213,8 @@
 		18F3C36E1E0CFFAA00F2B046 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 18F3C36C1E0CFFAA00F2B046 /* libcrypto.a */; };
 		18F3C36F1E0CFFAA00F2B046 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 18F3C36D1E0CFFAA00F2B046 /* libssl.a */; };
 		18F3C3761E0D010500F2B046 /* MapViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 18F3C3751E0D010500F2B046 /* MapViewController.mm */; };
+		18F3F6FD1ECA8A650020C748 /* AppSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F3F6FC1ECA8A650020C748 /* AppSearchViewController.m */; };
+		18F3F7031ECADF940020C748 /* BaseTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F3F7021ECADF940020C748 /* BaseTableView.m */; };
 		18F788CD1E5D5B6900EE35BE /* mapapi.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 18F788CC1E5D5B6900EE35BE /* mapapi.bundle */; };
 		18F788D11E5D5D4200EE35BE /* Common.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 18F788D01E5D5D4200EE35BE /* Common.xcassets */; };
 		18F788D31E5D5D6600EE35BE /* Msg.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 18F788D21E5D5D6600EE35BE /* Msg.xcassets */; };
@@ -646,6 +648,10 @@
 		18F3C36D1E0CFFAA00F2B046 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = BaiduMapAPI/thirdlibs/libssl.a; sourceTree = "<group>"; };
 		18F3C3741E0D010500F2B046 /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MapViewController.h; path = Classes/Map/Controller/MapViewController.h; sourceTree = "<group>"; };
 		18F3C3751E0D010500F2B046 /* MapViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = MapViewController.mm; path = Classes/Map/Controller/MapViewController.mm; sourceTree = "<group>"; };
+		18F3F6FB1ECA8A650020C748 /* AppSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppSearchViewController.h; path = Classes/App/Controller/AppSearchViewController.h; sourceTree = "<group>"; };
+		18F3F6FC1ECA8A650020C748 /* AppSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppSearchViewController.m; path = Classes/App/Controller/AppSearchViewController.m; sourceTree = "<group>"; };
+		18F3F7011ECADF940020C748 /* BaseTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseTableView.h; path = Classes/Base/View/BaseTableView.h; sourceTree = "<group>"; };
+		18F3F7021ECADF940020C748 /* BaseTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BaseTableView.m; path = Classes/Base/View/BaseTableView.m; sourceTree = "<group>"; };
 		18F788CC1E5D5B6900EE35BE /* mapapi.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = mapapi.bundle; path = ../BaiduMapAPI/BaiduMapAPI_Map.framework/Resources/mapapi.bundle; sourceTree = "<group>"; };
 		18F788D01E5D5D4200EE35BE /* Common.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Common.xcassets; path = Resources/Images/Common.xcassets; sourceTree = "<group>"; };
 		18F788D21E5D5D6600EE35BE /* Msg.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Msg.xcassets; path = Resources/Images/Msg.xcassets; sourceTree = "<group>"; };
@@ -1116,6 +1122,8 @@
 				18C87FA01E8BAD1B00A6986C /* AppSubViewController.m */,
 				188C75301E1653240056E40D /* AppEditViewController.h */,
 				188C75311E1653240056E40D /* AppEditViewController.m */,
+				18F3F6FB1ECA8A650020C748 /* AppSearchViewController.h */,
+				18F3F6FC1ECA8A650020C748 /* AppSearchViewController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -1170,6 +1178,8 @@
 				18DEE9591E4AA92C00536155 /* BaseScrollView.m */,
 				18BBE3591E4AFC8B00EF96D7 /* BaseTextField.h */,
 				18BBE35A1E4AFC8B00EF96D7 /* BaseTextField.m */,
+				18F3F7011ECADF940020C748 /* BaseTableView.h */,
+				18F3F7021ECADF940020C748 /* BaseTableView.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -2158,6 +2168,7 @@
 				18D5B2611E6FD21E00F5F555 /* UIImage+MultiFormat.m in Sources */,
 				18293D8A1D631A7F008A4A8C /* MJRefreshHeader.m in Sources */,
 				18293D8B1D631A7F008A4A8C /* MJRefreshAutoGifFooter.m in Sources */,
+				18F3F7031ECADF940020C748 /* BaseTableView.m in Sources */,
 				18D5B25B1E6FD21E00F5F555 /* SDWebImageDownloader.m in Sources */,
 				18E00F301E2F5CC9009A609A /* BaseWebViewController.m in Sources */,
 				18DC62211E6417E3001834D1 /* YZActionSheet.m in Sources */,
@@ -2218,6 +2229,7 @@
 				18293D901D631A7F008A4A8C /* MJRefreshBackStateFooter.m in Sources */,
 				18293D991D631A7F008A4A8C /* UIView+MJExtension.m in Sources */,
 				18AE22651D61B8F200C93890 /* MessageListViewCell.m in Sources */,
+				18F3F6FD1ECA8A650020C748 /* AppSearchViewController.m in Sources */,
 				18293D861D631A7F008A4A8C /* MJRefreshAutoFooter.m in Sources */,
 				18293D931D631A7F008A4A8C /* MJRefreshStateHeader.m in Sources */,
 				18A966BF1D531E4900A8E539 /* UIDevice+YZ.m in Sources */,

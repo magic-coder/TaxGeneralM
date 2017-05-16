@@ -21,6 +21,7 @@
     model.webImg = [dict objectForKey:@"appimage"];// 服务器logo图标
     model.localImg = [NSString stringWithFormat:@"app_%@%@", model.pno, model.no]; // 加载本地default图标(根据应用序列号生成)
     model.url = [dict objectForKey:@"appurl"];
+    model.keyWords = [NSString stringWithFormat:@"%@ %@", model.title, [[BaseHandleUtil shareInstance] transform:[dict objectForKey:@"appname"]]];
     return model;
 }
 
