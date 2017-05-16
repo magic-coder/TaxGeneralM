@@ -65,6 +65,8 @@ static NSString * const reuseIdentifier = @"appSubCell";
     [_cancelBtn addTarget:self action:@selector(cancelSearch:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_cancelBtn];
     
+    [_searchTextField becomeFirstResponder];    // 搜索输入框获取焦点
+    
     _data = [[NSMutableArray alloc] init];
     _data = [[AppSubUtil shareInstance] loadSearchData];
 }
@@ -72,7 +74,6 @@ static NSString * const reuseIdentifier = @"appSubCell";
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    [_searchTextField becomeFirstResponder];    // 搜索输入框获取焦点
     // 设置顶部状态栏字体为黑色
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
 }
@@ -147,6 +148,10 @@ static NSString * const reuseIdentifier = @"appSubCell";
     viewController.title = cell.model.title; // 设置标题
     [self.navigationController pushViewController:viewController animated:YES];
     
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    [self.view endEditing:YES];
 }
 
 #pragma mark - <BaseTableViewDelegate> Touch代理方法
