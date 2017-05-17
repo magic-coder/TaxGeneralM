@@ -43,6 +43,8 @@
 
 @property (nonatomic, strong) CLLocationManager *locationManager;// 定位权限管理器
 
+@property (nonatomic, strong) NSTimer *timer;
+
 @end
 
 @implementation AppDelegate
@@ -174,6 +176,9 @@
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    
+    // 应用已经进入后台
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:300 target:self selector:@selector(timerCallback) userInfo:nil repeats:NO];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
@@ -187,7 +192,13 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    
     // 进入前台
+    
+    if([self.timer isValid]){
+        [self.timer invalidate];
+        self.timer = nil;
+    }
     
     NSMutableDictionary *settingDict = [[SettingUtil shareInstance] loadSettingData];
     if([[settingDict objectForKey:@"night"] boolValue]){
@@ -640,7 +651,7 @@
     }];
 }
 
-#pragma makr - alert点击方法
+#pragma mark - alert点击方法
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
     // 退出应用
     if(alertView.tag == 0){
@@ -656,6 +667,12 @@
             exit(0);
         }];
     }
+}
+
+#pragma mark - 计时器方法
+- (void)timerCallback{
+    // 应用挂起300s后杀掉进程
+    exit(0);
 }
 
 #pragma mark - 记录Crash信息

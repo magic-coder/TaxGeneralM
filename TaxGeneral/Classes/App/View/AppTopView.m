@@ -33,6 +33,7 @@
             imageName = @"app_top_bg_2";    // 下午
         }
         
+        
         self.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:imageName scaleToSize:frame.size]];
         self.userInteractionEnabled = YES;
         self.multipleTouchEnabled = YES;
@@ -104,14 +105,14 @@
             searchTextField.backgroundColor = DEFAULT_BACKGROUND_COLOR;
             //searchTextField.placeholder = @"应用搜索";
             //searchTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"应用搜索" attributes:@{NSForegroundColorAttributeName: [UIColor lightGrayColor]}];
-            searchTextField.alpha = 0.5f;
+            searchTextField.alpha = 0.3f;
             [self addSubview:searchTextField];
             
-            UIImageView *imgSearch = [[UIImageView alloc] initWithFrame:CGRectMake(searchTextField.originX+2, searchTextField.originY+1, 24, 24)];
+            UIImageView *imgSearch = [[UIImageView alloc] initWithFrame:CGRectMake(searchTextField.originX+4, searchTextField.originY+1, 24, 24)];
             imgSearch.image = [UIImage imageNamed:@"app_common_searchHL"];
             [self addSubview:imgSearch];
             
-            UILabel *searchLabel = [[UILabel alloc] initWithFrame:CGRectMake(searchTextField.originX+28, searchTextField.originY, 100, 26)];
+            UILabel *searchLabel = [[UILabel alloc] initWithFrame:CGRectMake(searchTextField.originX+34, searchTextField.originY, 100, 26)];
             searchLabel.textColor = [UIColor whiteColor];
             searchLabel.font = [UIFont systemFontOfSize:14.0f];
             searchLabel.text = @"应用搜索";
