@@ -1,6 +1,6 @@
 #TaxGeneralM
 	This is TaxGeneralM project.(M -> Manager)
-	互联网+税务(管理端)
+	税务互联时代(管理端)
 	混搭模式：原生 + Web + (Cordova[Native H5])
 	Apple ID : 1230863080
 
