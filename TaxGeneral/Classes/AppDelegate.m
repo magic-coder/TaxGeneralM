@@ -178,7 +178,7 @@
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     
     // 应用已经进入后台
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:300 target:self selector:@selector(timerCallback) userInfo:nil repeats:NO];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:600 target:self selector:@selector(timerCallback) userInfo:nil repeats:NO];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {

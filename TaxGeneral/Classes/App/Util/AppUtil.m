@@ -162,7 +162,7 @@
         mineGroup.items = mineItems;
         
         BaseCollectionModelGroup *otherGroup = [[BaseCollectionModelGroup alloc] init];
-        otherGroup.groupTitle = @"其他应用";
+        otherGroup.groupTitle = @"更多应用";
         otherGroup.items = otherItems;
         
         BaseCollectionModelGroup *allGroup = [[BaseCollectionModelGroup alloc] init];
