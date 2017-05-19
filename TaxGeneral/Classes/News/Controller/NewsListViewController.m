@@ -372,6 +372,40 @@ static int const pageSize = 10;
             }
         }
     }
+    
+    // 检测版本更新
+    if([[[NSUserDefaults standardUserDefaults] objectForKey:IS_CHECKUPDATE] isEqualToString:@"YES"]){
+        DLog(@"进入自动检测版本更新");
+        NSString *urlStr = @"https://itunes.apple.com/cn/lookup?id=1230863080";
+        
+        AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+        [manager POST:urlStr parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            NSArray *results = [responseObject objectForKey:@"results"];
+            if(results.count > 0){
+                
+                // 服务器版本号
+                NSString *version = [[results objectAtIndex:0] objectForKey:@"version"];
+                NSArray *serverVers = [version componentsSeparatedByString:@"."];
+                // 应用程序介绍网址（用户升级跳转URL）
+                NSString *trackViewUrl = [[results objectAtIndex:0] objectForKey:@"trackViewUrl"];
+                
+                // 当前版本号（本地）
+                NSString *currentVersion = [Variable shareInstance].appVersion;
+                NSArray *currentVers = [currentVersion componentsSeparatedByString:@"."];
+                
+                if ([serverVers[0] intValue] > [currentVers[0] intValue] || [serverVers[1] intValue] > [currentVers[1] intValue] || [serverVers[2] intValue] > [currentVers[2] intValue]) {
+                    
+                    [YZAlertView showAlertWith:self title:@"版本更新" message:[NSString stringWithFormat:@"发现新版本(%@)，是否更新",version] callbackBlock:^(NSInteger btnIndex) {
+                        if (btnIndex == 1) {
+                            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:trackViewUrl]];
+                        }
+                    } cancelButtonTitle:@"以后" destructiveButtonTitle:nil otherButtonTitles:@"更新", nil];
+                }
+            }
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            RLog(@"自动检测版本更新失败，请稍后再试！");
+        }];
+    }
 }
 
 #pragma mark - 判断是否登录，及跳转登录

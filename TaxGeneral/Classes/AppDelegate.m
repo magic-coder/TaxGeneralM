@@ -523,10 +523,11 @@
     NSString *url = @"appManager/getVersion";
     [[YZNetworkingManager shareInstance] requestMethod:POST url:url parameters:parameters success:^(NSDictionary *responseDic) {
         if([[responseDic objectForKey:@"CHECKUPDATES"] isEqualToString:@"Y"]){
-            [Variable shareInstance].isUpdates = YES;
+            [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:IS_CHECKUPDATE];
         }else{
-            [Variable shareInstance].isUpdates = NO;
+            [[NSUserDefaults standardUserDefaults] setObject:@"NO" forKey:IS_CHECKUPDATE];
         }
+        [[NSUserDefaults standardUserDefaults] synchronize]; // 强制写入
     } failure:^(NSString *error) {
         RLog(@"Yan -> 获取检测标志失败 error : %@", error);
     }];

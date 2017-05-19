@@ -67,7 +67,7 @@
             
             // 登录成功将信息保存到用户单例模式中
             [[NSUserDefaults standardUserDefaults] setObject:dict forKey:LOGIN_SUCCESS];
-            [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:isTest] forKey:IS_TEST];
+            [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:isTest] forKey:IS_DEV];
             [[NSUserDefaults standardUserDefaults] synchronize]; // 强制写入
             
             // 绑定推送设备

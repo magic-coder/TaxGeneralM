@@ -46,7 +46,7 @@
     BaseTableModelGroup *group4 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:nil settingItems:about, nil];
     [items addObject:group4];
     
-    BOOL isTest = [[[NSUserDefaults standardUserDefaults] objectForKey:IS_TEST] boolValue];
+    BOOL isTest = [[[NSUserDefaults standardUserDefaults] objectForKey:IS_DEV] boolValue];
     if(isTest){
         BaseTableModelItem *test = [BaseTableModelItem createWithImageName:@"mine_test" title:@"测试"];
         BaseTableModelGroup *group5 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:nil settingItems:test, nil];

@@ -17,7 +17,7 @@
         self.backgroundColor = DEFAULT_BACKGROUND_COLOR;
         
         float bottomH = 0.f;
-        if(![Variable shareInstance].isUpdates){
+        if(![[[NSUserDefaults standardUserDefaults] objectForKey:IS_CHECKUPDATE] isEqualToString:@"YES"]){
             bottomH = 43.0f;
         }
         

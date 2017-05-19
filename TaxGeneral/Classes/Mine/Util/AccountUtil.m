@@ -57,7 +57,7 @@
     // 删除用户登录信息
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:LOGIN_SUCCESS];
     // 删除是否为开发者信息
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:IS_TEST];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:IS_DEV];
     // 删除用户手势密码信息
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:GESTURES_PASSWORD];
     // 删除绑定注册推送设备信息

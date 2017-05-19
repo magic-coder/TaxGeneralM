@@ -67,7 +67,8 @@
 #define PUSH_INFO           @"pushInfo"
 #define LOAD_FINISH         @"loadFinish"
 #define REGISTER_PUSH       @"registerPush"
-#define IS_TEST             @"isTest"
+#define IS_DEV              @"isDev"
+#define IS_CHECKUPDATE      @"isCheckUpdate"
 #define ICON_VERSION        @"iconVersion"
 
 #pragma mark - Common View

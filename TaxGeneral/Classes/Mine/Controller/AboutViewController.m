@@ -28,7 +28,7 @@ static NSString * const reuseIdentifier = @"aboutTableViewCell";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    if([Variable shareInstance].isUpdates){
+    if([[[NSUserDefaults standardUserDefaults] objectForKey:IS_CHECKUPDATE] isEqualToString:@"YES"]){
         _data = @[@"功能介绍", @"检测更新", @"去App Store评分"];
     }else{
         _data = @[@"功能介绍", @"去App Store评分"];
