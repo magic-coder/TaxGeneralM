@@ -15,7 +15,9 @@
 
 - (instancetype)initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
-        self.backgroundColor = DEFAULT_BLUE_COLOR;
+        
+        //self.backgroundColor = DEFAULT_BLUE_COLOR;
+        self.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"common_navigation_bg" scaleToSize:frame.size]];
         
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         [formatter setDateFormat:@"HH"];
@@ -33,14 +35,21 @@
             imageName = @"app_top_bg_2";    // 下午
         }
         
-        
-        self.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:imageName scaleToSize:frame.size]];
-        self.userInteractionEnabled = YES;
-        self.multipleTouchEnabled = YES;
+        //self.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:imageName scaleToSize:frame.size]];
+        //self.userInteractionEnabled = YES;
+        //self.multipleTouchEnabled = YES;
         //控制子视图不能超出父视图的范围
-        self.clipsToBounds = YES;
+        //self.clipsToBounds = YES;
         
-        // 读取系统设置文件内容(更新提醒)
+        UIImageView *bgImg = [[UIImageView alloc] initWithFrame:frame];
+        [bgImg sd_setImageWithURL:[NSURL URLWithString:imageName] placeholderImage:[UIImage imageNamed:imageName] options:SDWebImageAllowInvalidSSLCertificates completed:nil];
+        bgImg.userInteractionEnabled = YES;
+        bgImg.multipleTouchEnabled = YES;
+        //控制子视图不能超出父视图的范围
+        bgImg.clipsToBounds = YES;
+        [self addSubview:bgImg];
+        
+        // 读取系统设置文件内容(天气预报提醒)
         NSDictionary *settingDict = [[SettingUtil shareInstance] loadSettingData];
         BOOL forecastOn = [[settingDict objectForKey:@"forecast"] boolValue];
         if(forecastOn){
@@ -53,7 +62,7 @@
             autoScrollLabel.textAlignment = NSTextAlignmentLeft; // 不使用自动滚动时的中心文本
             autoScrollLabel.fadeLength = 12.f; // length of the left and right edge fade, 0 to disable
             autoScrollLabel.font = [UIFont systemFontOfSize:15.0f];
-            [self addSubview:autoScrollLabel];// 顶部天气预报提醒
+            [bgImg addSubview:autoScrollLabel];// 顶部天气预报提醒
             
             NSString *url = @"http://apis.baidu.com/tianyiweather/basicforecast/weatherapi?area=101110101";
             [[YZNetworkingManager shareInstance] requestMethod:GET url:url parameters:nil success:^(NSDictionary *responseDic) {
@@ -81,7 +90,7 @@
                 titleLabel.textAlignment = NSTextAlignmentCenter;
                 titleLabel.text = @"应用";
                 titleLabel.textColor = [UIColor whiteColor];
-                [self addSubview:titleLabel];// 顶部标题
+                [bgImg addSubview:titleLabel];// 顶部标题
             }];
             
             // 添加搜索按钮
@@ -91,7 +100,7 @@
             [btn_search setImage:[UIImage imageNamed:@"baritem_app_searchHL"] forState:UIControlStateHighlighted];
             btn_search.tag = 1;
             [btn_search addTarget:self action:@selector(appBtnOnClick:) forControlEvents:UIControlEventTouchUpInside];
-            [self addSubview:btn_search];   // 搜索按钮
+            [bgImg addSubview:btn_search];   // 搜索按钮
             
         }else{
             
@@ -106,23 +115,23 @@
             //searchTextField.placeholder = @"应用搜索";
             //searchTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"应用搜索" attributes:@{NSForegroundColorAttributeName: [UIColor lightGrayColor]}];
             searchTextField.alpha = 0.3f;
-            [self addSubview:searchTextField];
+            [bgImg addSubview:searchTextField];
             
             UIImageView *imgSearch = [[UIImageView alloc] initWithFrame:CGRectMake(searchTextField.originX+4, searchTextField.originY+1, 24, 24)];
             imgSearch.image = [UIImage imageNamed:@"app_common_searchHL"];
-            [self addSubview:imgSearch];
+            [bgImg addSubview:imgSearch];
             
             UILabel *searchLabel = [[UILabel alloc] initWithFrame:CGRectMake(searchTextField.originX+34, searchTextField.originY, 100, 26)];
             searchLabel.textColor = [UIColor whiteColor];
             searchLabel.font = [UIFont systemFontOfSize:14.0f];
             searchLabel.text = @"应用搜索";
-            [self addSubview:searchLabel];
+            [bgImg addSubview:searchLabel];
             
             UIButton *btn_search_frame = [UIButton buttonWithType:UIButtonTypeCustom];
             btn_search_frame.frame = searchTextField.frame;
             btn_search_frame.tag = 1;
             [btn_search_frame addTarget:self action:@selector(appBtnOnClick:) forControlEvents:UIControlEventTouchUpInside];
-            [self addSubview:btn_search_frame];   // 搜索按钮
+            [bgImg addSubview:btn_search_frame];   // 搜索按钮
             
         }
         
@@ -187,11 +196,11 @@
         [btn_3 addTarget:self action:@selector(appBtnOnClick:) forControlEvents:UIControlEventTouchUpInside];
         [btn_4 addTarget:self action:@selector(appBtnOnClick:) forControlEvents:UIControlEventTouchUpInside];
         
-        [self addSubview:btn_edit];     // 右侧编辑按钮
-        [self addSubview:btn_1];
-        [self addSubview:btn_2];
-        [self addSubview:btn_3];
-        [self addSubview:btn_4];
+        [bgImg addSubview:btn_edit];     // 右侧编辑按钮
+        [bgImg addSubview:btn_1];
+        [bgImg addSubview:btn_2];
+        [bgImg addSubview:btn_3];
+        [bgImg addSubview:btn_4];
         
     }
     return self;

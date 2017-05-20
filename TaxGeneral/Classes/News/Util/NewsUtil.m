@@ -33,6 +33,7 @@
     
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     [dict setObject:[NSNumber numberWithInt:pageSize] forKey:@"pageSize"];
+    [dict setObject:[[[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS] objectForKey:@"orgCode"] forKey:@"orgCode"];
     
     NSString *jsonString = [[BaseHandleUtil shareInstance] dataToJsonString:dict];
     

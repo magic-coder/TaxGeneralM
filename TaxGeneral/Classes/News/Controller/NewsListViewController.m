@@ -162,7 +162,7 @@ static int const pageSize = 10;
             [_data addObject:model];
             
             for(NewsModel *nm in _tempData){
-                if([nm.title isEqualToString:model.title]){
+                if([nm.url isEqualToString:model.url]){
                     _refreshCount--;
                 }
             }
@@ -292,7 +292,7 @@ static int const pageSize = 10;
     //UILabel *label = [[UILabel alloc] init];
     
     // 2.显示文字
-    if (count) {
+    if (count > 0) {
         self.hintLabel.text = [NSString stringWithFormat:@"更新了%d条税闻", count];
     } else {
         self.hintLabel.text = @"没有最新的税闻";

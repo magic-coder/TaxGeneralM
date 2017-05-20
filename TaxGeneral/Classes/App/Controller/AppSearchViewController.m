@@ -14,7 +14,7 @@
 #import "AppSubViewCell.h"
 #import "AppSubUtil.h"
 
-@interface AppSearchViewController () <UITableViewDelegate, UITableViewDataSource, BaseTableViewDelegate>
+@interface AppSearchViewController () <UIGestureRecognizerDelegate, UITableViewDelegate, UITableViewDataSource, BaseTableViewDelegate>
 
 @property (nonatomic, strong) BaseTableView *tableView;
 @property (nonatomic, strong) NSMutableArray *data;
@@ -32,6 +32,7 @@ static NSString * const reuseIdentifier = @"appSubCell";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.navigationController.interactivePopGestureRecognizer.delegate = self;
     self.view.backgroundColor = [UIColor whiteColor];
     
     _tableView = [[BaseTableView alloc] initWithFrame:CGRectMake(0, HEIGHT_STATUS + HEIGHT_NAVBAR, WIDTH_SCREEN, HEIGHT_SCREEN - HEIGHT_NAVBAR - HEIGHT_STATUS) style:UITableViewStylePlain];
