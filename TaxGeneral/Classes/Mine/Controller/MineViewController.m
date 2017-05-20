@@ -64,6 +64,7 @@
     [super viewWillDisappear:animated];
     
     _headerView.accountBtn.frame = CGRectMake(WIDTH_SCREEN/2-35, 40, 70, 70);
+    _headerView.levelLabel.frame = CGRectMake(WIDTH_SCREEN/2+10, CGRectGetMaxY(_headerView.accountBtn.frame)-14, 32, 12);
     _headerView.nameLabel.alpha = 1.0f;
     _headerView.bigNameLabel.alpha = 0.0f;
     _headerView.orgNameLabel.alpha = 0.0f;
@@ -166,10 +167,13 @@
         
         _headerView.nightBtn.frame = CGRectMake(WIDTH_SCREEN-35, offset.y + 30, 20, 20);
         float accountBtnX = WIDTH_SCREEN/2-35 + offset.y;
+        float levelLabelX = WIDTH_SCREEN/2+10 + offset.y;
         if(accountBtnX <= 40){
             accountBtnX = 40;
+            levelLabelX = 85;
         }
         _headerView.accountBtn.frame = CGRectMake(accountBtnX, 40, 70, 70);
+        _headerView.levelLabel.frame = CGRectMake(levelLabelX, CGRectGetMaxY(_headerView.accountBtn.frame)-14, 32, 12);
         _headerView.nameLabel.alpha = 1 + offset.y/50;
         _headerView.bigNameLabel.alpha = -0.4-offset.y/120;
         _headerView.orgNameLabel.alpha = -0.4-offset.y/120;

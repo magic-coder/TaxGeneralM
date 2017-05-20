@@ -46,6 +46,14 @@
         _accountBtn.frame = CGRectMake(WIDTH_SCREEN/2-35, 40, 70, 70);
         [self addSubview:_accountBtn];
         
+        _levelLabel = [self labelWithFrame:CGRectMake(WIDTH_SCREEN/2+10, CGRectGetMaxY(_accountBtn.frame)-14, 32, 12)];
+        _levelLabel.backgroundColor = WBColor(240, 180, 0, 1.f);
+        _levelLabel.font = [UIFont systemFontOfSize:13.0f];
+        _levelLabel.text = @"Lv 0";
+        _levelLabel.layer.masksToBounds = YES;
+        _levelLabel.layer.cornerRadius = 6;
+        [self addSubview:_levelLabel];
+        
         _nameLabel = [self labelWithFrame:CGRectMake(0, CGRectGetMaxY(_accountBtn.frame)+10, WIDTH_SCREEN, 20)];
         [self addSubview:_nameLabel];
         
