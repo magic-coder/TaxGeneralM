@@ -135,7 +135,7 @@
 - (NSMutableArray *)getScheduleItems{
     NSMutableArray *items = [[NSMutableArray alloc] init];
     BaseTableModelItem *item1 = [BaseTableModelItem createWithTitle:@"日程提醒管理"];
-    BaseTableModelItem *item2= [BaseTableModelItem createWithTitle:@"办税日历"];
+    BaseTableModelItem *item2= [BaseTableModelItem createWithTitle:@"税务日历"];
     BaseTableModelGroup *group1 = [[BaseTableModelGroup alloc] initWithHeaderTitle:nil footerTitle:nil settingItems:item1, item2, nil];
     [items addObject:group1];
     

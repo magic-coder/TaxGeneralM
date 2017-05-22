@@ -169,7 +169,7 @@
         btn_3.frame = CGRectMake(10 + btnW + 10 + btnW + 10, 70, btnW, 80);
         [btn_3 setImage:[UIImage imageNamed:@"app_common_map"] forState:UIControlStateNormal];
         [btn_3 setImage:[UIImage imageNamed:@"app_common_mapHL"] forState:UIControlStateHighlighted];
-        [btn_3 setTitle:@"办税地图" forState:UIControlStateNormal];
+        [btn_3 setTitle:@"税务地图" forState:UIControlStateNormal];
         [btn_3.titleLabel setFont:[UIFont systemFontOfSize:14.0f]];
         [btn_3 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [btn_3 setTitleColor:DEFAULT_LIGHT_BLUE_COLOR forState:UIControlStateHighlighted];

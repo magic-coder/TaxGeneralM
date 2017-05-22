@@ -38,7 +38,7 @@
             }
         } cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"打开", nil];
     }
-    if ([item.title isEqualToString:@"办税日历"]) {
+    if ([item.title isEqualToString:@"税务日历"]) {
         TaxCalendarViewController *taxCalendarVC = [[TaxCalendarViewController alloc] init];
         viewController = taxCalendarVC;
     }

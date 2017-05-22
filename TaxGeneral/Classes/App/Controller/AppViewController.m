@@ -121,7 +121,7 @@
     BaseCollectionViewCell *cell = (BaseCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
     UIViewController *viewController = nil;
     
-    if([cell.item.title isEqualToString:@"办税地图"]){
+    if([cell.item.title isEqualToString:@"税务地图"]){
         viewController = [[MapListViewController alloc] init];
         
         viewController.title = cell.titleLabel.text; // 设置标题
@@ -161,7 +161,7 @@
     if([sender.titleLabel.text isEqualToString:@"通讯录"]){
         url = [NSString stringWithFormat:@"%@litter/initLitter", SERVER_URL];
     }
-    if([sender.titleLabel.text isEqualToString:@"办税地图"]){
+    if([sender.titleLabel.text isEqualToString:@"税务地图"]){
         viewController = [[MapListViewController alloc] init];
     }
     if([sender.titleLabel.text isEqualToString:@"常见问题"]){
