@@ -22,6 +22,7 @@
 @property (nonatomic, strong) NSString *runtimeLog;         // 运行日志
 @property (nonatomic, strong) NSString *crashLog;           // 崩溃日志
 @property (nonatomic, assign) float brightness;             // 系统屏幕亮度
+@property (nonatomic, assign) NSTimeInterval startTime;     // 启动时间
 
 /**
  * @breif 实现声明单例方法 GCD

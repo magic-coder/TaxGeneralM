@@ -28,7 +28,7 @@
 @property (nonatomic, strong) UILabel *bigNameLabel;    // 用户名称放大
 @property (nonatomic, strong) UILabel *orgNameLabel;    // 机构名称
 
-@property (nonatomic, strong) NSString *nameText;
+@property (nonatomic, strong) NSString *nameText;       // 人名
 
 @property (nonatomic, weak) id<AccountHeaderViewDelegate> delegate;
 

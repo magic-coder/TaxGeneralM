@@ -49,7 +49,6 @@
         _levelLabel = [self labelWithFrame:CGRectMake(WIDTH_SCREEN/2+10, CGRectGetMaxY(_accountBtn.frame)-14, 32, 12)];
         _levelLabel.backgroundColor = WBColor(240, 180, 0, 1.f);
         _levelLabel.font = [UIFont systemFontOfSize:13.0f];
-        _levelLabel.text = @"Lv 0";
         _levelLabel.layer.masksToBounds = YES;
         _levelLabel.layer.cornerRadius = 6;
         [self addSubview:_levelLabel];
@@ -114,11 +113,16 @@
     _nameLabel.text = nameText;
     _bigNameLabel.text = nameText;
     if([nameText isEqualToString:@"未登录"]){
+        _levelLabel.backgroundColor = [UIColor lightGrayColor];
+        _levelLabel.text = @"Lv 0";
         _orgNameLabel.text = @"登录后，即可享用更多功能！";
         
         [_accountBtn setBackgroundImage:[UIImage imageNamed:@"mine_account_header_grey"] forState:UIControlStateNormal];
         [_accountBtn setBackgroundImage:[UIImage imageNamed:@"mine_account_header_grey"] forState:UIControlStateHighlighted];
     }else{
+        _levelLabel.backgroundColor = WBColor(240, 180, 0, 1.f);
+        //_levelLabel.text = [NSString stringWithFormat:@"Lv %@", [[[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS] objectForKey:@"level"]];
+        _levelLabel.text = @"Lv 0";
         _orgNameLabel.text = [[[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_SUCCESS] objectForKey:@"orgName"];
         
         [_accountBtn setBackgroundImage:[UIImage imageNamed:@"mine_account_header_color"] forState:UIControlStateNormal];

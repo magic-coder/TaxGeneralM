@@ -183,6 +183,11 @@
     
     DLog(@"app已经进入后台");
     
+    // 记录使用时长
+    NSTimeInterval timestamp = [[NSDate date] timeIntervalSince1970]*1 - [Variable shareInstance].startTime;
+    int second = (int)timestamp %60;//秒
+    DLog(@"本次在线时长为 : %d 秒", second);
+    
     // 应用已经进入后台
     self.timer = [NSTimer scheduledTimerWithTimeInterval:600 target:self selector:@selector(timerCallback) userInfo:nil repeats:NO];
 }
@@ -203,6 +208,9 @@
     // app进入前台
     
     DLog(@"app进入前台");
+    
+    // 记录打开时间
+    [Variable shareInstance].startTime = [[NSDate date] timeIntervalSince1970]*1;
     
     if([self.timer isValid]){
         [self.timer invalidate];
